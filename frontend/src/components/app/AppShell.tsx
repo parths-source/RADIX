@@ -7,6 +7,7 @@ const STEPS = [
   { to: "/analyze", label: "Analyze JD" },
   { to: "/resume", label: "Parse resume" },
   { to: "/profile", label: "Profile" },
+  { to: "/talent-check", label: "Talent Check" },
 ]
 
 /** Layout for app pages: static gradient backdrop, header with logo and step links. */

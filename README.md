@@ -5,7 +5,7 @@ Flow: pick a JD → parse a resume → build a profile → Talent Check → Skil
 
 Scope, data contract, scoring and build order: [PLAN.md](PLAN.md). Decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 
-**Status:** Phase 4 (Profile Builder) complete. JD Analytics, Resume Parsing and Profile Builder work from the API and from the `/analyze`, `/resume` and `/profile` screens. Phase 2 (landing hero) has not started; `/` is a placeholder.
+**Status:** Phase 5 (Talent Check) complete. JD Analytics, Resume Parsing, Profile Builder and Talent Check work from the API and from the `/analyze`, `/resume`, `/profile` and `/talent-check` screens. Phase 2 (landing hero) has not started; `/` is a placeholder.
 
 ## Requirements
 
@@ -85,14 +85,24 @@ cd frontend && npm run dev                               # http://localhost:5173
 | POST | `/api/profiles` | Create (body = profile; optional `?source_extraction_id=`). 409 if the email is taken |
 | GET / PUT | `/api/profiles/{id}` | Load / full replace |
 | GET | `/api/profiles` | Saved profiles (id, name, email, updated_at), newest first |
+| POST | `/api/profiles/{id}/talent-check` | Module 4. `{"company_key": "google"}` (key, name or alias). Stores and returns the readiness score and 12 skillset gaps |
 | POST | `/api/profiles/cv` | Upload a CV (PDF/DOCX) to the private bucket; returns `cv_file` to put in the profile |
 
 ## Test
 
 ```bash
-cd backend && .venv/bin/pytest          # LLM is mocked; tests/test_db_live.py runs only when Supabase is reachable
+cd backend && .venv/bin/pytest          # LLM is mocked; tests/test_db_live.py runs only when Supabase is reachable (it deletes its own rows)
 cd frontend && npm run lint && npm run build
 ```
+
+## Talent Check scoring (tc-v0.1)
+
+Plain code, no LLM; every constant is in [backend/app/scoring/config.py](backend/app/scoring/config.py). Formula: PLAN.md section 7. Honest limits:
+- Levels are **estimates from the documents, not verified proficiency**. The constants are judgment calls.
+- Results depend on extraction quality: a skill counts as evidenced only when a project, internship, hackathon or certification lists it in `skills_used`.
+- It cannot tell a deep project from a trivial one.
+- A skillset backed only by a skills list is capped at level 5, and a single listed skill on its own scores level 1.
+- With the placeholder company data every company has the same flat bar, so readiness differs by candidate but not by company.
 
 ## Notes
 

@@ -8,7 +8,7 @@ import httpx
 
 from app.config import Settings
 from app.errors import AppError
-from app.models.contract import CandidateProfile, ExtractedSkillList
+from app.models.contract import CandidateProfile, ExtractedSkillList, TalentCheckResult
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +126,13 @@ class Repository:
         result = self._run("list_profiles", lambda: self.client.table("candidate_profiles")
                            .select(PROFILE_LIST_COLUMNS).order("updated_at", desc=True).limit(100).execute())
         return result.data
+
+    # Results (modules 4 and 5)
+
+    def save_talent_check(self, profile_id: str, result: TalentCheckResult) -> TalentCheckResult:
+        row = {"profile_id": profile_id, **result.model_dump(mode="json")}
+        self._run("save_talent_check", lambda: self.client.table("talent_check_results").insert(row).execute())
+        return result
 
 
 def _is_uuid(value: str) -> bool:

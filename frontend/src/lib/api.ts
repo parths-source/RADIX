@@ -4,6 +4,7 @@ import type {
   CompaniesResponse,
   ExtractedSkillList,
   SourceType,
+  TalentCheckResult,
 } from "@/types/contract"
 
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:8000/api"
@@ -83,6 +84,8 @@ export const api = {
       json("POST", profile),
     ),
   updateProfile: (id: string, profile: CandidateProfile) => request<CandidateProfile>(`/profiles/${id}`, json("PUT", profile)),
+  talentCheck: (profileId: string, companyKey: string) =>
+    request<TalentCheckResult>(`/profiles/${profileId}/talent-check`, json("POST", { company_key: companyKey })),
   uploadCv: (file: File) => {
     const form = new FormData()
     form.append("file", file)

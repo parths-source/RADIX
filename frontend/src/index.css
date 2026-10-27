@@ -140,6 +140,9 @@
     --color-brand: #3d6bff;
     --color-warn: #f2b84b;
     --color-danger: #ff6b6b;
+    /* Chart series on the dark surface (validated with the dataviz palette checker vs #0a2a44) */
+    --color-series-candidate: #3987e5;
+    --color-series-required: #d55181;
 }
 
 /* App pages: a static version of the shader gradient plus faint noise (no WebGL off the landing page). */

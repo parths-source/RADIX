@@ -7,6 +7,7 @@ import { ShaderBackground } from "@/components/ui/kk"
 const AnalyzeJD = lazy(() => import("@/pages/AnalyzeJD"))
 const ParseResume = lazy(() => import("@/pages/ParseResume"))
 const Profile = lazy(() => import("@/pages/Profile"))
+const TalentCheck = lazy(() => import("@/pages/TalentCheck"))
 
 // The landing page is Phase 2; until then "/" is a minimal placeholder.
 function LandingPlaceholder() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/analyze" element={<AnalyzeJD />} />
           <Route path="/resume" element={<ParseResume />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/talent-check" element={<TalentCheck />} />
         </Routes>
       </Suspense>
       <Toaster theme="dark" position="top-center" richColors />

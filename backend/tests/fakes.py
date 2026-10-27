@@ -30,6 +30,7 @@ class FakeRepository:
         self.extractions: dict[str, ExtractedSkillList] = {}
         self.uploads: list[dict] = []
         self.profiles: dict[str, dict] = {}
+        self.talent_checks: list[dict] = []
 
     def ensure_ready(self):
         pass
@@ -75,6 +76,10 @@ class FakeRepository:
         rows = sorted(self.profiles.values(), key=lambda r: r["updated_at"], reverse=True)
         return [{"id": r["profile"].id, "name": r["profile"].name, "email": r["profile"].email,
                  "updated_at": r["updated_at"]} for r in rows]
+
+    def save_talent_check(self, profile_id, result):
+        self.talent_checks.append({"profile_id": profile_id, "result": result})
+        return result
 
 
 JD_OUT = {
