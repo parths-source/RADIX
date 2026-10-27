@@ -6,7 +6,8 @@ from app.config import REPO_ROOT
 from app.models.contract import SKILLSET_CODES, CandidateProfile, CategoryCode
 from app.scoring import config as cfg
 from app.services.company_data import Company, load_company_data
-from app.services.talent_check import estimate_levels, round_half_up, run
+from app.scoring.rounding import round_half_up
+from app.services.talent_check import estimate_levels, run
 
 PLACEHOLDER = load_company_data(REPO_ROOT / "data" / "none.json", REPO_ROOT / "data" / "company_skillsets.placeholder.json")
 GOOGLE = PLACEHOLDER.find("google")

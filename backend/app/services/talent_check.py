@@ -4,17 +4,13 @@ Plain code, deterministic, no LLM (PLAN.md section 7). The levels are evidence-b
 estimates from documents, not verified proficiency. Constants: app/scoring/config.py.
 """
 
-import math
 from dataclasses import dataclass
 
 from app.models.contract import SKILLSET_CODES, CandidateProfile, CategoryCode, Skill, SkillsetGap, TalentCheckResult
 from app.scoring import config as cfg
+from app.scoring.rounding import round_half_up
 from app.services.company_data import Company
 from app.services.normalization import canonical_name
-
-
-def round_half_up(value: float) -> int:
-    return math.floor(value + 0.5 + cfg.ROUNDING_EPSILON)
 
 
 @dataclass

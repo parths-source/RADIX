@@ -8,6 +8,7 @@ const STEPS = [
   { to: "/resume", label: "Parse resume" },
   { to: "/profile", label: "Profile" },
   { to: "/talent-check", label: "Talent Check" },
+  { to: "/match", label: "Skill Match" },
 ]
 
 /** Layout for app pages: static gradient backdrop, header with logo and step links. */
@@ -20,7 +21,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <img src={logo} alt="RADIX" className="h-6 w-auto" />
             <span className="text-xs font-medium tracking-[0.25em] text-mist/70">TALENT MATCH</span>
           </Link>
-          <nav aria-label="Steps" className="flex gap-1">
+          <nav aria-label="Steps" className="flex flex-wrap gap-1">
             {STEPS.map((step) => (
               <NavLink
                 key={step.to}

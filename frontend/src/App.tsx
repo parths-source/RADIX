@@ -8,6 +8,7 @@ const AnalyzeJD = lazy(() => import("@/pages/AnalyzeJD"))
 const ParseResume = lazy(() => import("@/pages/ParseResume"))
 const Profile = lazy(() => import("@/pages/Profile"))
 const TalentCheck = lazy(() => import("@/pages/TalentCheck"))
+const SkillMatch = lazy(() => import("@/pages/SkillMatch"))
 
 // The landing page is Phase 2; until then "/" is a minimal placeholder.
 function LandingPlaceholder() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/resume" element={<ParseResume />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/talent-check" element={<TalentCheck />} />
+          <Route path="/match" element={<SkillMatch />} />
         </Routes>
       </Suspense>
       <Toaster theme="dark" position="top-center" richColors />

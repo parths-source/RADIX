@@ -3,6 +3,7 @@ import type {
   CandidateProfile,
   CompaniesResponse,
   ExtractedSkillList,
+  SkillMatchResult,
   SourceType,
   TalentCheckResult,
 } from "@/types/contract"
@@ -42,6 +43,15 @@ export interface Sample {
   label: string
   format: "docx" | "pdf"
   converted: boolean
+}
+
+export interface ExtractionSummary {
+  id: string
+  source_file: string
+  company: string | null
+  role: string | null
+  status: string
+  created_at?: string
 }
 
 export interface ProfileSummary {
@@ -84,6 +94,10 @@ export const api = {
       json("POST", profile),
     ),
   updateProfile: (id: string, profile: CandidateProfile) => request<CandidateProfile>(`/profiles/${id}`, json("PUT", profile)),
+  extractions: (sourceType: SourceType) =>
+    request<{ extractions: ExtractionSummary[] }>(`/extractions?source_type=${sourceType}`).then((r) => r.extractions),
+  skillMatch: (profileId: string, jdExtractionId: string) =>
+    request<SkillMatchResult>(`/profiles/${profileId}/skill-match`, json("POST", { jd_extraction_id: jdExtractionId })),
   talentCheck: (profileId: string, companyKey: string) =>
     request<TalentCheckResult>(`/profiles/${profileId}/talent-check`, json("POST", { company_key: companyKey })),
   uploadCv: (file: File) => {

@@ -35,3 +35,17 @@ CLAIMS_ONLY_CAP = 5
 
 # Float tolerance so values like 4.4999999999 from binary arithmetic round as the exact 4.5 they represent.
 ROUNDING_EPSILON = 1e-9
+
+
+# Skill Matching v0.1 (PLAN.md section 8, decision D7 — a [Proposal] the user has not reviewed yet).
+
+SKILL_MATCH_VERSION = "sm-v0.1"
+
+# Quality credited to a JD skill by the first tier that matches it.
+MATCH_QUALITY = {"exact": 1.0, "alias": 1.0, "fuzzy": 0.8, "llm": 0.6}
+
+# rapidfuzz.fuzz.ratio on normalized names (0-100). Never partial/token ratios: they match Java to JavaScript.
+FUZZY_MIN_RATIO = 88
+
+# match_score = 100 * sum(weight * quality over matched) / sum(weight over all JD skills)
+REQUIREMENT_WEIGHT = {"required": 1.0, "preferred": 0.5}

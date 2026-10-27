@@ -73,3 +73,26 @@ def test_talent_check_result_is_stored():
         assert rows.data == [{"readiness_score": result.readiness_score}]
     finally:  # results cascade with the profile
         repo.client.table("candidate_profiles").delete().eq("id", profile.id).execute()
+
+
+def test_skill_match_result_is_stored_and_jd_listed():
+    import uuid
+
+    from app.models.contract import CandidateProfile
+    from app.services import skill_matching
+
+    repo = Repository(settings)
+    jd = repo.save_extraction(ExtractedSkillList.model_validate({
+        "source_type": "jd", "source_file": "pytest_live_jd.docx",
+        "skills": [{"skill_name": "Python", "category_code": "COD", "confidence": "high"}]}), None)
+    profile = repo.create_profile(CandidateProfile.model_validate({
+        "name": "pytest live", "email": f"pytest-{uuid.uuid4().hex[:8]}@example.com",
+        "skills": [{"skill_name": "Python", "category_code": "COD", "confidence": "high"}]}), None)
+    try:
+        assert jd.id in [e["id"] for e in repo.list_extractions("jd")]
+        result = repo.save_skill_match(profile.id, jd.id, skill_matching.run(profile.skills, jd))
+        rows = repo.client.table("skill_match_results").select("match_score").eq("profile_id", profile.id).execute()
+        assert rows.data == [{"match_score": result.match_score}] and result.match_score == 100
+    finally:
+        repo.client.table("candidate_profiles").delete().eq("id", profile.id).execute()
+        repo.client.table("extractions").delete().eq("id", jd.id).execute()

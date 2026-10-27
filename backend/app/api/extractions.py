@@ -91,6 +91,12 @@ async def extract_resume(
     return await _extract("resume", request, settings, llm, repo)
 
 
+@router.get("/extractions")
+def list_extractions(source_type: SourceType, repo: Repository = Depends(get_repository)) -> dict:
+    """Recent extractions of one type (for choosing the analyzed JD on the Skill Match screen)."""
+    return {"extractions": repo.list_extractions(source_type)}
+
+
 @router.get("/extractions/{extraction_id}", response_model=ExtractedSkillList, response_model_exclude_none=True)
 def get_extraction(extraction_id: str, repo: Repository = Depends(get_repository)):
     extraction = repo.get_extraction(extraction_id)

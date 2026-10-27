@@ -31,6 +31,7 @@ class FakeRepository:
         self.uploads: list[dict] = []
         self.profiles: dict[str, dict] = {}
         self.talent_checks: list[dict] = []
+        self.skill_matches: list[dict] = []
 
     def ensure_ready(self):
         pass
@@ -76,6 +77,14 @@ class FakeRepository:
         rows = sorted(self.profiles.values(), key=lambda r: r["updated_at"], reverse=True)
         return [{"id": r["profile"].id, "name": r["profile"].name, "email": r["profile"].email,
                  "updated_at": r["updated_at"]} for r in rows]
+
+    def save_skill_match(self, profile_id, jd_extraction_id, result):
+        self.skill_matches.append({"profile_id": profile_id, "jd_extraction_id": jd_extraction_id, "result": result})
+        return result
+
+    def list_extractions(self, source_type):
+        return [{"id": e.id, "source_file": e.source_file, "company": e.company, "role": e.role, "status": e.status}
+                for e in self.extractions.values() if e.source_type == source_type]
 
     def save_talent_check(self, profile_id, result):
         self.talent_checks.append({"profile_id": profile_id, "result": result})

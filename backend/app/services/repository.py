@@ -8,7 +8,7 @@ import httpx
 
 from app.config import Settings
 from app.errors import AppError
-from app.models.contract import CandidateProfile, ExtractedSkillList, TalentCheckResult
+from app.models.contract import CandidateProfile, ExtractedSkillList, SkillMatchResult, TalentCheckResult
 
 logger = logging.getLogger(__name__)
 
@@ -91,6 +91,12 @@ class Repository:
         result = self._run("save_extraction", lambda: self.client.table("extractions").insert(row).execute())
         return extraction.model_copy(update={"id": result.data[0]["id"]})
 
+    def list_extractions(self, source_type: str) -> list[dict]:
+        result = self._run("list_extractions", lambda: self.client.table("extractions")
+                           .select("id,source_file,company,role,status,created_at").eq("source_type", source_type)
+                           .order("created_at", desc=True).limit(100).execute())
+        return result.data
+
     def get_extraction(self, extraction_id: str) -> ExtractedSkillList | None:
         if not _is_uuid(extraction_id):
             return None
@@ -132,6 +138,11 @@ class Repository:
     def save_talent_check(self, profile_id: str, result: TalentCheckResult) -> TalentCheckResult:
         row = {"profile_id": profile_id, **result.model_dump(mode="json")}
         self._run("save_talent_check", lambda: self.client.table("talent_check_results").insert(row).execute())
+        return result
+
+    def save_skill_match(self, profile_id: str, jd_extraction_id: str, result: SkillMatchResult) -> SkillMatchResult:
+        row = {"profile_id": profile_id, "jd_extraction_id": jd_extraction_id, **result.model_dump(mode="json")}
+        self._run("save_skill_match", lambda: self.client.table("skill_match_results").insert(row).execute())
         return result
 
 
