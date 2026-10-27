@@ -2,6 +2,9 @@
 
 Copied from PLAN.md section 6. **Locked:** any change needs the user's approval and a row in [DECISIONS.md](DECISIONS.md).
 
+**Approved changes since the copy:**
+- **D10 (2026-10-28):** `Entry` gains optional `kind` (`"hackathon" | "internship"`). Resume extraction sets it on each `details.experience` entry so Profile Builder can sort them. If `kind` is missing, Talent Check scores the entry at the hackathon tier (0.7), not the internship tier.
+
 Implementation: [backend/app/models/contract.py](../backend/app/models/contract.py) (Pydantic, the source of truth) and [frontend/src/types/contract.ts](../frontend/src/types/contract.ts) (TypeScript mirror). Tests: `backend/tests/test_contract.py`.
 
 How the validation rules are enforced:
@@ -34,7 +37,8 @@ COD programming languages and coding · DSA data structures and algorithms · OO
   "title": "...",
   "description": "...",
   "skills_used": ["Python", "SQL"],  // (+) names must exist in the profile's skills list
-  "duration_months": 1               // (+) optional, internships mainly
+  "duration_months": 1,              // (+) optional, internships mainly
+  "kind": "internship"               // (+) D10: hackathon | internship, set on resume details.experience entries
 }
 
 // Extracted skill list [Brief: Role 1 and 2 output]

@@ -142,3 +142,12 @@ def test_skills_used_must_reference_listed_skills_with_a_clear_message():
 
 def test_blank_email_becomes_none():
     assert CandidateProfile.model_validate({**PROFILE, "email": "  "}).email is None
+
+
+def test_experience_kind_is_optional_and_restricted():
+    # D10: kind tags resume experience entries; missing is allowed.
+    resume = _with(RESUME, ["details", "experience", 0, "kind"], "internship")
+    assert ExtractedSkillList.model_validate(resume).details.experience[0].kind == "internship"
+    assert ExtractedSkillList.model_validate(RESUME).details.experience[0].kind is None
+    with pytest.raises(ValidationError):
+        ExtractedSkillList.model_validate(_with(RESUME, ["details", "experience", 0, "kind"], "job"))

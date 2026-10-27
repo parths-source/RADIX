@@ -15,6 +15,7 @@ export type SourceType = "jd" | "resume"
 export type ExtractionStatus = "ok" | "fallback" | "llm_failed"
 export type MatchType = "exact" | "alias" | "fuzzy" | "llm"
 export type EvidenceStatus = "none" | "claimed_only" | "evidenced"
+export type ExperienceKind = "hackathon" | "internship"
 
 export interface Skill {
   skill_name: string
@@ -30,6 +31,7 @@ export interface Entry {
   description?: string
   skills_used?: string[] // (+) names must exist in the profile's skills list
   duration_months?: number | null // (+)
+  kind?: ExperienceKind | null // (+) D10: on resume experience entries; missing -> hackathon tier
 }
 
 export interface ResumeDetails {

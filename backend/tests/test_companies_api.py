@@ -13,7 +13,10 @@ def test_companies_lists_three_placeholder_companies_with_dummy_flag():
     assert set(body["companies"][0]) == {"company_key", "display_name"}
 
 
-def test_health_flags_placeholder_company_data():
+def test_health_flags_placeholder_company_data(monkeypatch):
+    from app.api import health as health_module
+
+    monkeypatch.setattr(health_module, "check_connection", lambda settings: "not_configured")
     body = client.get("/api/health").json()
     assert body["company_data_dummy"] is True
     assert body["company_data_configured"] is False

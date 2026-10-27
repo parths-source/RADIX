@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import companies, health
+from app.api import companies, extractions, health, samples
 from app.config import get_settings
 from app.errors import register_error_handlers
 from app.logging_setup import configure_logging, register_request_logging
@@ -27,6 +27,8 @@ def create_app() -> FastAPI:
     )
     app.include_router(health.router, prefix="/api")
     app.include_router(companies.router, prefix="/api")
+    app.include_router(samples.router, prefix="/api")
+    app.include_router(extractions.router, prefix="/api")
     return app
 
 

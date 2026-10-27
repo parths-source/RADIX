@@ -13,3 +13,4 @@ Seeded from PLAN.md section 2. Add a row for every approved change (including an
 | D7 | Skill Matching score v0.1 (PLAN.md section 8) | **[Proposal] — not yet discussed with the user. Flag it in the Phase 6 summary** |
 | D8 | UI: hero uses the supplied WebGL shader as background and orbiting tech logos (PLAN.md section 11) | Approved |
 | D9 | Demo runs locally (localhost), not from a deployed URL | [Proposal] |
+| D10 | Contract change (2026-10-28, option A): `Entry` gains optional `kind` (`hackathon` \| `internship`), set on resume `details.experience` entries. If `kind` is missing, Talent Check scores the entry at the hackathon tier. Reason: resume extraction merges the samples' combined "Hackathons / Internships" section into one list, and Talent Check scores the two differently | Approved |

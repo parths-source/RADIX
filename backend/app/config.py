@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     llm_provider: str = ""
     llm_model: str = ""
     llm_api_key: str = ""
+    llm_fallback_model: str = ""  # optional; tried when the main model errors (e.g. 503 overload)
     enable_llm_match: bool = False
 
     frontend_origin: str = "http://localhost:5173"

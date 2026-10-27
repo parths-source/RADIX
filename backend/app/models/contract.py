@@ -41,6 +41,7 @@ SourceType = Literal["jd", "resume"]
 ExtractionStatus = Literal["ok", "fallback", "llm_failed"]
 MatchType = Literal["exact", "alias", "fuzzy", "llm"]
 EvidenceStatus = Literal["none", "claimed_only", "evidenced"]
+ExperienceKind = Literal["hackathon", "internship"]
 
 NonEmptyStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 Level = Annotated[int, Field(ge=1, le=10)]
@@ -71,6 +72,8 @@ class Entry(ContractModel):
     description: str = ""
     skills_used: list[NonEmptyStr] = Field(default_factory=list)  # (+)
     duration_months: Optional[Annotated[int, Field(ge=0)]] = None  # (+)
+    # (+) D10: set on resume details.experience entries. Missing -> scored at the hackathon tier.
+    kind: Optional[ExperienceKind] = None
 
 
 class ResumeDetails(ContractModel):
