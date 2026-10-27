@@ -14,3 +14,6 @@ Rules:
 8. experience: hackathons and internships. They may share one section such as "Hackathons / Internships". Set kind to "hackathon" or "internship" for each entry, based on its own text.
 9. skills_used, for every project and experience entry: infer it from that entry's own text only, using names exactly as they appear in your skills list. Example: "multithreaded job scheduler in C++ simulating OS-level process scheduling" gives ["C++", "Operating Systems"]. If an entry clearly names a skill that is not in the skills list yet, add it to the skills list too.
 10. duration_months: only when the resume states a duration. Otherwise null. Never guess.
+11. name: the candidate's name as written at the top. email: only if an email address appears in the resume; otherwise null. Never invent one.
+12. certifications: one entry per certification listed (title = the certification name; skills_used as in rule 9). "None listed" gives an empty list.
+13. preferred_roles: the roles listed under a heading such as "Preferred Roles" or "Objective", as short role names. Empty if none are listed.

@@ -6,6 +6,7 @@ import logo from "@/assets/radix-logo.svg"
 const STEPS = [
   { to: "/analyze", label: "Analyze JD" },
   { to: "/resume", label: "Parse resume" },
+  { to: "/profile", label: "Profile" },
 ]
 
 /** Layout for app pages: static gradient backdrop, header with logo and step links. */

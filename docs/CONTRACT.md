@@ -4,6 +4,7 @@ Copied from PLAN.md section 6. **Locked:** any change needs the user's approval 
 
 **Approved changes since the copy:**
 - **D10 (2026-10-28):** `Entry` gains optional `kind` (`"hackathon" | "internship"`). Resume extraction sets it on each `details.experience` entry so Profile Builder can sort them. If `kind` is missing, Talent Check scores the entry at the hackathon tier (0.7), not the internship tier.
+- **D11 (2026-10-28):** resume `details` gains optional `name`, `email`, `certifications` (list of `Entry`) and `preferred_roles` (list of strings), filled by the same single LLM call (prompt `resume_extraction_v2`), so Profile Builder can pre-fill the whole form.
 
 Implementation: [backend/app/models/contract.py](../backend/app/models/contract.py) (Pydantic, the source of truth) and [frontend/src/types/contract.ts](../frontend/src/types/contract.ts) (TypeScript mirror). Tests: `backend/tests/test_contract.py`.
 
@@ -52,7 +53,11 @@ COD programming languages and coding · DSA data structures and algorithms · OO
   "details": {                       // (+) resume only
     "education": "...",
     "projects": [ /* Entry */ ],
-    "experience": [ /* Entry */ ]
+    "experience": [ /* Entry */ ],
+    "name": "...",                   // (+) D11
+    "email": "...",                  // (+) D11
+    "certifications": [ /* Entry */ ], // (+) D11
+    "preferred_roles": ["..."]       // (+) D11
   },
   "status": "ok"                     // (+) ok | fallback | llm_failed
 }

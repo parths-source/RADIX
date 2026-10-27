@@ -151,3 +151,13 @@ def test_experience_kind_is_optional_and_restricted():
     assert ExtractedSkillList.model_validate(RESUME).details.experience[0].kind is None
     with pytest.raises(ValidationError):
         ExtractedSkillList.model_validate(_with(RESUME, ["details", "experience", 0, "kind"], "job"))
+
+
+def test_resume_details_d11_fields_are_optional():
+    details = ExtractedSkillList.model_validate(RESUME).details
+    assert (details.name, details.email, details.certifications, details.preferred_roles) == (None, None, [], [])
+    full = _with(RESUME, ["details", "certifications"], [{"title": "AWS CCP"}])
+    full["details"].update(name="A", email="a@b.co", preferred_roles=["SWE"])
+    assert ExtractedSkillList.model_validate(full).details.certifications[0].title == "AWS CCP"
+    with pytest.raises(ValidationError):
+        ExtractedSkillList.model_validate(_with(RESUME, ["details", "email"], "nope"))

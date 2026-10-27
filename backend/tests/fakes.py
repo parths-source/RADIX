@@ -1,7 +1,9 @@
 """Test doubles: a scripted LLM and an in-memory repository (no network, no Supabase)."""
 
 import uuid
+from datetime import datetime, timezone
 
+from app.errors import AppError
 from app.models.contract import ExtractedSkillList
 from app.services.llm import LLMResult
 
@@ -27,6 +29,7 @@ class FakeRepository:
     def __init__(self):
         self.extractions: dict[str, ExtractedSkillList] = {}
         self.uploads: list[dict] = []
+        self.profiles: dict[str, dict] = {}
 
     def ensure_ready(self):
         pass
@@ -44,6 +47,35 @@ class FakeRepository:
     def get_extraction(self, extraction_id):
         return self.extractions.get(extraction_id)
 
+    def _check_email(self, profile, own_id=None):
+        for pid, row in self.profiles.items():
+            if profile.email and row["profile"].email == profile.email and pid != own_id:
+                raise AppError(409, "email_taken", "A saved profile already uses this email.")
+
+    def create_profile(self, profile, source_extraction_id):
+        self._check_email(profile)
+        saved = profile.model_copy(update={"id": str(uuid.uuid4())})
+        self.profiles[saved.id] = {"profile": saved, "source_extraction_id": source_extraction_id,
+                                   "updated_at": datetime.now(timezone.utc).isoformat()}
+        return saved
+
+    def update_profile(self, profile_id, profile):
+        if profile_id not in self.profiles:
+            return None
+        self._check_email(profile, profile_id)
+        saved = profile.model_copy(update={"id": profile_id})
+        self.profiles[profile_id].update(profile=saved, updated_at=datetime.now(timezone.utc).isoformat())
+        return saved
+
+    def get_profile(self, profile_id):
+        row = self.profiles.get(profile_id)
+        return row["profile"] if row else None
+
+    def list_profiles(self):
+        rows = sorted(self.profiles.values(), key=lambda r: r["updated_at"], reverse=True)
+        return [{"id": r["profile"].id, "name": r["profile"].name, "email": r["profile"].email,
+                 "updated_at": r["updated_at"]} for r in rows]
+
 
 JD_OUT = {
     "company": "Google LLC",
@@ -57,6 +89,10 @@ JD_OUT = {
 }
 
 RESUME_OUT = {
+    "name": "Test Candidate",
+    "email": "test@example.com",
+    "certifications": [{"title": "Linux Basics", "skills_used": ["operating systems"]}],
+    "preferred_roles": ["Software Engineer", " Software Engineer ", "SRE"],
     "skills": [
         {"skill_name": "C++", "category_code": "COD", "evidence": "C++", "confidence": "high"},
         {"skill_name": "Operating Systems", "category_code": "OS", "evidence": "OS", "confidence": "high"},

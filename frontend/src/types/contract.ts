@@ -38,6 +38,10 @@ export interface ResumeDetails {
   education: string
   projects: Entry[]
   experience: Entry[]
+  name?: string | null // (+) D11
+  email?: string | null // (+) D11
+  certifications?: Entry[] // (+) D11
+  preferred_roles?: string[] // (+) D11
 }
 
 export interface ExtractedSkillList {

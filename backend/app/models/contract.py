@@ -76,10 +76,30 @@ class Entry(ContractModel):
     kind: Optional[ExperienceKind] = None
 
 
+def clean_email(value: Optional[str]) -> Optional[str]:
+    """Blank -> None; anything that is not an address raises ValueError."""
+    if value is None or not value.strip():
+        return None
+    value = value.strip()
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value):
+        raise ValueError("email is not a valid address")
+    return value
+
+
 class ResumeDetails(ContractModel):
     education: str = ""
     projects: list[Entry] = Field(default_factory=list)
     experience: list[Entry] = Field(default_factory=list)
+    # (+) D11: pre-fill the rest of the profile form from the same extraction
+    name: Optional[str] = None
+    email: Optional[str] = None
+    certifications: list[Entry] = Field(default_factory=list)
+    preferred_roles: list[NonEmptyStr] = Field(default_factory=list)
+
+    @field_validator("email")
+    @classmethod
+    def _email_shape(cls, value: Optional[str]) -> Optional[str]:
+        return clean_email(value)
 
 
 class ExtractedSkillList(ContractModel):
@@ -115,12 +135,7 @@ class CandidateProfile(ContractModel):
     @field_validator("email")
     @classmethod
     def _email_shape(cls, value: Optional[str]) -> Optional[str]:
-        if value is None or not value.strip():
-            return None
-        value = value.strip()
-        if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value):
-            raise ValueError("email is not a valid address")
-        return value
+        return clean_email(value)
 
     @model_validator(mode="after")
     def _skills_used_must_be_listed(self):

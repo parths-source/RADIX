@@ -1,3 +1,5 @@
+import { Link } from "react-router"
+
 import { AppShell, FallbackBadge, PageHeading } from "@/components/app/AppShell"
 import { SkillChips, SkillLegend } from "@/components/app/SkillChips"
 import { SourcePicker } from "@/components/app/SourcePicker"
@@ -27,9 +29,22 @@ export default function ParseResume() {
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-sm text-mist/60">{state.result.source_file}</p>
-                    <h2 className="text-xl font-semibold">{state.result.skills.length} skills found</h2>
+                    <h2 className="text-xl font-semibold">
+                      {state.result.details?.name ?? "Candidate"} · {state.result.skills.length} skills found
+                    </h2>
+                    {state.result.details?.email && <p className="text-sm text-mist/60">{state.result.details.email}</p>}
                   </div>
-                  {state.result.status === "fallback" && <FallbackBadge />}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {state.result.status === "fallback" && <FallbackBadge />}
+                    {state.result.id && (
+                      <Link
+                        to={`/profile?from=${state.result.id}`}
+                        className="rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white hover:bg-brand/90 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
+                      >
+                        Build profile from this resume
+                      </Link>
+                    )}
+                  </div>
                 </div>
                 {state.result.skills.length === 0 ? (
                   <EmptyState>No skills were found. Check that the file is a resume with selectable text.</EmptyState>
@@ -50,6 +65,12 @@ export default function ParseResume() {
                   </Section>
                   <Section title="Hackathons and internships">
                     <Entries entries={state.result.details.experience} empty="No hackathons or internships found." />
+                  </Section>
+                  <Section title="Certifications">
+                    <Entries entries={state.result.details.certifications ?? []} empty="No certifications found." />
+                  </Section>
+                  <Section title="Preferred roles">
+                    <p className="text-sm text-mist/80">{state.result.details.preferred_roles?.join(", ") || "None listed."}</p>
                   </Section>
                 </Panel>
               )}

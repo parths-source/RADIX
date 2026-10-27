@@ -5,7 +5,7 @@ Flow: pick a JD → parse a resume → build a profile → Talent Check → Skil
 
 Scope, data contract, scoring and build order: [PLAN.md](PLAN.md). Decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 
-**Status:** Phase 3 (modules 1 and 2) complete. JD Analytics and Resume Parsing work from the API and from the `/analyze` and `/resume` screens. Phase 2 (landing hero) has not started; `/` is a placeholder.
+**Status:** Phase 4 (Profile Builder) complete. JD Analytics, Resume Parsing and Profile Builder work from the API and from the `/analyze`, `/resume` and `/profile` screens. Phase 2 (landing hero) has not started; `/` is a placeholder.
 
 ## Requirements
 
@@ -81,6 +81,11 @@ cd frontend && npm run dev                               # http://localhost:5173
 | POST | `/api/extractions/jd` | Module 1. Multipart `file` (PDF/DOCX, ≤ 5 MB) or JSON `{"sample_id": "jd:google_software_engineer.docx"}` |
 | POST | `/api/extractions/resume` | Module 2. Same inputs; response includes `details` |
 | GET | `/api/extractions/{id}` | Fetch a stored extraction |
+| POST | `/api/profiles/draft` | Module 3. `{"resume_extraction_id"}` gives a pre-filled draft; add `"base_profile_id"` to merge the resume into a saved profile. Nothing is saved |
+| POST | `/api/profiles` | Create (body = profile; optional `?source_extraction_id=`). 409 if the email is taken |
+| GET / PUT | `/api/profiles/{id}` | Load / full replace |
+| GET | `/api/profiles` | Saved profiles (id, name, email, updated_at), newest first |
+| POST | `/api/profiles/cv` | Upload a CV (PDF/DOCX) to the private bucket; returns `cv_file` to put in the profile |
 
 ## Test
 

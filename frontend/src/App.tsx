@@ -1,8 +1,12 @@
+import { lazy, Suspense } from "react"
 import { BrowserRouter, Link, Route, Routes } from "react-router"
+import { Toaster } from "sonner"
 
 import { ShaderBackground } from "@/components/ui/kk"
-import AnalyzeJD from "@/pages/AnalyzeJD"
-import ParseResume from "@/pages/ParseResume"
+
+const AnalyzeJD = lazy(() => import("@/pages/AnalyzeJD"))
+const ParseResume = lazy(() => import("@/pages/ParseResume"))
+const Profile = lazy(() => import("@/pages/Profile"))
 
 // The landing page is Phase 2; until then "/" is a minimal placeholder.
 function LandingPlaceholder() {
@@ -20,11 +24,15 @@ function LandingPlaceholder() {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPlaceholder />} />
-        <Route path="/analyze" element={<AnalyzeJD />} />
-        <Route path="/resume" element={<ParseResume />} />
-      </Routes>
+      <Suspense fallback={<div className="app-backdrop min-h-svh" />}>
+        <Routes>
+          <Route path="/" element={<LandingPlaceholder />} />
+          <Route path="/analyze" element={<AnalyzeJD />} />
+          <Route path="/resume" element={<ParseResume />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </Suspense>
+      <Toaster theme="dark" position="top-center" richColors />
     </BrowserRouter>
   )
 }

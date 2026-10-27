@@ -46,6 +46,22 @@ def test_resume_success_maps_skills_used_and_kind(settings):
     assert out.company is None and out.role is None
 
 
+def test_resume_d11_fields(settings):
+    out = resume_parsing.run("resume text", "cv.docx", FakeLLM(RESUME_OUT), settings)
+    assert (out.details.name, out.details.email) == ("Test Candidate", "test@example.com")
+    assert out.details.certifications[0].skills_used == ["Operating Systems"]
+    assert out.details.preferred_roles == ["Software Engineer", "SRE"]
+
+
+def test_resume_bad_email_is_dropped_not_fatal(settings):
+    out = resume_parsing.run("t", "cv.docx", FakeLLM({**RESUME_OUT, "email": "not an email"}), settings)
+    assert out.status == "ok" and out.details.email is None
+
+
+def test_resume_prompt_is_v2():
+    assert resume_parsing.SPEC.prompt_version == "resume_extraction_v2"
+
+
 def test_unknown_category_becomes_other_and_duplicates_collapse(settings):
     skills = [
         {"skill_name": "Postman", "category_code": "TOOLS", "evidence": "x", "confidence": "low", "requirement_type": "preferred"},

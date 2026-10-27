@@ -1,4 +1,10 @@
-import type { ApiError as ApiErrorBody, CompaniesResponse, ExtractedSkillList, SourceType } from "@/types/contract"
+import type {
+  ApiError as ApiErrorBody,
+  CandidateProfile,
+  CompaniesResponse,
+  ExtractedSkillList,
+  SourceType,
+} from "@/types/contract"
 
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:8000/api"
 
@@ -37,6 +43,19 @@ export interface Sample {
   converted: boolean
 }
 
+export interface ProfileSummary {
+  id: string
+  name: string
+  email: string | null
+  updated_at: string
+}
+
+const json = (method: string, body: unknown): RequestInit => ({
+  method,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(body),
+})
+
 export const api = {
   samples: () => request<{ samples: Sample[] }>("/samples").then((r) => r.samples),
   companies: () => request<CompaniesResponse>("/companies"),
@@ -52,4 +71,21 @@ export const api = {
     return request<ExtractedSkillList>(`/extractions/${kind}`, { method: "POST", body: form })
   },
   extraction: (id: string) => request<ExtractedSkillList>(`/extractions/${id}`),
+
+  profiles: () => request<{ profiles: ProfileSummary[] }>("/profiles").then((r) => r.profiles),
+  profile: (id: string) => request<CandidateProfile>(`/profiles/${id}`),
+  /** Pre-filled draft from a resume extraction; with baseProfileId, merged into that saved profile. Not saved. */
+  profileDraft: (resumeExtractionId: string, baseProfileId?: string) =>
+    request<CandidateProfile>("/profiles/draft", json("POST", { resume_extraction_id: resumeExtractionId, base_profile_id: baseProfileId ?? null })),
+  createProfile: (profile: CandidateProfile, sourceExtractionId?: string) =>
+    request<CandidateProfile>(
+      `/profiles${sourceExtractionId ? `?source_extraction_id=${encodeURIComponent(sourceExtractionId)}` : ""}`,
+      json("POST", profile),
+    ),
+  updateProfile: (id: string, profile: CandidateProfile) => request<CandidateProfile>(`/profiles/${id}`, json("PUT", profile)),
+  uploadCv: (file: File) => {
+    const form = new FormData()
+    form.append("file", file)
+    return request<{ cv_file: string }>("/profiles/cv", { method: "POST", body: form })
+  },
 }

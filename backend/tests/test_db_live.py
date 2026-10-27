@@ -27,3 +27,29 @@ def test_extraction_and_upload_round_trip():
         repo.client.table("extractions").delete().eq("id", saved.id).execute()
         repo.client.storage.from_(BUCKET).remove([path])
     assert repo.get_extraction(saved.id) is None
+
+
+def test_profile_round_trip_and_unique_email():
+    import uuid
+
+    from app.errors import AppError
+    from app.models.contract import CandidateProfile
+
+    repo = Repository(settings)
+    email = f"pytest-{uuid.uuid4().hex[:8]}@example.com"
+    profile = CandidateProfile.model_validate({
+        "name": "pytest live", "email": email,
+        "skills": [{"skill_name": "Python", "category_code": "COD", "confidence": "high"}],
+        "projects": [{"title": "App", "skills_used": ["Python"]}],
+    })
+    created = repo.create_profile(profile, None)
+    try:
+        assert repo.get_profile(created.id) == created
+        updated = repo.update_profile(created.id, created.model_copy(update={"name": "pytest renamed"}))
+        assert updated.name == "pytest renamed"
+        assert created.id in [p["id"] for p in repo.list_profiles()]
+        with pytest.raises(AppError) as exc_info:
+            repo.create_profile(profile, None)
+        assert exc_info.value.code == "email_taken"
+    finally:
+        repo.client.table("candidate_profiles").delete().eq("id", created.id).execute()

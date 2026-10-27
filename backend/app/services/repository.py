@@ -2,18 +2,21 @@
 
 import logging
 import uuid
+from datetime import datetime, timezone
 
 import httpx
 
 from app.config import Settings
 from app.errors import AppError
-from app.models.contract import ExtractedSkillList
+from app.models.contract import CandidateProfile, ExtractedSkillList
 
 logger = logging.getLogger(__name__)
 
 BUCKET = "uploads"
 HEALTH_TIMEOUT_SECONDS = 4
 EXTRACTION_COLUMNS = "id,source_type,source_file,company,role,skills,details,status"
+PROFILE_COLUMNS = "id,name,email,education,skills,hackathons,internships,certifications,projects,preferred_roles,cv_file"
+PROFILE_LIST_COLUMNS = "id,name,email,updated_at"
 
 
 def check_connection(settings: Settings) -> str:
@@ -70,6 +73,8 @@ class Repository:
         except AppError:
             raise
         except Exception as exc:
+            if getattr(exc, "code", None) == "23505":  # unique violation: candidate_profiles.email
+                raise AppError(409, "email_taken", "A saved profile already uses this email. Load that profile instead, or use another email.") from exc
             logger.warning("db_error action=%s error=%s", action, type(exc).__name__)
             raise AppError(503, "db_unavailable", f"The database request failed ({action}). Check /api/health.") from exc
 
@@ -87,10 +92,58 @@ class Repository:
         return extraction.model_copy(update={"id": result.data[0]["id"]})
 
     def get_extraction(self, extraction_id: str) -> ExtractedSkillList | None:
-        try:
-            uuid.UUID(extraction_id)
-        except ValueError:
+        if not _is_uuid(extraction_id):
             return None
         result = self._run("get_extraction", lambda: self.client.table("extractions")
                            .select(EXTRACTION_COLUMNS).eq("id", extraction_id).limit(1).execute())
         return ExtractedSkillList.model_validate(result.data[0]) if result.data else None
+
+    # Profiles (module 3)
+
+    def create_profile(self, profile: CandidateProfile, source_extraction_id: str | None) -> CandidateProfile:
+        row = _profile_row(profile)
+        row["source_extraction_id"] = source_extraction_id
+        result = self._run("create_profile", lambda: self.client.table("candidate_profiles").insert(row).execute())
+        return _row_to_profile(result.data[0])
+
+    def update_profile(self, profile_id: str, profile: CandidateProfile) -> CandidateProfile | None:
+        if not _is_uuid(profile_id):
+            return None
+        row = _profile_row(profile)
+        row["updated_at"] = datetime.now(timezone.utc).isoformat()
+        result = self._run("update_profile", lambda: self.client.table("candidate_profiles")
+                           .update(row).eq("id", profile_id).execute())
+        return _row_to_profile(result.data[0]) if result.data else None
+
+    def get_profile(self, profile_id: str) -> CandidateProfile | None:
+        if not _is_uuid(profile_id):
+            return None
+        result = self._run("get_profile", lambda: self.client.table("candidate_profiles")
+                           .select(PROFILE_COLUMNS).eq("id", profile_id).limit(1).execute())
+        return _row_to_profile(result.data[0]) if result.data else None
+
+    def list_profiles(self) -> list[dict]:
+        result = self._run("list_profiles", lambda: self.client.table("candidate_profiles")
+                           .select(PROFILE_LIST_COLUMNS).order("updated_at", desc=True).limit(100).execute())
+        return result.data
+
+
+def _is_uuid(value: str) -> bool:
+    try:
+        uuid.UUID(value)
+        return True
+    except ValueError:
+        return False
+
+
+def _profile_row(profile: CandidateProfile) -> dict:
+    return profile.model_dump(mode="json", exclude={"id"})
+
+
+def _row_to_profile(row: dict) -> CandidateProfile:
+    """jsonb list columns are nullable in the schema; the contract wants lists."""
+    data = {k: v for k, v in row.items() if k in PROFILE_COLUMNS.split(",")}
+    for key in ("skills", "hackathons", "internships", "certifications", "projects", "preferred_roles"):
+        data[key] = data.get(key) or []
+    data["education"] = data.get("education") or ""
+    return CandidateProfile.model_validate(data)

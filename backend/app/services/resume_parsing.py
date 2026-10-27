@@ -6,7 +6,7 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field
 
 from app.config import Settings
-from app.models.contract import Entry, ExtractedSkillList, ResumeDetails
+from app.models.contract import Entry, ExtractedSkillList, ResumeDetails, clean_email
 from app.services.extraction import ExtractionSpec, dedupe_by_name, run_extraction, short_evidence, to_category
 from app.services.llm import StructuredLLM
 from app.services.normalization import normalize_name
@@ -33,10 +33,14 @@ class ExperienceOut(EntryOut):
 
 
 class ResumeOut(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = Field(default=None, description="Only if an address appears in the resume")
     skills: list[ResumeSkillOut]
     education: str = ""
     projects: list[EntryOut] = Field(default_factory=list)
     experience: list[ExperienceOut] = Field(default_factory=list)
+    certifications: list[EntryOut] = Field(default_factory=list)
+    preferred_roles: list[str] = Field(default_factory=list)
 
 
 def _entry(out: EntryOut, skill_names: dict[str, str], kind: Optional[str] = None) -> Entry:
@@ -55,6 +59,14 @@ def _entry(out: EntryOut, skill_names: dict[str, str], kind: Optional[str] = Non
                  duration_months=duration, kind=kind)
 
 
+def _safe_email(value: Optional[str]) -> Optional[str]:
+    """A malformed address from the LLM is dropped rather than failing the whole extraction."""
+    try:
+        return clean_email(value)
+    except ValueError:
+        return None
+
+
 def _to_contract(out: ResumeOut, source_file: str) -> ExtractedSkillList:
     skills = dedupe_by_name([
         {
@@ -70,12 +82,16 @@ def _to_contract(out: ResumeOut, source_file: str) -> ExtractedSkillList:
         education=" ".join(out.education.split()),
         projects=[_entry(p, names) for p in out.projects if p.title.strip()],
         experience=[_entry(e, names, e.kind) for e in out.experience if e.title.strip()],
+        name=(out.name or "").strip() or None,
+        email=_safe_email(out.email),
+        certifications=[_entry(c, names) for c in out.certifications if c.title.strip()],
+        preferred_roles=list(dict.fromkeys(r.strip() for r in out.preferred_roles if r.strip())),
     )
     return ExtractedSkillList(source_type="resume", source_file=source_file, skills=skills, details=details)
 
 
 SPEC = ExtractionSpec(
-    source_type="resume", prompt_version="resume_extraction_v1", schema=ResumeOut, to_contract=_to_contract
+    source_type="resume", prompt_version="resume_extraction_v2", schema=ResumeOut, to_contract=_to_contract
 )
 
 
