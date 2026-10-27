@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router"
 
-import { AppShell, PageHeading } from "@/components/app/AppShell"
+import { AppShell, NextStep, PageHeading } from "@/components/app/AppShell"
 import { DummyBanner } from "@/components/app/DummyBanner"
 import { GapRadar } from "@/components/app/GapRadar"
 import { GapTable } from "@/components/app/GapTable"
@@ -10,6 +10,7 @@ import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app
 import { inputClass } from "@/components/profile/fields"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ProfileSummary } from "@/lib/api"
+import { useFlow } from "@/lib/flowState"
 import type { CompaniesResponse, TalentCheckResult } from "@/types/contract"
 
 type Run = { status: "idle" } | { status: "loading" } | { status: "done"; result: TalentCheckResult } | { status: "error"; message: string }
@@ -19,9 +20,10 @@ export default function TalentCheck() {
   const [profiles, setProfiles] = useState<ProfileSummary[] | null>(null)
   const [companies, setCompanies] = useState<CompaniesResponse | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [companyKey, setCompanyKey] = useState("")
+  const { flow, update } = useFlow()
   const [run, setRun] = useState<Run>({ status: "idle" })
-  const profileId = params.get("id") ?? profiles?.[0]?.id ?? ""
+  const profileId = params.get("id") ?? flow.profileId ?? profiles?.[0]?.id ?? ""
+  const companyKey = flow.companyKey ?? ""
 
   useEffect(() => {
     Promise.all([api.profiles(), api.companies()]).then(
@@ -37,6 +39,7 @@ export default function TalentCheck() {
     setRun({ status: "loading" })
     try {
       setRun({ status: "done", result: await api.talentCheck(profileId, companyKey) })
+      update({ profileId, talentCheckDone: true })
     } catch (e) {
       setRun({ status: "error", message: e instanceof ApiError ? e.message : "Unexpected error. Check the backend logs." })
     }
@@ -62,14 +65,14 @@ export default function TalentCheck() {
           <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
             <div>
               <label htmlFor="tc-profile" className="mb-1.5 block text-sm font-medium">Profile</label>
-              <select id="tc-profile" className={inputClass} value={profileId} disabled={!profiles} onChange={(e) => { setParams({ id: e.target.value }); setRun({ status: "idle" }) }}>
+              <select id="tc-profile" className={inputClass} value={profileId} disabled={!profiles} onChange={(e) => { setParams({ id: e.target.value }); update({ profileId: e.target.value, talentCheckDone: false, skillMatchDone: false }); setRun({ status: "idle" }) }}>
                 {!profiles && <option>Loading…</option>}
                 {profiles?.map((p) => <option key={p.id} value={p.id}>{p.name}{p.email ? ` (${p.email})` : ""}</option>)}
               </select>
             </div>
             <div>
               <label htmlFor="tc-company" className="mb-1.5 block text-sm font-medium">Company</label>
-              <select id="tc-company" className={inputClass} value={companyKey} disabled={!companies} onChange={(e) => { setCompanyKey(e.target.value); setRun({ status: "idle" }) }}>
+              <select id="tc-company" className={inputClass} value={companyKey} disabled={!companies} onChange={(e) => { update({ companyKey: e.target.value || undefined }); setRun({ status: "idle" }) }}>
                 <option value="">{companies ? "Choose a company…" : "Loading…"}</option>
                 {companies?.companies.map((c) => <option key={c.company_key} value={c.company_key}>{c.display_name}</option>)}
               </select>
@@ -103,6 +106,7 @@ export default function TalentCheck() {
                 Scoring {run.result.scoring_version}. Estimated levels depend on extraction quality and cannot tell a deep project from a small one.
               </p>
             </Panel>
+            <NextStep to="/match" label="Next: Skill Match" />
           </div>
         )}
       </div>

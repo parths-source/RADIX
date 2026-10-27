@@ -1,11 +1,14 @@
-import { AppShell, FallbackBadge, PageHeading } from "@/components/app/AppShell"
+import { AppShell, FallbackBadge, NextStep, PageHeading } from "@/components/app/AppShell"
 import { SkillChips, SkillLegend } from "@/components/app/SkillChips"
 import { SourcePicker } from "@/components/app/SourcePicker"
 import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app/StateViews"
+import { useFlow } from "@/lib/flowState"
 import { useExtraction } from "@/lib/useExtraction"
 
 export default function AnalyzeJD() {
-  const { state, run } = useExtraction("jd")
+  const { flow, update } = useFlow()
+  // A new JD invalidates the last Skill Match result.
+  const { state, run } = useExtraction("jd", flow.jdExtractionId, (r) => update({ jdExtractionId: r.id ?? undefined, skillMatchDone: false }))
   const busy = state.status === "loading"
 
   return (
@@ -40,6 +43,7 @@ export default function AnalyzeJD() {
               )}
             </Panel>
           )}
+          {state.status === "done" && <NextStep to="/resume" label="Next: parse a resume" />}
         </div>
       </div>
     </AppShell>

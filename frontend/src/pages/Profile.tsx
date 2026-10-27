@@ -4,7 +4,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { useNavigate, useSearchParams } from "react-router"
 import { toast } from "sonner"
 
-import { AppShell, PageHeading } from "@/components/app/AppShell"
+import { AppShell, NextStep, PageHeading } from "@/components/app/AppShell"
 import { FileDrop } from "@/components/app/FileDrop"
 import { ErrorPanel, LoadingSkeleton } from "@/components/app/StateViews"
 import { EntriesEditor } from "@/components/profile/EntriesEditor"
@@ -12,6 +12,7 @@ import { Field, FormSection, inputClass } from "@/components/profile/fields"
 import { SkillsEditor } from "@/components/profile/SkillsEditor"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ProfileSummary } from "@/lib/api"
+import { useFlow } from "@/lib/flowState"
 import { fromForm, profileSchema, toForm, type ProfileForm } from "@/lib/profileForm"
 
 type Load = { status: "loading" } | { status: "ready"; note?: string } | { status: "error"; message: string }
@@ -21,8 +22,11 @@ const errorMessage = (e: unknown) => (e instanceof ApiError ? e.message : "Unexp
 export default function Profile() {
   const [params, setParams] = useSearchParams()
   const navigate = useNavigate()
-  const profileId = params.get("id")
-  const fromId = params.get("from") // a resume extraction to pre-fill or merge from
+  const { flow, update } = useFlow()
+  // URL first, then the flow state; ?new starts an empty profile.
+  const isNew = params.has("new")
+  const profileId = params.get("id") ?? (isNew || params.has("from") ? null : (flow.profileId ?? null))
+  const fromId = params.get("from") ?? (isNew ? null : (flow.resumeExtractionId ?? null)) // resume extraction to pre-fill or merge from
   const form = useForm<ProfileForm>({ resolver: zodResolver(profileSchema), defaultValues: toForm(), mode: "onBlur" })
   const { register, handleSubmit, reset, setValue, control, formState } = form
   // Loading is derived: the stored result belongs to one URL; a different URL means "loading".
@@ -64,7 +68,9 @@ export default function Profile() {
       const result = profileId ? await api.updateProfile(profileId, body) : await api.createProfile(body, fromId ?? undefined)
       reset(toForm(result))
       toast.success("Profile saved")
-      if (!profileId && result.id) setParams(fromId ? { id: result.id, from: fromId } : { id: result.id })
+      // Saved changes make earlier Talent Check / Skill Match results stale.
+      update({ profileId: result.id ?? undefined, talentCheckDone: false, skillMatchDone: false })
+      if (!profileId && result.id) setParams({ id: result.id })
     } catch (e) {
       toast.error(`Save profile failed: ${errorMessage(e)}`)
     } finally {
@@ -113,7 +119,12 @@ export default function Profile() {
             id="saved-profile"
             className={inputClass}
             value={profileId ?? ""}
-            onChange={(e) => navigate(e.target.value ? `/profile?id=${e.target.value}` : "/profile")}
+            onChange={(e) => {
+              if (e.target.value) {
+                update({ profileId: e.target.value, talentCheckDone: false, skillMatchDone: false })
+                navigate(`/profile?id=${e.target.value}`)
+              } else navigate("/profile?new=1")
+            }}
           >
             <option value="">{saved.length ? "New profile" : "No saved profiles yet"}</option>
             {saved.map((p) => (
@@ -183,6 +194,7 @@ export default function Profile() {
                 {saving ? "Saving…" : "Save profile"}
               </Button>
             </div>
+            {profileId && !formState.isDirty && <NextStep to="/talent-check" label="Next: run Talent Check" />}
           </form>
         </FormProvider>
       )}

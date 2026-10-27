@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Route, Routes } from "react-router"
 import { Toaster } from "sonner"
 
 import { ShaderBackground } from "@/components/ui/kk"
+import { FlowProvider } from "@/lib/flowState"
 
 const AnalyzeJD = lazy(() => import("@/pages/AnalyzeJD"))
 const ParseResume = lazy(() => import("@/pages/ParseResume"))
@@ -25,19 +26,21 @@ function LandingPlaceholder() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<div className="app-backdrop min-h-svh" />}>
-        <Routes>
-          <Route path="/" element={<LandingPlaceholder />} />
-          <Route path="/analyze" element={<AnalyzeJD />} />
-          <Route path="/resume" element={<ParseResume />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/talent-check" element={<TalentCheck />} />
-          <Route path="/match" element={<SkillMatch />} />
-        </Routes>
-      </Suspense>
-      <Toaster theme="dark" position="top-center" richColors />
-    </BrowserRouter>
+    <FlowProvider>
+      <BrowserRouter>
+        <Suspense fallback={<div className="app-backdrop min-h-svh" />}>
+          <Routes>
+            <Route path="/" element={<LandingPlaceholder />} />
+            <Route path="/analyze" element={<AnalyzeJD />} />
+            <Route path="/resume" element={<ParseResume />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/talent-check" element={<TalentCheck />} />
+            <Route path="/match" element={<SkillMatch />} />
+          </Routes>
+        </Suspense>
+        <Toaster theme="dark" position="top-center" richColors />
+      </BrowserRouter>
+    </FlowProvider>
   )
 }
 

@@ -5,7 +5,7 @@ Flow: pick a JD → parse a resume → build a profile → Talent Check → Skil
 
 Scope, data contract, scoring and build order: [PLAN.md](PLAN.md). Decisions: [docs/DECISIONS.md](docs/DECISIONS.md).
 
-**Status:** Phase 6 (Skill Matching) complete. All five modules work from the API and from the `/analyze`, `/resume`, `/profile`, `/talent-check` and `/match` screens; Phase 7 wires them into one guided flow. Phase 2 (landing hero) has not started; `/` is a placeholder.
+**Status:** Phase 7 (integration) complete. The five modules run as one guided flow with a stepper; the flow survives a page refresh. Phase 2 (landing hero) has not started: `/` is a placeholder with a Get Started link. Phase 8 (hardening and demo script) is next. Phase 2 (landing hero) has not started; `/` is a placeholder.
 
 ## Requirements
 
@@ -72,7 +72,18 @@ cd backend && .venv/bin/uvicorn app.main:app --reload   # http://localhost:8000/
 cd frontend && npm run dev                               # http://localhost:5173
 ```
 
-## API (so far)
+## Run the demo
+
+1. Start both servers (see Run) and open http://localhost:5173/analyze.
+2. **Analyze JD:** pick a sample (e.g. Google LLC Data Scientist) and press "Analyze JD".
+3. **Parse resume:** pick a sample (e.g. Karthik Subramaniam) and press "Parse resume", then "Next: build the profile".
+4. **Build profile:** the form is pre-filled from the resume. Check it, link skills to projects and internships, press "Save profile".
+5. **Talent Check:** choose a company and press "Run Talent Check" (placeholder company data: the banner says so).
+6. **Skill Match:** the analyzed JD and saved profile are pre-selected; press "Match". Missing skills come first.
+
+The stepper marks each step done; "Start over" forgets the chosen JD, resume and profile (saved data stays in Supabase). If Gemini is down, sample files fall back to saved extractions in `data/fixtures/` ("Using saved extraction"). A live extraction can differ slightly from the saved one, so scores can move a few points between runs.
+
+## API
 
 | Method | Path | Purpose |
 |---|---|---|

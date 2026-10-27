@@ -8,6 +8,7 @@ import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app
 import { inputClass } from "@/components/profile/fields"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ExtractionSummary, type ProfileSummary } from "@/lib/api"
+import { useFlow } from "@/lib/flowState"
 import type { SkillMatchResult } from "@/types/contract"
 
 type Run = { status: "idle" } | { status: "loading" } | { status: "done"; result: SkillMatchResult } | { status: "error"; message: string }
@@ -20,8 +21,9 @@ export default function SkillMatch() {
   const [jds, setJds] = useState<ExtractionSummary[] | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [run, setRun] = useState<Run>({ status: "idle" })
-  const profileId = params.get("id") ?? profiles?.[0]?.id ?? ""
-  const jdId = params.get("jd") ?? jds?.[0]?.id ?? ""
+  const { flow, update } = useFlow()
+  const profileId = params.get("id") ?? flow.profileId ?? profiles?.[0]?.id ?? ""
+  const jdId = params.get("jd") ?? flow.jdExtractionId ?? jds?.[0]?.id ?? ""
 
   useEffect(() => {
     Promise.all([api.profiles(), api.extractions("jd")]).then(
@@ -35,6 +37,7 @@ export default function SkillMatch() {
 
   function choose(key: "id" | "jd", value: string) {
     setParams({ id: profileId, jd: jdId, [key]: value })
+    update(key === "id" ? { profileId: value, talentCheckDone: false, skillMatchDone: false } : { jdExtractionId: value, skillMatchDone: false })
     setRun({ status: "idle" })
   }
 
@@ -42,6 +45,7 @@ export default function SkillMatch() {
     setRun({ status: "loading" })
     try {
       setRun({ status: "done", result: await api.skillMatch(profileId, jdId) })
+      update({ profileId, jdExtractionId: jdId, skillMatchDone: true })
     } catch (e) {
       setRun({ status: "error", message: e instanceof ApiError ? e.message : "Unexpected error. Check the backend logs." })
     }

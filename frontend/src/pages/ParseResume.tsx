@@ -1,14 +1,16 @@
 import { Link } from "react-router"
 
-import { AppShell, FallbackBadge, PageHeading } from "@/components/app/AppShell"
+import { AppShell, FallbackBadge, NextStep, PageHeading } from "@/components/app/AppShell"
 import { SkillChips, SkillLegend } from "@/components/app/SkillChips"
 import { SourcePicker } from "@/components/app/SourcePicker"
 import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app/StateViews"
+import { useFlow } from "@/lib/flowState"
 import { useExtraction } from "@/lib/useExtraction"
 import type { Entry } from "@/types/contract"
 
 export default function ParseResume() {
-  const { state, run } = useExtraction("resume")
+  const { flow, update } = useFlow()
+  const { state, run } = useExtraction("resume", flow.resumeExtractionId, (r) => update({ resumeExtractionId: r.id ?? undefined }))
   const busy = state.status === "loading"
 
   return (
@@ -38,10 +40,10 @@ export default function ParseResume() {
                     {state.result.status === "fallback" && <FallbackBadge />}
                     {state.result.id && (
                       <Link
-                        to={`/profile?from=${state.result.id}`}
+                        to={flow.profileId ? `/profile?id=${flow.profileId}&from=${state.result.id}` : `/profile?from=${state.result.id}`}
                         className="rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white hover:bg-brand/90 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
                       >
-                        Build profile from this resume
+                        {flow.profileId ? "Merge into the profile" : "Build profile from this resume"}
                       </Link>
                     )}
                   </div>
@@ -73,6 +75,12 @@ export default function ParseResume() {
                     <p className="text-sm text-mist/80">{state.result.details.preferred_roles?.join(", ") || "None listed."}</p>
                   </Section>
                 </Panel>
+              )}
+              {state.result.id && (
+                <NextStep
+                  to={flow.profileId ? `/profile?id=${flow.profileId}&from=${state.result.id}` : `/profile?from=${state.result.id}`}
+                  label={flow.profileId ? "Next: merge into the profile" : "Next: build the profile"}
+                />
               )}
             </>
           )}
