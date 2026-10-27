@@ -141,7 +141,9 @@ class Repository:
         return result
 
     def save_skill_match(self, profile_id: str, jd_extraction_id: str, result: SkillMatchResult) -> SkillMatchResult:
-        row = {"profile_id": profile_id, "jd_extraction_id": jd_extraction_id, **result.model_dump(mode="json")}
+        # llm_judge (D12) describes this response only; the 0001 schema has no column for it.
+        row = {"profile_id": profile_id, "jd_extraction_id": jd_extraction_id,
+               **result.model_dump(mode="json", exclude={"llm_judge"})}
         self._run("save_skill_match", lambda: self.client.table("skill_match_results").insert(row).execute())
         return result
 

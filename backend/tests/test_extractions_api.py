@@ -30,7 +30,8 @@ def use(repo, tmp_path):
 
     def _use(llm, fixtures=None):
         for name, data in (fixtures or {}).items():
-            (tmp_path / "fixtures" / name).write_text(json.dumps(data))
+            meta = {"model": "test-model", "prompt_version": "test", "generated_at": "2026-10-28"}
+            (tmp_path / "fixtures" / name).write_text(json.dumps({"_meta": meta, "extraction": data}))
         app.dependency_overrides[get_llm] = lambda: llm
         app.dependency_overrides[get_repository] = lambda: repo
         app.dependency_overrides[get_settings] = lambda: Settings(_env_file=None, data_dir=tmp_path)

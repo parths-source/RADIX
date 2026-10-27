@@ -1,0 +1,108 @@
+{
+  "_meta": {
+    "model": "gemini-3.5-flash",
+    "prompt_version": "jd_extraction_v1",
+    "generated_at": "2026-10-28",
+    "note": "Saved unedited from a real extractor run."
+  },
+  "extraction": {
+    "source_type": "jd",
+    "source_file": "microsoft_software_engineer.docx",
+    "company": "Microsoft Corporation",
+    "role": "Software Engineer",
+    "skills": [
+      {
+        "skill_name": "Data Structures and Algorithms",
+        "category_code": "DSA",
+        "evidence": "Strong data structures and algorithms fundamentals",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Programming",
+        "category_code": "COD",
+        "evidence": "Practical coding skills",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Operating Systems",
+        "category_code": "OS",
+        "evidence": "Working knowledge of operating systems",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Computer Networks",
+        "category_code": "NETW",
+        "evidence": "core networking (REST APIs, timeouts, request lifecycle)",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "REST APIs",
+        "category_code": "SWE",
+        "evidence": "core networking (REST APIs, timeouts, request lifecycle)",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "System Design",
+        "category_code": "SYSD",
+        "evidence": "Ability to design at the system level",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Object-Oriented Design",
+        "category_code": "OOD",
+        "evidence": "Understanding of object-oriented design and SOLID principles",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "SOLID Principles",
+        "category_code": "OOD",
+        "evidence": "Understanding of object-oriented design and SOLID principles",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Software Testing",
+        "category_code": "SWE",
+        "evidence": "a real testing strategy",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Communication",
+        "category_code": "COMM",
+        "evidence": "Strong communication — able to describe a hard problem",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Agile",
+        "category_code": "SWE",
+        "evidence": "Participate in Agile ceremonies",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Code Review",
+        "category_code": "SWE",
+        "evidence": "hold a high bar in code review",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Azure",
+        "category_code": "CLOUD",
+        "evidence": "Exposure to cloud infrastructure (Azure or similar)",
+        "confidence": "high",
+        "requirement_type": "preferred"
+      }
+    ],
+    "status": "ok"
+  }
+}

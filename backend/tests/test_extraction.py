@@ -20,7 +20,8 @@ def settings(tmp_path):
 
 
 def _write_fixture(settings, name, data):
-    (settings.data_dir / "fixtures" / name).write_text(json.dumps(data))
+    meta = {"model": "test-model", "prompt_version": "test", "generated_at": "2026-10-28"}
+    (settings.data_dir / "fixtures" / name).write_text(json.dumps({"_meta": meta, "extraction": data}))
 
 
 JD_FIXTURE = {"source_type": "jd", "source_file": "google_swe.docx", "company": "Google LLC", "role": "SWE",

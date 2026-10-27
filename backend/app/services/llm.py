@@ -16,7 +16,6 @@ from app.config import Settings
 logger = logging.getLogger(__name__)
 
 SUPPORTED_PROVIDERS = ("google",)
-LLM_TIMEOUT_SECONDS = 90
 
 
 @dataclass
@@ -25,6 +24,7 @@ class LLMResult:
     error: str | None = None
     input_tokens: int | None = None
     output_tokens: int | None = None
+    model: str | None = None  # the model that actually answered (main or fallback)
 
 
 # (schema, system prompt, user message) -> LLMResult. Raises on transport/API errors.
@@ -50,15 +50,17 @@ def make_structured_llm(settings: Settings) -> StructuredLLM | None:
     model_names = [settings.llm_model]
     if settings.llm_fallback_model and settings.llm_fallback_model != settings.llm_model:
         model_names.append(settings.llm_fallback_model)
+    # With a fallback configured, the main model gets no retry: the fallback is the retry.
+    # The last model gets one retry for a transient 429/503.
     models = [
         ChatGoogleGenerativeAI(
             model=name,
             google_api_key=settings.llm_api_key,
             temperature=0,
-            max_retries=3,  # transient 429/503s are common under load
-            timeout=LLM_TIMEOUT_SECONDS,
+            max_retries=1 if i == len(model_names) - 1 else 0,
+            timeout=settings.llm_timeout_seconds,
         )
-        for name in model_names
+        for i, name in enumerate(model_names)
     ]
 
     def invoke(schema: type[BaseModel], system: str, user: str) -> tuple[str, dict]:
@@ -88,6 +90,7 @@ def make_structured_llm(settings: Settings) -> StructuredLLM | None:
             error=str(error)[:1000] if error else None,
             input_tokens=usage.get("input_tokens"),
             output_tokens=usage.get("output_tokens"),
+            model=used_model,
         )
 
     return call

@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     llm_model: str = ""
     llm_api_key: str = ""
     llm_fallback_model: str = ""  # optional; tried when the main model errors (e.g. 503 overload)
+    llm_timeout_seconds: int = 40  # per request, so a hung call falls back quickly
     enable_llm_match: bool = False
 
     frontend_origin: str = "http://localhost:5173"

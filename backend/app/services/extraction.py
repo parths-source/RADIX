@@ -119,13 +119,19 @@ def run_extraction(
     return _fallback(spec, source_file, settings, "invalid_llm_output")
 
 
+def load_fixture(path: Path) -> tuple[dict, ExtractedSkillList]:
+    """A fixture is {"_meta": {model, prompt_version, generated_at, ...}, "extraction": ExtractedSkillList}."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data["_meta"], ExtractedSkillList.model_validate(data["extraction"])
+
+
 def _fallback(spec: ExtractionSpec, source_file: str, settings: Settings, reason: str) -> ExtractedSkillList:
     fixture = settings.data_dir / "fixtures" / f"{Path(source_file).stem}.json"
     if fixture.is_file():
-        data = json.loads(fixture.read_text(encoding="utf-8"))
-        extraction = ExtractedSkillList.model_validate(data)
+        meta, extraction = load_fixture(fixture)
         if extraction.source_type == spec.source_type:
-            logger.info("extraction_fallback module=%s reason=%s fixture=%s", spec.source_type, reason, fixture.name)
+            logger.info("extraction_fallback module=%s reason=%s fixture=%s fixture_model=%s",
+                        spec.source_type, reason, fixture.name, meta.get("model"))
             return extraction.model_copy(update={"id": None, "source_file": source_file, "status": "fallback"})
     messages = {
         "llm_not_configured": "No LLM is configured and there is no saved extraction for this file.",

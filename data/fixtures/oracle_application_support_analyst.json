@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "model": "gemini-3.5-flash",
+    "prompt_version": "jd_extraction_v1",
+    "generated_at": "2026-10-28",
+    "note": "Saved unedited from a real extractor run."
+  },
+  "extraction": {
+    "source_type": "jd",
+    "source_file": "oracle_application_support_analyst.docx",
+    "company": "Oracle Financial Services Software Limited",
+    "role": "Application Support Analyst",
+    "skills": [
+      {
+        "skill_name": "SQL",
+        "category_code": "SQL",
+        "evidence": "Comfort with basic SQL — simple SELECT/WHERE queries",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Operating Systems",
+        "category_code": "OS",
+        "evidence": "Operating systems and Linux fundamentals",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Linux",
+        "category_code": "OS",
+        "evidence": "Operating systems and Linux fundamentals",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Computer Networks",
+        "category_code": "NETW",
+        "evidence": "Basic networking knowledge",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Quantitative Reasoning",
+        "category_code": "APTI",
+        "evidence": "Strong quantitative and logical reasoning",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Logical Reasoning",
+        "category_code": "APTI",
+        "evidence": "Strong quantitative and logical reasoning",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Communication",
+        "category_code": "COMM",
+        "evidence": "Excellent communication skills",
+        "confidence": "high",
+        "requirement_type": "required"
+      },
+      {
+        "skill_name": "Ticketing Systems",
+        "category_code": "SWE",
+        "evidence": "Prior exposure to a ticketing/incident system",
+        "confidence": "high",
+        "requirement_type": "preferred"
+      },
+      {
+        "skill_name": "System Administration",
+        "category_code": "OTHER",
+        "evidence": "coursework in networking or systems administration",
+        "confidence": "high",
+        "requirement_type": "preferred"
+      }
+    ],
+    "status": "ok"
+  }
+}

@@ -138,12 +138,49 @@ def test_llm_judge_cannot_invent_candidate_skills():
 
 
 @pytest.mark.parametrize("failure", [RuntimeError("503"), LLMResult(parsed=None, error="bad json")])
-def test_llm_judge_failure_falls_back_to_rule_result(failure):
+def test_llm_judge_failure_falls_back_to_rule_result_and_says_so(failure):
     result = match([s("Python")], s("Python"), s("Programming"), llm=FakeLLM(failure))
     assert result.match_score == 50 and result.missing_skills[0].reason == "No matching skill in profile"
+    assert result.llm_judge == "failed"
+
+
+def test_llm_judge_status_off_and_used():
+    assert match([s("Python")], s("Python")).llm_judge == "off"
+    used = match([s("Python")], s("Programming"), llm=FakeLLM(_verdicts(("Programming", "Python", "language"))))
+    assert used.llm_judge == "used"
 
 
 def test_llm_judge_not_called_when_everything_matched():
     llm = FakeLLM()
     match([s("Python")], s("Python"), llm=llm)
     assert llm.calls == []
+
+
+# D13: concept synonyms (data/skill_aliases.json v0.2)
+
+@pytest.mark.parametrize(
+    "jd_name, candidate_name",
+    [
+        ("Operating Systems", "OS"), ("Computer Networks", "Networking"), ("Computer Networks", "Networking Fundamentals"),
+        ("Object-Oriented Design", "OOP"), ("Object-Oriented Design", "Object-Oriented Programming"),
+        ("Data Structures and Algorithms", "Data Structures & Algorithms"), ("Data Structures and Algorithms", "DSA"),
+        ("System Design", "Systems Design"), ("Software Testing", "Testing"), ("CI/CD", "Continuous Integration"),
+        ("Communication", "Communication Skills"), ("APIs", "REST APIs"), ("Statistics", "Applied Statistics"),
+        ("Ticketing Systems", "Ticketing Tools"),
+    ],
+)
+def test_concept_synonyms_match_by_alias(jd_name, candidate_name):
+    result = match([s(candidate_name)], s(jd_name))
+    assert matched_types(result) == {jd_name: "alias"} and result.match_score == 100
+
+
+@pytest.mark.parametrize(
+    "jd_name, candidate_name",
+    [
+        ("Computer Networks", "Neural Networks"), ("Operating Systems", "iOS"), ("Software Testing", "A/B testing"),
+        ("Git", "Version Control"), ("Kubernetes", "Cloud"), ("AWS", "Azure"), ("Databases", "NoSQL"),
+        ("JavaScript", "Java"), ("C++", "C"), ("NoSQL", "SQL"),
+    ],
+)
+def test_synonyms_do_not_create_false_matches(jd_name, candidate_name):
+    assert match([s(candidate_name)], s(jd_name)).matched_skills == []

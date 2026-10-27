@@ -1,0 +1,106 @@
+{
+  "_meta": {
+    "model": "gemini-3.5-flash",
+    "prompt_version": "resume_extraction_v2",
+    "generated_at": "2026-10-28",
+    "note": "Saved unedited from a real extractor run."
+  },
+  "extraction": {
+    "source_type": "resume",
+    "source_file": "priya_menon.docx",
+    "skills": [
+      {
+        "skill_name": "Java",
+        "category_code": "COD",
+        "evidence": "Java",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "SQL",
+        "category_code": "SQL",
+        "evidence": "SQL (basic)",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "MySQL",
+        "category_code": "SQL",
+        "evidence": "a MySQL backend",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "Linux",
+        "category_code": "OS",
+        "evidence": "Linux basics",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Networking",
+        "category_code": "NETW",
+        "evidence": "Networking fundamentals",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "MS Excel",
+        "category_code": "OTHER",
+        "evidence": "MS Excel",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Ticketing Tools",
+        "category_code": "OTHER",
+        "evidence": "exposure to ticketing tools",
+        "confidence": "medium"
+      }
+    ],
+    "details": {
+      "education": "B.Tech, Information Technology, Class of 2026 — CGPA 7.4 / 10",
+      "projects": [
+        {
+          "title": "Student Attendance Tracker",
+          "description": "Built a simple student attendance tracker using Java and a MySQL backend for a college project.",
+          "skills_used": [
+            "Java",
+            "MySQL",
+            "SQL"
+          ]
+        },
+        {
+          "title": "College Helpdesk Simulation Project",
+          "description": "Contributed to a college helpdesk simulation project, resolving simulated tickets and logging resolutions.",
+          "skills_used": [
+            "Ticketing Tools"
+          ]
+        }
+      ],
+      "experience": [
+        {
+          "title": "IT Support Desk Summer Intern",
+          "description": "Handled first-level troubleshooting and escalations at a local business.",
+          "skills_used": [],
+          "kind": "internship"
+        },
+        {
+          "title": "12-Hour Campus Hackathon",
+          "description": "Participated as a non-finalist in a 12-hour campus hackathon.",
+          "skills_used": [],
+          "kind": "hackathon"
+        }
+      ],
+      "name": "Priya Menon",
+      "certifications": [
+        {
+          "title": "Cisco Networking Basics",
+          "description": "Online course",
+          "skills_used": [
+            "Networking"
+          ]
+        }
+      ],
+      "preferred_roles": [
+        "Application Support Analyst",
+        "Associate Software Engineer"
+      ]
+    },
+    "status": "ok"
+  }
+}

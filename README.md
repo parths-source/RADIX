@@ -42,12 +42,13 @@ In `backend/.env`:
 
 ```
 LLM_PROVIDER=google
-LLM_MODEL=gemini-3.8-flash
-LLM_FALLBACK_MODEL=gemini-3.5-flash
+LLM_MODEL=gemini-3.5-flash
+LLM_FALLBACK_MODEL=gemini-3.8-flash
 LLM_API_KEY=<your key>
+LLM_TIMEOUT_SECONDS=40
 ```
 
-If the main model fails (Gemini often returns 503 "high demand"), the call is retried, then sent to `LLM_FALLBACK_MODEL`, then answered from a saved extraction in `data/fixtures/<file stem>.json` (shown as "Using saved extraction"), otherwise it fails with a clear 502. **The Gemini free tier allows 20 requests per day per model**; each extraction is 1 request (2 if the first answer is invalid). Enable billing on the key, or seed fixtures, before a demo.
+Each request times out after `LLM_TIMEOUT_SECONDS`. If the main model fails or hangs (Gemini often returns 503 "high demand"), the call goes straight to `LLM_FALLBACK_MODEL` (one retry there), then answered from a saved extraction in `data/fixtures/<file stem>.json` (shown as "Using saved extraction"), otherwise it fails with a clear 502. **The Gemini free tier allows 20 requests per day per model**; each extraction is 1 request (2 if the first answer is invalid). Enable billing on the key, or seed fixtures, before a demo.
 
 ### Company data
 

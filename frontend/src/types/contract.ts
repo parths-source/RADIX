@@ -16,6 +16,7 @@ export type ExtractionStatus = "ok" | "fallback" | "llm_failed"
 export type MatchType = "exact" | "alias" | "fuzzy" | "llm"
 export type EvidenceStatus = "none" | "claimed_only" | "evidenced"
 export type ExperienceKind = "hackathon" | "internship"
+export type LLMJudgeStatus = "off" | "used" | "failed"
 
 export interface Skill {
   skill_name: string
@@ -105,6 +106,7 @@ export interface SkillMatchResult {
   matched_skills: MatchedSkill[]
   missing_skills: MissingSkill[]
   scoring_version?: string | null // (+)
+  llm_judge?: LLMJudgeStatus | null // (+) D12: "failed" -> rule-based score only
 }
 
 // API envelopes that are not part of the module contract.

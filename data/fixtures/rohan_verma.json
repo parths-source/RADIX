@@ -1,0 +1,122 @@
+{
+  "_meta": {
+    "model": "gemini-3.5-flash",
+    "prompt_version": "resume_extraction_v2",
+    "generated_at": "2026-10-28",
+    "note": "Saved unedited from a real extractor run."
+  },
+  "extraction": {
+    "source_type": "resume",
+    "source_file": "rohan_verma.docx",
+    "skills": [
+      {
+        "skill_name": "C++",
+        "category_code": "COD",
+        "evidence": "C++",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Python",
+        "category_code": "COD",
+        "evidence": "Python",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "SQL",
+        "category_code": "SQL",
+        "evidence": "SQL",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Data Structures & Algorithms",
+        "category_code": "DSA",
+        "evidence": "Data Structures & Algorithms",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "System Design",
+        "category_code": "SYSD",
+        "evidence": "System Design",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "Object-Oriented Design",
+        "category_code": "OOD",
+        "evidence": "Object-Oriented Design",
+        "confidence": "high"
+      },
+      {
+        "skill_name": "Operating Systems",
+        "category_code": "OS",
+        "evidence": "Operating Systems",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Machine Learning",
+        "category_code": "AI",
+        "evidence": "basic Machine Learning",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Git",
+        "category_code": "SWE",
+        "evidence": "Git",
+        "confidence": "medium"
+      },
+      {
+        "skill_name": "Docker",
+        "category_code": "SWE",
+        "evidence": "Docker",
+        "confidence": "medium"
+      }
+    ],
+    "details": {
+      "education": "B.Tech, Computer Science and Engineering, Class of 2026 — CGPA 9.1 / 10",
+      "projects": [
+        {
+          "title": "Scalable Notification Service",
+          "description": "Designed and built a scalable notification service using pub-sub architecture and horizontally-scalable workers. Documented the system using architecture diagrams.",
+          "skills_used": [
+            "System Design"
+          ]
+        },
+        {
+          "title": "Recommendation Engine",
+          "description": "Built a recommendation engine using collaborative filtering on a movie-ratings dataset. Evaluated model performance with precision and recall metrics.",
+          "skills_used": [
+            "Machine Learning"
+          ]
+        },
+        {
+          "title": "Technical Blog Series on OOD",
+          "description": "Wrote a technical blog series analyzing object-oriented design patterns used in real-world systems.",
+          "skills_used": [
+            "Object-Oriented Design"
+          ]
+        }
+      ],
+      "experience": [
+        {
+          "title": "National Inter-College Hackathon",
+          "description": "Won national inter-college hackathon by building a real-time collaborative document editor.",
+          "skills_used": [],
+          "kind": "hackathon"
+        },
+        {
+          "title": "Software Engineering Intern",
+          "description": "Shipped a feature end-to-end at a Series-B startup, including automated tests and continuous integration.",
+          "skills_used": [],
+          "kind": "internship"
+        }
+      ],
+      "name": "Rohan Verma",
+      "certifications": [],
+      "preferred_roles": [
+        "Software Engineer",
+        "Data Scientist",
+        "Backend Engineer"
+      ]
+    },
+    "status": "ok"
+  }
+}

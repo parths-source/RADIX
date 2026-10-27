@@ -42,6 +42,7 @@ ExtractionStatus = Literal["ok", "fallback", "llm_failed"]
 MatchType = Literal["exact", "alias", "fuzzy", "llm"]
 EvidenceStatus = Literal["none", "claimed_only", "evidenced"]
 ExperienceKind = Literal["hackathon", "internship"]
+LLMJudgeStatus = Literal["off", "used", "failed"]
 
 NonEmptyStr = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 Level = Annotated[int, Field(ge=1, le=10)]
@@ -186,3 +187,5 @@ class SkillMatchResult(ContractModel):
     matched_skills: list[MatchedSkill] = Field(default_factory=list)
     missing_skills: list[MissingSkill] = Field(default_factory=list)
     scoring_version: Optional[str] = None  # (+)
+    # (+) D12: "failed" means the optional LLM judge errored and this is the rule-based score only.
+    llm_judge: Optional[LLMJudgeStatus] = None

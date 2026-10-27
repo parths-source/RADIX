@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "version": "0.1",
-    "note": "Keys and values are normalized names (lowercase, trimmed). Map variants to one canonical name. gcp, aws and azure are distinct skills: never alias them to each other or to 'cloud'."
+    "version": "0.2",
+    "note": "Keys and values are normalized names (lowercase, trimmed). Map variants that mean the SAME skill to one canonical name. Never alias a general skill to a specific one (version control != git, cloud != aws), and never alias related-but-different skills (java != javascript, c != c++, sql != nosql). gcp, aws and azure are distinct skills."
   },
   "aliases": {
     "js": "javascript",
@@ -14,7 +14,40 @@
     "k8s": "kubernetes",
     "ml": "machine learning",
     "dsa": "data structures and algorithms",
-    "oop": "object-oriented programming",
-    "oops": "object-oriented programming"
+    "oop": "object-oriented design",
+    "oops": "object-oriented design",
+    "ood": "object-oriented design",
+    "object-oriented programming": "object-oriented design",
+    "object oriented programming": "object-oriented design",
+    "os": "operating systems",
+    "operating system": "operating systems",
+    "networking": "computer networks",
+    "computer networking": "computer networks",
+    "networking fundamentals": "computer networks",
+    "networks": "computer networks",
+    "computer network": "computer networks",
+    "data structures & algorithms": "data structures and algorithms",
+    "data structures and algorithm": "data structures and algorithms",
+    "systems design": "system design",
+    "testing": "software testing",
+    "software test": "software testing",
+    "continuous integration": "ci cd",
+    "communication skills": "communication",
+    "written and verbal communication": "communication",
+    "verbal communication": "communication",
+    "rest apis": "apis",
+    "rest api": "apis",
+    "restful apis": "apis",
+    "api": "apis",
+    "api design": "apis",
+    "applied statistics": "statistics",
+    "a/b testing basics": "a/b testing",
+    "ab testing": "a/b testing",
+    "dbms": "databases",
+    "database management systems": "databases",
+    "database": "databases",
+    "ticketing tools": "ticketing systems",
+    "ticketing tool": "ticketing systems",
+    "ticketing": "ticketing systems"
   }
 }

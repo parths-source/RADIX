@@ -5,7 +5,8 @@ import json
 import pytest
 
 from app.config import REPO_ROOT
-from app.models.contract import CandidateProfile, ExtractedSkillList
+from app.models.contract import CandidateProfile
+from app.services.extraction import load_fixture
 
 DATA = REPO_ROOT / "data"
 
@@ -37,5 +38,8 @@ FIXTURES = sorted((DATA / "fixtures").glob("*.json"))
 
 @pytest.mark.skipif(not FIXTURES, reason="no fixtures seeded yet (Phase 8)")
 @pytest.mark.parametrize("path", FIXTURES, ids=lambda p: p.name)
-def test_every_fixture_matches_the_contract(path):
-    ExtractedSkillList.model_validate(json.loads(path.read_text()))
+def test_every_fixture_matches_the_contract_and_names_its_model(path):
+    meta, extraction = load_fixture(path)
+    assert meta["model"] and meta["prompt_version"] and meta["generated_at"]
+    assert extraction.status == "ok" and extraction.id is None  # saved straight from a successful real run
+    assert path.stem == extraction.source_file.rsplit(".", 1)[0]

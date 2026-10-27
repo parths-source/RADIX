@@ -94,6 +94,11 @@ export default function SkillMatch() {
         {run.status === "done" && (
           <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
             <Panel className="lg:row-span-2">
+              {run.result.llm_judge === "failed" && (
+                <p role="note" className="mb-4 rounded-xl border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-mist">
+                  The AI judge was unavailable, so this is the rule-based score only (exact, alias and similar-name matches).
+                </p>
+              )}
               <h2 className="text-xl font-semibold">Missing skills</h2>
               <p className="mt-1 mb-4 text-sm text-mist/70">
                 {missingRequired > 0 ? `${missingRequired} required skill${missingRequired === 1 ? "" : "s"} not shown in the profile. Close these first.` : "Every required skill is covered."}

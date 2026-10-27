@@ -70,8 +70,10 @@ def _rule_match(jd_skill: Skill, candidates: list[Skill]) -> Optional[tuple[Skil
     return None
 
 
-def _llm_judge(unmatched: list[Skill], candidates: list[Skill], llm: StructuredLLM) -> dict[str, tuple[Optional[Skill], str]]:
-    """One batched call. Returns canonical JD name -> (candidate skill or None, reason). Failures return {}."""
+def _llm_judge(
+    unmatched: list[Skill], candidates: list[Skill], llm: StructuredLLM
+) -> Optional[dict[str, tuple[Optional[Skill], str]]]:
+    """One batched call. Returns canonical JD name -> (candidate skill or None, reason), or None if the call failed."""
     by_name = {canonical_name(c.skill_name): c for c in candidates}
     user = "JD skills to judge:\n" + "\n".join(f"- {s.skill_name} ({s.category_code.value})" for s in unmatched)
     user += "\n\nCandidate skills:\n" + "\n".join(f"- {c.skill_name} ({c.category_code.value})" for c in candidates)
@@ -79,10 +81,10 @@ def _llm_judge(unmatched: list[Skill], candidates: list[Skill], llm: StructuredL
         result = llm(JudgeOut, JUDGE_PROMPT.read_text(encoding="utf-8"), user)
     except Exception as exc:
         logger.warning("skill_judge_error error=%s", type(exc).__name__)
-        return {}
+        return None
     if result.parsed is None:
         logger.warning("skill_judge_invalid_output")
-        return {}
+        return None
     verdicts: dict[str, tuple[Optional[Skill], str]] = {}
     for v in result.parsed.verdicts:
         candidate = by_name.get(canonical_name(v.candidate_skill)) if v.candidate_skill else None
@@ -109,8 +111,13 @@ def run(candidate_skills: list[Skill], jd: ExtractedSkillList, llm: StructuredLL
                                     category_code=jd_skill.category_code, match_type=match_type, evidence=evidence))
 
     reasons: dict[str, str] = {}
+    judge_status = "off" if llm is None else "used"
+    verdicts = None
     if llm is not None and missing and candidate_skills:
         verdicts = _llm_judge([s for _, s in missing], candidate_skills, llm)
+        if verdicts is None:
+            judge_status = "failed"  # keep the rule-based result; the response says so
+    if verdicts is not None:
         still_missing = []
         for order, jd_skill in missing:
             candidate, reason = verdicts.get(canonical_name(jd_skill.skill_name), (None, ""))
@@ -138,4 +145,5 @@ def run(candidate_skills: list[Skill], jd: ExtractedSkillList, llm: StructuredLL
             for _, s in missing
         ],
         scoring_version=cfg.SKILL_MATCH_VERSION,
+        llm_judge=judge_status,
     )
