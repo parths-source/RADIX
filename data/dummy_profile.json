@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "dummy": true,
+    "purpose": "Hand-written fictional candidate for building and testing Talent Check and Skill Matching before real extractions exist. Not derived from any sample resume. Never present it as a real candidate."
+  },
+  "profile": {
+    "name": "Test Candidate (dummy)",
+    "email": "test.candidate@example.com",
+    "education": "B.Tech Computer Science (dummy)",
+    "skills": [
+      { "skill_name": "Python", "category_code": "COD", "evidence": "dummy", "confidence": "high" },
+      { "skill_name": "Java", "category_code": "COD", "evidence": "dummy", "confidence": "medium" },
+      { "skill_name": "Data Structures", "category_code": "DSA", "evidence": "dummy", "confidence": "high" },
+      { "skill_name": "Algorithms", "category_code": "DSA", "evidence": "dummy", "confidence": "high" },
+      { "skill_name": "Dynamic Programming", "category_code": "DSA", "evidence": "dummy", "confidence": "medium" },
+      { "skill_name": "Object-Oriented Programming", "category_code": "OOD", "evidence": "dummy", "confidence": "medium" },
+      { "skill_name": "PostgreSQL", "category_code": "SQL", "evidence": "dummy", "confidence": "high" },
+      { "skill_name": "Git", "category_code": "SWE", "evidence": "dummy", "confidence": "high" },
+      { "skill_name": "REST APIs", "category_code": "SWE", "evidence": "dummy", "confidence": "medium" },
+      { "skill_name": "Linux", "category_code": "OS", "evidence": "dummy", "confidence": "low" },
+      { "skill_name": "Pandas", "category_code": "AI", "evidence": "dummy", "confidence": "medium" },
+      { "skill_name": "AWS", "category_code": "CLOUD", "evidence": "dummy", "confidence": "low" }
+    ],
+    "hackathons": [
+      {
+        "title": "Campus hackathon: route planner (dummy)",
+        "description": "Shortest-path route planner built in 24 hours.",
+        "skills_used": ["Python", "Algorithms"]
+      }
+    ],
+    "internships": [
+      {
+        "title": "Backend intern (dummy)",
+        "description": "Built REST endpoints over a PostgreSQL database.",
+        "skills_used": ["Python", "PostgreSQL", "REST APIs", "Git"],
+        "duration_months": 2
+      }
+    ],
+    "certifications": [],
+    "projects": [
+      {
+        "title": "Library management system (dummy)",
+        "description": "Java console app with class hierarchy for books and members.",
+        "skills_used": ["Java", "Object-Oriented Programming", "Data Structures"]
+      }
+    ],
+    "preferred_roles": ["Software Engineer"],
+    "cv_file": null
+  }
+}

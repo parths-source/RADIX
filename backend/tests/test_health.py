@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
 
+from app.api.deps import get_company_data
 from app.config import Settings, get_settings
 from app.main import app
+from app.services.company_data import CompanyData
 
 client = TestClient(app)
 
@@ -14,8 +16,15 @@ def teardown_function():
     app.dependency_overrides.clear()
 
 
-def test_health_reports_unconfigured_services(tmp_path):
-    _override(data_dir=tmp_path)
+def _company_data(dummy: bool) -> CompanyData:
+    real = app.state.company_data.model_dump(by_alias=True, mode="json")
+    real["_meta"]["dummy"] = dummy
+    return CompanyData.model_validate(real)
+
+
+def test_health_reports_unconfigured_services():
+    _override()
+    app.dependency_overrides[get_company_data] = lambda: _company_data(dummy=True)
     body = client.get("/api/health").json()
     assert body == {
         "status": "ok",
@@ -26,10 +35,9 @@ def test_health_reports_unconfigured_services(tmp_path):
     }
 
 
-def test_health_reports_configured_services(tmp_path):
-    (tmp_path / "company_skillsets.json").write_text("{}")
+def test_health_reports_configured_services():
+    app.dependency_overrides[get_company_data] = lambda: _company_data(dummy=False)
     _override(
-        data_dir=tmp_path,
         supabase_url="https://example.supabase.co",
         supabase_service_role_key="service-role",
         llm_provider="provider",

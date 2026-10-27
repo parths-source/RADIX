@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "version": "0.1",
+    "note": "Keys and values are normalized names (lowercase, trimmed). Map variants to one canonical name. gcp, aws and azure are distinct skills: never alias them to each other or to 'cloud'."
+  },
+  "aliases": {
+    "js": "javascript",
+    "ts": "typescript",
+    "postgres": "postgresql",
+    "node": "node.js",
+    "nodejs": "node.js",
+    "reactjs": "react",
+    "react.js": "react",
+    "k8s": "kubernetes",
+    "ml": "machine learning",
+    "dsa": "data structures and algorithms",
+    "oop": "object-oriented programming",
+    "oops": "object-oriented programming"
+  }
+}

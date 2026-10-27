@@ -1,0 +1,188 @@
+{
+  "_meta": {
+    "source": "placeholder, not RADIX data",
+    "dummy": true,
+    "exported_at": null,
+    "note": "Every level is the same flat value (5) on purpose: these are not company expectations. Replace with data/company_skillsets.json exported from staging_company_skill_levels."
+  },
+  "companies": [
+    {
+      "company_key": "google",
+      "display_name": "Google LLC",
+      "aliases": [
+        "Google",
+        "Google LLC"
+      ],
+      "skillsets": [
+        {
+          "category_code": "COD",
+          "required_level": 5
+        },
+        {
+          "category_code": "DSA",
+          "required_level": 5
+        },
+        {
+          "category_code": "OOD",
+          "required_level": 5
+        },
+        {
+          "category_code": "APTI",
+          "required_level": 5
+        },
+        {
+          "category_code": "COMM",
+          "required_level": 5
+        },
+        {
+          "category_code": "AI",
+          "required_level": 5
+        },
+        {
+          "category_code": "CLOUD",
+          "required_level": 5
+        },
+        {
+          "category_code": "SQL",
+          "required_level": 5
+        },
+        {
+          "category_code": "SWE",
+          "required_level": 5
+        },
+        {
+          "category_code": "SYSD",
+          "required_level": 5
+        },
+        {
+          "category_code": "NETW",
+          "required_level": 5
+        },
+        {
+          "category_code": "OS",
+          "required_level": 5
+        }
+      ]
+    },
+    {
+      "company_key": "microsoft",
+      "display_name": "Microsoft Corporation",
+      "aliases": [
+        "Microsoft",
+        "Microsoft Corporation",
+        "Microsoft Corp"
+      ],
+      "skillsets": [
+        {
+          "category_code": "COD",
+          "required_level": 5
+        },
+        {
+          "category_code": "DSA",
+          "required_level": 5
+        },
+        {
+          "category_code": "OOD",
+          "required_level": 5
+        },
+        {
+          "category_code": "APTI",
+          "required_level": 5
+        },
+        {
+          "category_code": "COMM",
+          "required_level": 5
+        },
+        {
+          "category_code": "AI",
+          "required_level": 5
+        },
+        {
+          "category_code": "CLOUD",
+          "required_level": 5
+        },
+        {
+          "category_code": "SQL",
+          "required_level": 5
+        },
+        {
+          "category_code": "SWE",
+          "required_level": 5
+        },
+        {
+          "category_code": "SYSD",
+          "required_level": 5
+        },
+        {
+          "category_code": "NETW",
+          "required_level": 5
+        },
+        {
+          "category_code": "OS",
+          "required_level": 5
+        }
+      ]
+    },
+    {
+      "company_key": "oracle",
+      "display_name": "Oracle Financial Services Software Limited",
+      "aliases": [
+        "Oracle",
+        "Oracle Financial Services",
+        "Oracle Financial Services Software",
+        "Oracle Financial Services Software Limited",
+        "OFSS"
+      ],
+      "skillsets": [
+        {
+          "category_code": "COD",
+          "required_level": 5
+        },
+        {
+          "category_code": "DSA",
+          "required_level": 5
+        },
+        {
+          "category_code": "OOD",
+          "required_level": 5
+        },
+        {
+          "category_code": "APTI",
+          "required_level": 5
+        },
+        {
+          "category_code": "COMM",
+          "required_level": 5
+        },
+        {
+          "category_code": "AI",
+          "required_level": 5
+        },
+        {
+          "category_code": "CLOUD",
+          "required_level": 5
+        },
+        {
+          "category_code": "SQL",
+          "required_level": 5
+        },
+        {
+          "category_code": "SWE",
+          "required_level": 5
+        },
+        {
+          "category_code": "SYSD",
+          "required_level": 5
+        },
+        {
+          "category_code": "NETW",
+          "required_level": 5
+        },
+        {
+          "category_code": "OS",
+          "required_level": 5
+        }
+      ]
+    }
+  ]
+}

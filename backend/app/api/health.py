@@ -1,19 +1,21 @@
 from fastapi import APIRouter, Depends
 
+from app.api.deps import get_company_data
 from app.config import Settings, get_settings
+from app.services.company_data import CompanyData
 
 router = APIRouter()
 
 
 @router.get("/health")
-def health(settings: Settings = Depends(get_settings)) -> dict:
-    # Real export missing -> Talent Check will use the dummy placeholder file.
-    # Phase 1 replaces this file check with the validating company-data loader.
-    real_company_data = settings.company_data_path.is_file()
+def health(
+    settings: Settings = Depends(get_settings),
+    company_data: CompanyData = Depends(get_company_data),
+) -> dict:
     return {
         "status": "ok",
         "db_configured": settings.db_configured,
         "llm_configured": settings.llm_configured,
-        "company_data_configured": real_company_data,
-        "company_data_dummy": not real_company_data,
+        "company_data_configured": not company_data.dummy,
+        "company_data_dummy": company_data.dummy,
     }

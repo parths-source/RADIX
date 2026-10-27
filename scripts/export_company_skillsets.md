@@ -1,0 +1,27 @@
+# Company expectations: how to supply the real data
+
+Status: **not provided yet.** The app runs on `data/company_skillsets.placeholder.json`, which is marked `"dummy": true`; `/api/health` and `/api/companies` report `dummy: true` and the UI shows a "Placeholder company data" banner. Placeholder levels are one flat value on purpose, not estimates of any company.
+
+## What to provide
+
+An export of the organizers' `staging_company_skill_levels` table (the brief calls it `talent_check_company_skillsets.json`) for Google LLC, Microsoft Corporation and Oracle Financial Services Software Limited: one required level (integer 1–10) per company for each of the 12 categories `COD, DSA, OOD, APTI, COMM, AI, CLOUD, SQL, SWE, SYSD, NETW, OS`.
+
+## Where it goes
+
+`data/company_skillsets.json`, in this shape (see PLAN.md section 9):
+
+```jsonc
+{
+  "_meta": { "source": "staging_company_skill_levels export", "dummy": false, "exported_at": "YYYY-MM-DD" },
+  "companies": [
+    { "company_key": "google", "display_name": "Google LLC", "aliases": ["Google", "Google LLC"],
+      "skillsets": [ { "category_code": "COD", "required_level": 8 } /* exactly 12 */ ] }
+  ]
+}
+```
+
+When this file exists it replaces the placeholder automatically. The backend refuses to start if it is invalid (missing or duplicate categories, levels outside 1–10, duplicate company keys) and says what is wrong.
+
+## Adapter
+
+The export's column layout is still unknown. When it arrives, a small conversion script will be added here that turns it into the shape above; keep the aliases from the placeholder so JD company names resolve.
