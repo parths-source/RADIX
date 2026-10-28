@@ -49,16 +49,16 @@ const TRANSPARENT_PLATE_EDITS: [string, string][] = [
 ]
 
 /**
- * The light variant, applied after TRANSPARENT_PLATE_EDITS: a white plate with dark blue electricity
- * and near-black text. Arcs are composited by their intensity (dark ink cannot be keyed off
+ * The light variant, applied after TRANSPARENT_PLATE_EDITS: a blue plate with dark blue electricity
+ * and white text. Arcs are composited by their intensity (dark ink cannot be keyed off
  * brightness the way the glowing dark variant is).
  */
 const LIGHT_PLATE_EDITS: [string, string][] = [
-  ["'  vec3 plateCol = vec3(0.04, 0.05, 0.055);',", "'  vec3 plateCol = vec3(1.0);',"],
-  ["'  plateCol += vec3(0.014, 0.022, 0.035) * fbm(p * 9.0);',", "'  plateCol -= vec3(0.035, 0.028, 0.0) * fbm(p * 9.0);',"],
+  ["'  vec3 plateCol = vec3(0.04, 0.05, 0.055);',", "'  vec3 plateCol = vec3(0.12, 0.34, 0.88);',"],
+  ["'  plateCol += vec3(0.014, 0.022, 0.035) * fbm(p * 9.0);',", "'  plateCol -= vec3(0.03, 0.05, 0.08) * fbm(p * 9.0);',"],
   [
     "'  plateCol += vec3(0.0, 0.25, 0.3) * exp(d * 9.0) * (0.25 + hover * 0.6);',",
-    "'  plateCol = mix(plateCol, vec3(0.76, 0.84, 1.0), clamp(exp(d * 9.0) * (0.25 + hover * 0.6), 0.0, 1.0));',",
+    "'  plateCol = mix(plateCol, vec3(0.38, 0.62, 1.0), clamp(exp(d * 9.0) * (0.25 + hover * 0.6), 0.0, 1.0));',",
   ],
   // Sample the arc noise on a circle instead of by raw angle, so there is no seam where the angle wraps (left edge).
   [
@@ -79,17 +79,17 @@ const LIGHT_PLATE_EDITS: [string, string][] = [
     "'  float arcA = clamp(arcCol.x * (0.6 + 0.4 * hover) * outerMask, 0.0, 1.0);', '  vec3 arcInk = mix(vec3(0.03, 0.10, 0.42), vec3(0.12, 0.33, 0.95), clamp(arcCol.y * 0.5, 0.0, 1.0));',",
   ],
   ["'  col += vec3(0.8, 0.98, 1.0) * ring * u_flash * 1.5 * outerMask;',", "'  arcA = clamp(arcA + ring * u_flash * 1.5 * outerMask, 0.0, 1.0);',"],
-  ["'  col += vec3(0.7, 0.95, 1.0) * u_flash * 0.16 * outerMask;',", "'  col = mix(col, vec3(0.80, 0.87, 1.0) * plate, u_flash * 0.5);',"],
+  ["'  col += vec3(0.7, 0.95, 1.0) * u_flash * 0.16 * outerMask;',", "'  col = mix(col, vec3(0.55, 0.75, 1.0) * plate, u_flash * 0.5);',"],
   [
     "'  float alpha = max(plate, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));', '  gl_FragColor = vec4(min(col, vec3(alpha)), alpha);',",
     "'  gl_FragColor = vec4(arcInk * arcA + col * (1.0 - arcA), arcA + plate * (1.0 - arcA));',",
   ],
-  // No WebGL: plain white plate with a blue edge.
-  ["btn.style.background = '#062630';", "btn.style.background = '#ffffff';"],
-  ["btn.style.boxShadow = '0 0 0 2px #00f2fe, 0 0 24px rgba(0, 242, 254, .5)';", "btn.style.boxShadow = '0 0 0 2px #1f56e0, 0 0 24px rgba(31, 86, 224, .35)';"],
+  // No WebGL: plain blue plate with a dark blue edge.
+  ["btn.style.background = '#062630';", "btn.style.background = '#1f56e0';"],
+  ["btn.style.boxShadow = '0 0 0 2px #00f2fe, 0 0 24px rgba(0, 242, 254, .5)';", "btn.style.boxShadow = '0 0 0 2px #1e3a8a, 0 0 24px rgba(30, 58, 138, .35)';"],
   [
     `text-[#e0f7f8]" style="text-shadow: 0 0 12px rgba(0, 210, 255, .6), 0 1px 4px rgba(0, 0, 0, .8);"`,
-    `text-[#0b1020]" style=""`,
+    `text-white" style="text-shadow: 0 1px 2px rgba(8, 20, 70, .45);"`,
   ],
 ]
 
@@ -113,7 +113,7 @@ function labelEdits(label: string, width: number): [string, string][] {
 /**
  * A call to action drawn by the WebGL induction button, with a plain link as fallback.
  * label: upper-case text on the plate. width: the button's width in px (the plate is 96 px tall).
- * variant: "dark" glows cyan over dark backgrounds; "light" is a white plate with dark blue electricity.
+ * variant: "dark" glows cyan over dark backgrounds; "light" is a blue plate with dark blue electricity, for light backgrounds.
  * children: the fallback link's content.
  */
 export function ElectricButton({

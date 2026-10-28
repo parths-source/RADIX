@@ -36,7 +36,7 @@ export default function Landing() {
             </div>
 
             <div className="relative mt-14 flex justify-center">
-              {/* Soft blue halo under the white electric button. */}
+              {/* Soft blue halo under the electric button. */}
               <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 h-16 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent/25 via-[#1e3a8a]/30 to-accent/25 blur-2xl" />
               <ElectricButton
                 label="START WITH A JOB DESCRIPTION"
