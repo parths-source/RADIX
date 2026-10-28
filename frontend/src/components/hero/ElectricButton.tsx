@@ -1,11 +1,8 @@
-import { useEffect, useMemo, useState } from "react"
-import { ArrowRight } from "lucide-react"
+import { useEffect, useMemo, useState, type ReactNode } from "react"
 import { Link, useNavigate } from "react-router"
 
 import { INDUCTION_EFFECT, NeuformIsolatedEffect, type EffectDefinition } from "@/components/ui/induction-button"
 
-const LABEL = "GET STARTED"
-const TARGET = "/analyze"
 const FLASH_MS = 380 // let the click discharge show before leaving the page
 const READY_TIMEOUT_MS = 6000 // no word from the iframe by then: show the plain button
 const MESSAGE_SOURCE = "radix-induction-button"
@@ -53,31 +50,52 @@ const TRANSPARENT_PLATE_EDITS: [string, string][] = [
 
 function applyEdits(source: string, edits: [string, string][]) {
   return edits.reduce((text, [from, to]) => {
-    if (!text.includes(from)) console.warn(`GetStartedButton: scene changed, could not apply edit for: ${from}`)
+    if (!text.includes(from)) console.warn(`ElectricButton: scene changed, could not apply edit for: ${from}`)
     return text.replace(from, to)
   }, source)
 }
 
-/** The landing "Get Started" call to action: the WebGL induction button, with a plain button as fallback. */
-export function GetStartedButton() {
+/** Label edits: one line keeps the scene's wide letter spacing; two lines get tighter, smaller type to fit the plate. */
+function labelEdits(lines: string[]): [string, string][] {
+  const edits: [string, string][] = [[">VALENCE CORE</span>", `>${lines.join("<br>")}</span>`]]
+  if (lines.length > 1) edits.push(["tracking-[0.3em] indent-[0.3em]", "tracking-[0.2em] indent-[0.2em] text-xs leading-snug text-center"])
+  return edits
+}
+
+/**
+ * A call to action drawn by the WebGL induction button, with a plain link as fallback.
+ * label: upper-case text on the plate, one string per line. children: the fallback link's content.
+ */
+export function ElectricButton({
+  label,
+  to,
+  fallbackClassName,
+  className = "",
+  children,
+}: {
+  label: string[]
+  to: string
+  fallbackClassName: string
+  className?: string
+  children: ReactNode
+}) {
   const navigate = useNavigate()
   const token = useMemo(() => crypto.randomUUID(), [])
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading")
 
+  const labelKey = label.join("\n") // stable across renders, unlike the array
   const definition = useMemo<EffectDefinition>(
     () => ({
       ...INDUCTION_EFFECT,
-      title: "Get Started",
+      title: labelKey.replace(/\n/g, " "),
       background: "transparent",
       theme: { ...INDUCTION_EFFECT.theme!, darkBackground: "transparent" },
       // Only the button: no ambient background canvas, so the hero shader shows through.
       targets: [{ selector: "#btn", role: "button" }],
       transformSource: (source) =>
-        applyEdits(source, TRANSPARENT_PLATE_EDITS)
-          .replace(">VALENCE CORE</span>", `>${LABEL}</span>`)
-          .replace(/<\/body>/i, `${bridgeScript(token)}</body>`),
+        applyEdits(applyEdits(source, TRANSPARENT_PLATE_EDITS), labelEdits(labelKey.split("\n"))).replace(/<\/body>/i, `${bridgeScript(token)}</body>`),
     }),
-    [token],
+    [token, labelKey],
   )
 
   useEffect(() => {
@@ -87,27 +105,25 @@ export function GetStartedButton() {
       if (data?.source !== MESSAGE_SOURCE || data.token !== token) return
       if (data.type === "ready") setStatus("ready")
       else if (data.type === "failed") setStatus("failed")
-      else if (data.type === "click") window.setTimeout(() => navigate(TARGET), FLASH_MS)
+      else if (data.type === "click") window.setTimeout(() => navigate(to), FLASH_MS)
     }
     window.addEventListener("message", onMessage)
     return () => {
       window.clearTimeout(timer)
       window.removeEventListener("message", onMessage)
     }
-  }, [token, navigate])
+  }, [token, navigate, to])
 
   return (
-    <div className="relative mt-2 flex h-[112px] w-[320px] max-w-full items-center justify-center">
+    <div className={`relative flex h-[112px] w-[320px] max-w-full items-center justify-center ${className}`}>
       {/* Plain fallback: kept invisible while the electric button loads (no flash of the old button,
           no layout jump), shown only if the electric button fails, e.g. CDNs unreachable. */}
       {status !== "ready" && (
         <Link
-          to={TARGET}
-          className={`inline-flex items-center gap-2 rounded-full border border-mist/40 bg-abyss/60 px-6 py-2.5 font-medium text-mist backdrop-blur hover:bg-abyss/80 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none ${
-            status === "loading" ? "invisible" : ""
-          }`}
+          to={to}
+          className={`${fallbackClassName} ${status === "loading" ? "invisible" : ""}`}
         >
-          Get Started <ArrowRight className="size-4" aria-hidden />
+          {children}
         </Link>
       )}
       {status !== "failed" && (

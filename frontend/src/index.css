@@ -197,18 +197,18 @@
     color: transparent;
 }
 
-/* Landing steps: a light pulse running along the connectors. */
-.steps-flow-pulse {
-    animation: steps-flow 2.2s linear infinite;
+/* Landing steps: dashes flowing along the connectors toward each arrowhead (one dash period per cycle). */
+.steps-flow-dash {
+    animation: steps-flow 0.9s linear infinite;
 }
 @keyframes steps-flow {
     to {
-        stroke-dashoffset: -200;
+        stroke-dashoffset: -19;
     }
 }
 @media (prefers-reduced-motion: reduce) {
-    .steps-flow-pulse {
-        display: none;
+    .steps-flow-dash {
+        animation: none;
     }
 }
 

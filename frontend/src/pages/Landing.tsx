@@ -1,6 +1,5 @@
 import { ArrowRight, Sparkles } from "lucide-react"
-import { Link } from "react-router"
-
+import { ElectricButton } from "@/components/hero/ElectricButton"
 import { Hero } from "@/components/hero/Hero"
 import { RadixLogo } from "@/components/hero/RadixLogo"
 import { StepsFlow } from "@/components/landing/StepsFlow"
@@ -36,14 +35,17 @@ export default function Landing() {
               <StepsFlow />
             </div>
 
-            <div className="mt-16 flex justify-center">
-              <Link
+            <div className="relative mt-14 flex justify-center">
+              {/* Blue halo so the button's glow reads on the light paper. */}
+              <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 h-20 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent/35 via-sky-400/40 to-accent/35 blur-2xl" />
+              <ElectricButton
+                label={["START WITH A", "JOB DESCRIPTION"]}
                 to="/analyze"
-                className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#4338ca] via-accent to-sky px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_32px_-12px_rgb(31_86_224/0.7)] transition hover:shadow-[0_18px_40px_-10px_rgb(31_86_224/0.8)] hover:brightness-110 focus-visible:ring-4 focus-visible:ring-accent/30 focus-visible:outline-none"
+                fallbackClassName="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#4338ca] via-accent to-sky px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_32px_-12px_rgb(31_86_224/0.7)] transition hover:brightness-110 focus-visible:ring-4 focus-visible:ring-accent/30 focus-visible:outline-none"
               >
                 Start with a job description
                 <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden />
-              </Link>
+              </ElectricButton>
             </div>
           </div>
         </section>

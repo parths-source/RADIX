@@ -75,15 +75,16 @@ export function StepsFlow() {
             <stop offset="0%" stopColor="var(--color-accent)" />
             <stop offset="100%" stopColor="var(--color-sky)" />
           </linearGradient>
-          <marker id="steps-flow-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
-            <path d="M2 2 L10 6 L2 10" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <marker id="steps-flow-arrow" viewBox="0 0 16 16" refX="13" refY="8" markerWidth="18" markerHeight="18" markerUnits="userSpaceOnUse" orient="auto">
+            <path d="M2 2 L14 8 L2 14 L5 8 Z" fill="var(--color-accent)" stroke="var(--color-accent)" strokeWidth="1.5" strokeLinejoin="round" />
           </marker>
         </defs>
         {paths.map((d, i) => (
           <g key={i}>
-            <path d={d} fill="none" stroke="var(--color-accent)" strokeOpacity="0.12" strokeWidth="8" strokeLinecap="round" />
-            <path d={d} fill="none" stroke="url(#steps-flow-stroke)" strokeWidth="2" strokeLinecap="round" markerEnd="url(#steps-flow-arrow)" />
-            <path d={d} fill="none" className="steps-flow-pulse" stroke="#38bdf8" strokeWidth="3" strokeLinecap="round" strokeDasharray="14 186" />
+            {/* soft glow, a faint solid track, then the bold dashes that flow toward the arrowhead */}
+            <path d={d} fill="none" stroke="var(--color-accent)" strokeOpacity="0.14" strokeWidth="12" strokeLinecap="round" />
+            <path d={d} fill="none" stroke="var(--color-accent)" strokeOpacity="0.22" strokeWidth="3" strokeLinecap="round" />
+            <path d={d} fill="none" className="steps-flow-dash" stroke="url(#steps-flow-stroke)" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="10 9" markerEnd="url(#steps-flow-arrow)" />
           </g>
         ))}
       </svg>

@@ -1,5 +1,6 @@
+import { ArrowRight } from "lucide-react"
 import "@/components/hero/hero.css"
-import { GetStartedButton } from "@/components/hero/GetStartedButton"
+import { ElectricButton } from "@/components/hero/ElectricButton"
 import { Nav } from "@/components/hero/Nav"
 import { OrbitStage } from "@/components/hero/OrbitStage"
 import { ShaderBackground } from "@/components/ui/kk"
@@ -30,7 +31,14 @@ export function Hero() {
           <p className="hero-sub mt-4 max-w-xl text-base text-mist sm:text-lg">
             RADIX Talent Match helps you understand job requirements, evaluate your skills, find the gaps, and build your path to success.
           </p>
-          <GetStartedButton />
+          <ElectricButton
+            label={["GET STARTED"]}
+            to="/analyze"
+            className="mt-2"
+            fallbackClassName="inline-flex items-center gap-2 rounded-full border border-mist/40 bg-abyss/60 px-6 py-2.5 font-medium text-mist backdrop-blur hover:bg-abyss/80 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
+          >
+            Get Started <ArrowRight className="size-4" aria-hidden />
+          </ElectricButton>
         </div>
         <div className="mt-auto pt-4">
           <OrbitStage />
