@@ -64,32 +64,10 @@ html {
     }
 }
 
-/* Landing footer (components/landing/SiteFooter.tsx): hero shader under a navy scrim, a cursor light
-   (--fx/--fy, set from script) and the large RADIX wordmark lit from that light. */
+/* Landing footer (components/landing/SiteFooter.tsx): the same layers as the hero (fallback, shader,
+   then a scrim in the hero's abyss tone behind the text) and the large RADIX wordmark. */
 .footer-scrim {
-    background:
-        linear-gradient(to bottom, rgb(4 10 32 / 0.8), rgb(4 12 40 / 0.62) 45%, rgb(2 6 20 / 0.9)),
-        radial-gradient(ellipse 60% 50% at 70% 0%, rgb(61 107 255 / 0.18), transparent 70%);
-}
-.footer-stripes {
-    background: repeating-linear-gradient(90deg, rgb(0 0 0 / 0.18) 0 26px, transparent 26px 52px);
-    mask-image: linear-gradient(to right, black, transparent 45%);
-    opacity: 0.6;
-}
-.footer-glow {
-    background: radial-gradient(520px circle at var(--fx, 62%) var(--fy, 35%), rgb(84 120 255 / 0.3), transparent 65%);
-    mix-blend-mode: screen;
-}
-/* A soft diagonal shaft of light through the cursor. */
-.footer-beam {
-    left: var(--fx, 62%);
-    top: calc(var(--fy, 35%) - 90vh);
-    width: 220px;
-    height: 180vh;
-    transform: translateX(-50%) rotate(20deg);
-    background: linear-gradient(to bottom, transparent, rgb(90 130 255 / 0.32) 42%, rgb(90 130 255 / 0.4) 50%, rgb(90 130 255 / 0.18) 62%, transparent);
-    filter: blur(38px);
-    mix-blend-mode: screen;
+    background: radial-gradient(ellipse 75% 70% at 45% 22%, rgb(3 28 38 / 0.62), rgb(3 28 38 / 0.4) 55%, rgb(3 28 38 / 0.12) 85%, transparent);
 }
 .footer-label {
     border-bottom: 1px solid rgb(91 124 255 / 0.45);

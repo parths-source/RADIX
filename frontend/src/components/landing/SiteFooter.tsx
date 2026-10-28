@@ -41,8 +41,8 @@ const COLUMNS: Column[] = [
 ]
 
 /**
- * Landing footer: the hero shader as background, a light beam that follows the cursor and a
- * large RADIX wordmark whose letters lift toward the cursor and catch its light.
+ * Landing footer: the hero's shader background (same layers as the hero) and a large RADIX
+ * wordmark whose letters lift toward the cursor and catch its light.
  */
 export function SiteFooter() {
   const reducedMotion = useReducedMotion()
@@ -79,8 +79,6 @@ export function SiteFooter() {
     let last = 0
 
     const paint = () => {
-      footer.style.setProperty("--fx", `${light.x}px`)
-      footer.style.setProperty("--fy", `${light.y}px`)
       letters.forEach((el, i) => {
         const box = boxes[i]
         el.style.setProperty("--lx", `${light.x - box.x}px`)
@@ -157,9 +155,6 @@ export function SiteFooter() {
     <footer ref={footerRef} className="hero-fallback relative isolate overflow-hidden text-mist">
       {!reducedMotion && <ShaderBackground className="absolute inset-0 z-0" />}
       <div aria-hidden className="footer-scrim pointer-events-none absolute inset-0 z-[1]" />
-      <div aria-hidden className="footer-stripes pointer-events-none absolute inset-0 z-[1]" />
-      <div aria-hidden className="footer-glow pointer-events-none absolute inset-0 z-[2]" />
-      <div aria-hidden className="footer-beam pointer-events-none absolute z-[2]" />
 
       <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-10 px-4 pt-14 sm:px-6 md:grid-cols-[2fr_1fr_1fr] md:gap-12">
         <div className="col-span-2 md:col-span-1">

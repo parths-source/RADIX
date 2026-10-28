@@ -185,7 +185,7 @@ Everything outside the hero uses off-white paper (`--color-paper` #f5f7fc), whit
 
 ## Landing footer
 
-`components/landing/SiteFooter.tsx`: the hero shader (`kk.tsx`, which pauses itself off-screen, so only one shader animates at a time) under a navy scrim, with link columns and a large RADIX wordmark at the bottom. A soft light and a diagonal shaft follow the cursor. The wordmark letters are filled by that light, and the letter under the cursor lifts and tilts while its neighbours rise less, easing back when the cursor leaves. With `prefers-reduced-motion`: no shader and no letter movement; the light still follows the cursor. On phones the two link columns sit side by side.
+`components/landing/SiteFooter.tsx`: the same background layers as the hero (gradient fallback, the `kk.tsx` shader, which pauses itself off-screen so only one shader animates at a time, and a scrim in the hero's abyss tone behind the text), with link columns and a large RADIX wordmark at the bottom. The wordmark letters are lit from the cursor position, and the letter under the cursor lifts and tilts while its neighbours rise less, easing back when the cursor leaves. With `prefers-reduced-motion`: no shader (gradient fallback, as in the hero) and no letter movement. On phones the two link columns sit side by side.
 
 ## Notes
 
