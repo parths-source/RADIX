@@ -90,7 +90,7 @@ def test_app_refuses_to_start_with_bad_company_data(tmp_path, monkeypatch):
     from app.config import get_settings
     from app.main import create_app
 
-    (tmp_path / "company_skillsets.json").write_text(json.dumps(_bad(lambda d: d["companies"][0]["skillsets"].pop())))
+    (tmp_path / "talent_check_company_skillsets.json").write_text(json.dumps(_bad(lambda d: d["companies"][0]["skillsets"].pop())))
     monkeypatch.setenv("DATA_DIR", str(tmp_path))
     get_settings.cache_clear()
     try:

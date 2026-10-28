@@ -43,7 +43,7 @@ class Settings(BaseSettings):
 
     @property
     def company_data_path(self) -> Path:
-        return self.data_dir / "company_skillsets.json"
+        return self.data_dir / "talent_check_company_skillsets.json"  # file name from the brief
 
     @property
     def company_data_placeholder_path(self) -> Path:

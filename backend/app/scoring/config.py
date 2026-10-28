@@ -49,3 +49,12 @@ FUZZY_MIN_RATIO = 88
 
 # match_score = 100 * sum(weight * quality over matched) / sum(weight over all JD skills)
 REQUIREMENT_WEIGHT = {"required": 1.0, "preferred": 0.5}
+
+
+# Company bars derived from the sample JDs (decision D20). Used only by scripts/derive_company_skillsets.py
+# to build data/talent_check_company_skillsets.json; the organizers supplied no company export.
+# level_c = clamp(COMPANY_BASE_LEVEL + round_half_up(COMPANY_PER_SKILL * weighted_c), COMPANY_BASE_LEVEL, COMPANY_MAX_LEVEL)
+# weighted_c = sum over the distinct skills the company's JDs ask for in category c of REQUIREMENT_WEIGHT.
+COMPANY_BASE_LEVEL = 2  # a skillset neither JD mentions still gets a basic expectation
+COMPANY_PER_SKILL = 1.0
+COMPANY_MAX_LEVEL = 8  # two JDs are thin evidence; leave the top of the scale to real hiring data

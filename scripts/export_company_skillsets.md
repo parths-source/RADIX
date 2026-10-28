@@ -1,6 +1,6 @@
 # Company expectations: how to supply the real data
 
-Status: **not provided yet.** The app runs on `data/company_skillsets.placeholder.json`, which is marked `"dummy": true`; `/api/health` and `/api/companies` report `dummy: true` and the UI shows a "Placeholder company data" banner. Placeholder levels are one flat value on purpose, not estimates of any company.
+Status: **no export was supplied; the facilitator asked teams to create the file.** The app uses `data/talent_check_company_skillsets.json`, derived from each company's two sample JDs by `scripts/derive_company_skillsets.py` (decision D20): per skillset, `required_level = clamp(2 + round_half_up(weighted), 2, 8)`, where `weighted` counts the distinct skills the company's JDs ask for there (required 1, preferred 0.5). It is labelled "not RADIX hiring data" in the file, the API and the UI. Regenerate it with `cd backend && .venv/bin/python ../scripts/derive_company_skillsets.py --write`. If a real export arrives, write it to the same path in the shape below (it replaces the derived file; delete `method` from `_meta`).
 
 ## What to provide
 
@@ -8,7 +8,7 @@ An export of the organizers' `staging_company_skill_levels` table (the brief cal
 
 ## Where it goes
 
-`data/company_skillsets.json`, in this shape (see PLAN.md section 9):
+`data/talent_check_company_skillsets.json`, in this shape (see PLAN.md section 9):
 
 ```jsonc
 {

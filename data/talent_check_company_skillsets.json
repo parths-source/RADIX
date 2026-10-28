@@ -1,0 +1,201 @@
+{
+  "_meta": {
+    "source": "derived from each company's two sample JDs (data/fixtures), not RADIX hiring data",
+    "dummy": false,
+    "method": "derived_from_jds",
+    "exported_at": "2026-10-28",
+    "note": "required_level = clamp(2 + round_half_up(1 x weighted), 2, 8); weighted = distinct skills the company's JDs ask for in the skillset, required 1, preferred 0.5. Replace with a real staging_company_skill_levels export when available."
+  },
+  "companies": [
+    {
+      "company_key": "google",
+      "display_name": "Google LLC",
+      "aliases": [
+        "Google",
+        "Google LLC"
+      ],
+      "derived_from": [
+        "google_data_scientist.docx",
+        "google_software_engineer.docx"
+      ],
+      "skillsets": [
+        {
+          "category_code": "COD",
+          "required_level": 3
+        },
+        {
+          "category_code": "DSA",
+          "required_level": 3
+        },
+        {
+          "category_code": "OOD",
+          "required_level": 3
+        },
+        {
+          "category_code": "APTI",
+          "required_level": 3
+        },
+        {
+          "category_code": "COMM",
+          "required_level": 3
+        },
+        {
+          "category_code": "AI",
+          "required_level": 7
+        },
+        {
+          "category_code": "CLOUD",
+          "required_level": 2
+        },
+        {
+          "category_code": "SQL",
+          "required_level": 5
+        },
+        {
+          "category_code": "SWE",
+          "required_level": 6
+        },
+        {
+          "category_code": "SYSD",
+          "required_level": 4
+        },
+        {
+          "category_code": "NETW",
+          "required_level": 3
+        },
+        {
+          "category_code": "OS",
+          "required_level": 3
+        }
+      ]
+    },
+    {
+      "company_key": "microsoft",
+      "display_name": "Microsoft Corporation",
+      "aliases": [
+        "Microsoft",
+        "Microsoft Corporation",
+        "Microsoft Corp"
+      ],
+      "derived_from": [
+        "microsoft_data_analyst.docx",
+        "microsoft_software_engineer.docx"
+      ],
+      "skillsets": [
+        {
+          "category_code": "COD",
+          "required_level": 3
+        },
+        {
+          "category_code": "DSA",
+          "required_level": 3
+        },
+        {
+          "category_code": "OOD",
+          "required_level": 4
+        },
+        {
+          "category_code": "APTI",
+          "required_level": 3
+        },
+        {
+          "category_code": "COMM",
+          "required_level": 3
+        },
+        {
+          "category_code": "AI",
+          "required_level": 4
+        },
+        {
+          "category_code": "CLOUD",
+          "required_level": 3
+        },
+        {
+          "category_code": "SQL",
+          "required_level": 5
+        },
+        {
+          "category_code": "SWE",
+          "required_level": 6
+        },
+        {
+          "category_code": "SYSD",
+          "required_level": 3
+        },
+        {
+          "category_code": "NETW",
+          "required_level": 3
+        },
+        {
+          "category_code": "OS",
+          "required_level": 3
+        }
+      ]
+    },
+    {
+      "company_key": "oracle",
+      "display_name": "Oracle Financial Services Software Limited",
+      "aliases": [
+        "Oracle",
+        "Oracle Financial Services",
+        "Oracle Financial Services Software",
+        "Oracle Financial Services Software Limited",
+        "OFSS"
+      ],
+      "derived_from": [
+        "oracle_application_support_analyst.docx",
+        "oracle_associate_software_engineer.docx"
+      ],
+      "skillsets": [
+        {
+          "category_code": "COD",
+          "required_level": 2
+        },
+        {
+          "category_code": "DSA",
+          "required_level": 3
+        },
+        {
+          "category_code": "OOD",
+          "required_level": 3
+        },
+        {
+          "category_code": "APTI",
+          "required_level": 5
+        },
+        {
+          "category_code": "COMM",
+          "required_level": 3
+        },
+        {
+          "category_code": "AI",
+          "required_level": 2
+        },
+        {
+          "category_code": "CLOUD",
+          "required_level": 2
+        },
+        {
+          "category_code": "SQL",
+          "required_level": 3
+        },
+        {
+          "category_code": "SWE",
+          "required_level": 7
+        },
+        {
+          "category_code": "SYSD",
+          "required_level": 2
+        },
+        {
+          "category_code": "NETW",
+          "required_level": 3
+        },
+        {
+          "category_code": "OS",
+          "required_level": 4
+        }
+      ]
+    }
+  ]
+}

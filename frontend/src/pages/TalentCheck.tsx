@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router"
 
 import { AppShell, NextStep, PageHeading } from "@/components/app/AppShell"
-import { DummyBanner } from "@/components/app/DummyBanner"
+import { CompanyDataNote } from "@/components/app/DummyBanner"
 import { GapRadar } from "@/components/app/GapRadar"
 import { GapTable } from "@/components/app/GapTable"
 import { ScoreRing } from "@/components/app/ScoreRing"
@@ -55,7 +55,7 @@ export default function TalentCheck() {
         description="See how a saved profile stacks up against a company's bar across all 12 skillsets. Levels are estimated from the evidence in the profile, not verified proficiency."
       />
       {loadError && <ErrorPanel title="Could not load the page" message={loadError} />}
-      {companies?.dummy && <div className="mb-6"><DummyBanner /></div>}
+      {companies && (companies.dummy || companies.method) && <div className="mb-6"><CompanyDataNote data={companies} /></div>}
 
       {profiles && profiles.length === 0 ? (
         <EmptyState>

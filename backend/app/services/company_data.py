@@ -1,7 +1,8 @@
 """Company expectations (D4): one JSON file, validated at startup.
 
-Uses data/company_skillsets.json (the organizers' export) when present, else
-data/company_skillsets.placeholder.json, which must be marked "dummy": true.
+Uses data/talent_check_company_skillsets.json when present (derived from the sample JDs,
+decision D20, until a real export replaces it), else data/company_skillsets.placeholder.json,
+which must be marked "dummy": true.
 Any problem raises CompanyDataError with a message saying what to fix.
 """
 
@@ -37,6 +38,7 @@ class Company(_Strict):
     company_key: NonEmptyStr
     display_name: NonEmptyStr
     aliases: list[NonEmptyStr] = Field(default_factory=list)
+    derived_from: list[NonEmptyStr] = Field(default_factory=list)  # JD files the bars were derived from (D20)
     skillsets: list[CompanySkillset]
 
     @field_validator("skillsets")
@@ -60,6 +62,7 @@ class Company(_Strict):
 class CompanyDataMeta(_Strict):
     source: str
     dummy: bool
+    method: str | None = None  # "derived_from_jds" for the D20 file; None for a real export
     exported_at: str | None = None
     note: str | None = None
 

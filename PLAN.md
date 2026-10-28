@@ -63,7 +63,7 @@ Copy this table into `docs/DECISIONS.md` in Phase 0 and keep it updated.
 | Input | Where it goes | If missing |
 |---|---|---|
 | Sample JD and resume files | `data/samples/jds/`, `data/samples/resumes/` | **PROVIDED** (6 JDs + 4 resumes, DOCX only; see section 3b). PDF versions are not supplied: generate test PDFs from the DOCX files (LibreOffice `soffice --headless --convert-to pdf`) if available, and label them as converted |
-| Company expectations export from `staging_company_skill_levels` (3 companies × 12 skillsets) | `data/company_skillsets.json` | **NOT PROVIDED YET.** Use `data/company_skillsets.placeholder.json` (dummy values, `"dummy": true`); UI shows a "Placeholder company data" banner. **Blocks a truthful demo of Talent Check** |
+| Company expectations export from `staging_company_skill_levels` (3 companies × 12 skillsets) | `data/talent_check_company_skillsets.json` | **Not supplied; facilitator asked teams to create it.** Derived from each company's two sample JDs (D20), labelled as such in the file, API and UI. The flat `data/company_skillsets.placeholder.json` remains the fallback |
 | RADIX logo | `frontend/src/assets/radix-logo.svg`, `radix-mark.svg` | **PROVIDED** (rebuilt from the brief PDF's geometry, see 11.2) |
 | Shader component `kk.tsx` | `frontend/src/components/ui/kk.tsx` | **PROVIDED** verbatim; do not modify |
 | Design references | `docs/design/` | **PROVIDED**: hero mockup and background reference image |

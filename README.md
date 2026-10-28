@@ -65,23 +65,25 @@ The sample files, converted PDFs and saved extractions (`data/fixtures/`) are in
 | `FRONTEND_ORIGIN` | `http://localhost:5173` | The only origin CORS allows |
 | `MAX_UPLOAD_MB`, `LLM_MAX_INPUT_CHARS` | `5`, `20000` | Upload size limit; document text is truncated (and logged) beyond this |
 
-**Company data.** Until `data/company_skillsets.json` (the organizers' `staging_company_skill_levels` export) exists, the backend uses `data/company_skillsets.placeholder.json`: marked `"dummy": true`, one flat level for every company and skillset, not RADIX data. The API reports `dummy: true` and the Talent Check screen shows a "Placeholder company data" banner. How to supply the real file: [scripts/export_company_skillsets.md](scripts/export_company_skillsets.md).
+**Company data.** The organizers supplied no company export and asked teams to create it, so `data/talent_check_company_skillsets.json` (the brief's file name) is **derived from each company's two sample JDs** (decision D20): per skillset, `required_level = clamp(2 + round_half_up(weighted), 2, 8)`, where `weighted` counts the distinct skills the company's JDs ask for in that skillset (required 1, nice to have 0.5). It is regenerated from the saved JD extractions by `scripts/derive_company_skillsets.py` (a test checks the committed file matches). The file says it is not RADIX hiring data, the API returns `method: "derived_from_jds"`, and Talent Check shows a blue note saying so. If the file is missing, the backend falls back to `data/company_skillsets.placeholder.json` (flat dummy bar, yellow banner). A real `staging_company_skill_levels` export can replace it: [scripts/export_company_skillsets.md](scripts/export_company_skillsets.md).
+
+**Before a rehearsal or the demo**, clear old profiles so the dropdowns are not full of duplicates: `cd backend && .venv/bin/python ../scripts/reset_demo_data.py` shows what would go, `--yes` deletes (all rows in the four tables; uploaded files stay).
 
 ## Run the demo
 
 Full script with timings: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md). Short version:
 
-1. **Analyze JD:** sample "Google Data Scientist" → Analyze JD. ("Use saved extraction" is ticked by default; untick it to run Gemini live.)
+1. **Analyze JD:** sample "Google Data Scientist" → Analyze JD. ("Use saved extraction" is switched on by default; switch it off to run Gemini live.)
 2. **Parse resume:** "Karthik Subramaniam" → Parse resume → Next: build the profile → Save profile.
 3. **Skill Match:** Match → score 32, six required skills missing.
 4. **Contrast:** parse "Ananya Rao" → Next: build a new profile → Save → Skill Match against the same JD → score 0.
-5. **Talent Check:** Karthik vs Google LLC → readiness 42; link SQL and Python to his internship and Python and pandas to his competition in the profile, save, re-run → 45.
+5. **Talent Check:** Karthik vs Google LLC → readiness 51; link SQL and Python to his internship and Python and pandas to his competition in the profile, save, re-run → 56.
 
 The stepper marks steps done and survives a refresh; "Start over" clears the flow (saved rows stay in Supabase).
 
 ## Definition of Done: results on the sample pack (2026-10-28)
 
-All numbers use the saved extractions in `data/fixtures/` (model `gemini-3.5-flash`; JD prompt `jd_extraction_v1`, resume prompt `resume_extraction_v2`) and the committed scoring (`tc-v0.1`, `sm-v0.1` with aliases v0.2). Talent Check uses the **placeholder** company data.
+All numbers use the saved extractions in `data/fixtures/` (model `gemini-3.5-flash`; JD prompt `jd_extraction_v1`, resume prompt `resume_extraction_v2`) and the committed scoring (`tc-v0.1`, `sm-v0.1` with aliases v0.2). Talent Check uses the company bars **derived from the sample JDs** (D20).
 
 ### 1. Each module runs on its own against at least 2 samples ✅
 
@@ -94,7 +96,7 @@ All numbers use the saved extractions in `data/fixtures/` (model `gemini-3.5-fla
 | Skill Matching | All 4 candidates × all 6 JDs | Table below; stored in Supabase |
 
 ### 2. The five pieces wired into one flow ✅
-- **Browser (headless Chromium), saved extractions:** Google Data Scientist JD → Karthik → profile → Skill Match **32** → Ananya → profile → Skill Match **0** → Talent Check Karthik vs Google **42** → link skills to experience → **45**. No console errors; no horizontal scroll at 375 px.
+- **Browser (headless Chromium), saved extractions:** Google Data Scientist JD → Karthik → profile → Skill Match **32** → Ananya → profile → Skill Match **0** → Talent Check Karthik vs Google **51** → link skills to experience → **56**. No console errors; no horizontal scroll at 375 px.
 - **API, live Gemini + Supabase:** Google Data Scientist + Karthik, and Oracle Application Support Analyst + Priya (PDF): extraction → profile → Talent Check → Skill Match, every LLM call answered by `gemini-3.5-flash`.
 - `backend/tests/test_flow.py` runs all five modules back to back on every test run.
 
@@ -111,21 +113,40 @@ All numbers use the saved extractions in `data/fixtures/` (model `gemini-3.5-fla
 
 Matches the pack's stated fits: Ananya leads the SWE roles, Karthik the data roles, Priya the Oracle support role, Rohan is strong on most.
 
-**Talent Check estimated level per skillset (Google, placeholder bar 5 everywhere):**
+**Company bars derived from the sample JDs (D20):**
 
-| | COD | DSA | OOD | APTI | AI | SQL | NETW | OS | Readiness |
-|---|---|---|---|---|---|---|---|---|---|
-| Ananya | 7 | 1 | 4 | 1 | 1 | 3 | 1 | 4 | 40 |
-| Karthik | 4 | 1 | 1 | 4 | 4 | 5 | 1 | 1 | 42 |
-| Priya | 4 | 1 | 1 | 1 | 1 | 5 | 2 | 1 | 33 |
-| Rohan | 2 | 1 | 4 | 1 | 3 | 1 | 1 | 1 | 37 |
+| | COD | DSA | OOD | APTI | COMM | AI | CLOUD | SQL | SWE | SYSD | NETW | OS |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Google | 3 | 3 | 3 | 3 | 3 | 7 | 2 | 5 | 6 | 4 | 3 | 3 |
+| Microsoft | 3 | 3 | 4 | 3 | 3 | 4 | 3 | 5 | 6 | 3 | 3 | 3 |
+| Oracle | 2 | 3 | 3 | 5 | 3 | 2 | 2 | 3 | 7 | 2 | 3 | 4 |
 
-(COMM, CLOUD, SWE and SYSD omitted for width; all four score 1–4 there.) Levels differ by candidate in the expected directions (Ananya coding and OS, Karthik SQL, AI and aptitude). Rohan is not first; see Limits and decision D16. Per-company ordering cannot be judged until real company data replaces the flat placeholder.
+**Talent Check estimated level per skillset** (the candidate's levels do not depend on the company):
+
+| | COD | DSA | OOD | APTI | AI | SQL | NETW | OS |
+|---|---|---|---|---|---|---|---|---|
+| Ananya | 7 | 1 | 4 | 1 | 1 | 3 | 1 | 4 |
+| Karthik | 4 | 1 | 1 | 4 | 4 | 5 | 1 | 1 |
+| Priya | 4 | 1 | 1 | 1 | 1 | 5 | 2 | 1 |
+| Rohan | 2 | 1 | 4 | 1 | 3 | 1 | 1 | 1 |
+
+(COMM, CLOUD, SWE and SYSD omitted for width; all four score 1–4 there.)
+
+**Talent Check readiness (0–100), profiles built straight from the parsed resumes:**
+
+| | Google | Microsoft | Oracle | (old flat placeholder) |
+|---|---|---|---|---|
+| Ananya (systems) | 44 | 49 | **51** | 40 |
+| Karthik (data) | **51** | **53** | 49 | 42 |
+| Priya (support) | 42 | 44 | 41 | 33 |
+| Rohan (all-rounder) | 47 | 49 | 46 | 37 |
+
+Readiness now differs by company as well as by candidate: Karthik is strongest at the data-heavy Google and Microsoft bars, Ananya at Oracle's software-engineering and OS bar. Two results do not match the pack's stated fits, reported rather than tuned away: **Priya is lowest at Oracle**, because each company's bar mixes both of its JDs and Oracle's is dominated by the Associate Software Engineer JD (SWE 7), while her fit shows in Skill Match against the Oracle Support JD (44, her best); and **Rohan is not first** (D16). No scoring constants were changed.
 
 ## Limits (said plainly)
 
 - **Estimates, not verified proficiency.** Talent Check levels come from what the documents say. The constants are judgment calls, all in `backend/app/scoring/config.py`.
-- **Placeholder company data.** Company bars are one flat dummy value. Talent Check readiness therefore differs by candidate but not by company, and readiness barely moves once a skillset reaches the flat bar of 5 (no bonus for exceeding it).
+- **Company bars are derived, not RADIX data.** No company export was supplied, so each company's bar comes from its two sample JDs by a fixed rule (D20). Two JDs are thin evidence, and a company bar mixes both roles (Oracle's is dominated by its SWE JD). Levels are capped at 8, and readiness gives no bonus for exceeding a bar.
 - **Extraction quality drives everything.** A skill counts as evidence only when a project, internship, hackathon or certification lists it. The sample resumes' internship and hackathon lines name almost no skills, so the internship tier rarely counts until the candidate links skills in Profile Builder. This is why Rohan, the pack's "strong all-rounder", is not top in Talent Check (D16).
 - **Talent Check cannot tell a deep project from a trivial one**, and a single listed skill scores level 1.
 - **Skill Matching is name-based by default.** JDs ask for concepts ("Programming", "Quantitative Reasoning") while resumes name tools, so many requirements show as missing and scores stay under 50. The optional AI judge (`ENABLE_LLM_MATCH`) addresses this but is off by default.
@@ -140,7 +161,8 @@ Matches the pack's stated fits: Ananya leads the SWE roles, Karthik the data rol
 - `data/samples/`: the hackathon pack (6 JDs, 4 resumes, DOCX) plus converted PDFs.
 - `data/fixtures/<stem>.json`: saved extractions, `{"_meta": {model, prompt_version, generated_at}, "extraction": …}`, saved unedited by [scripts/seed_fixtures.py](scripts/seed_fixtures.py), which refuses results that did not come from the primary model.
 - `data/skill_aliases.json`: same-meaning skill names for Skill Matching.
-- `data/company_skillsets.placeholder.json`: dummy company bars (see Configuration).
+- `data/talent_check_company_skillsets.json`: company bars derived from the sample JDs by [scripts/derive_company_skillsets.py](scripts/derive_company_skillsets.py) (D20).
+- `data/company_skillsets.placeholder.json`: flat dummy bars, used only if the file above is missing.
 - `data/dummy_profile.json`: a hand-written fictional profile used during development (`"dummy": true`).
 
 ## API

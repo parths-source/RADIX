@@ -112,6 +112,9 @@ export interface SkillMatchResult {
 // API envelopes that are not part of the module contract.
 export interface CompaniesResponse {
   dummy: boolean // true -> show the "Placeholder company data" banner
+  source?: string // where the company bars come from
+  method?: string | null // "derived_from_jds" (D20) -> show the "derived from the sample JDs" note
+  note?: string | null // how the levels were computed
   companies: { company_key: string; display_name: string }[]
 }
 
