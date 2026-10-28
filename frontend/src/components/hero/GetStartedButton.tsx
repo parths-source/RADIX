@@ -7,7 +7,7 @@ import { INDUCTION_EFFECT, NeuformIsolatedEffect, type EffectDefinition } from "
 const LABEL = "GET STARTED"
 const TARGET = "/analyze"
 const FLASH_MS = 380 // let the click discharge show before leaving the page
-const READY_TIMEOUT_MS = 8000
+const READY_TIMEOUT_MS = 4000 // no word from the iframe by then: show the plain button
 const MESSAGE_SOURCE = "radix-induction-button"
 
 /**
@@ -91,10 +91,14 @@ export function GetStartedButton() {
 
   return (
     <div className="relative mt-2 flex h-[112px] w-[320px] max-w-full items-center justify-center">
+      {/* Plain fallback: kept invisible while the electric button loads (no flash of the old button,
+          no layout jump), shown only if the electric button fails, e.g. CDNs unreachable. */}
       {status !== "ready" && (
         <Link
           to={TARGET}
-          className="inline-flex items-center gap-2 rounded-full border border-mist/40 bg-abyss/60 px-6 py-2.5 font-medium text-mist backdrop-blur hover:bg-abyss/80 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
+          className={`inline-flex items-center gap-2 rounded-full border border-mist/40 bg-abyss/60 px-6 py-2.5 font-medium text-mist backdrop-blur hover:bg-abyss/80 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none ${
+            status === "loading" ? "invisible" : ""
+          }`}
         >
           Get Started <ArrowRight className="size-4" aria-hidden />
         </Link>
