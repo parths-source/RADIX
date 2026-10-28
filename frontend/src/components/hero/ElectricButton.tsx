@@ -49,7 +49,7 @@ const TRANSPARENT_PLATE_EDITS: [string, string][] = [
 ]
 
 /**
- * The light variant, applied after TRANSPARENT_PLATE_EDITS: a blue plate with dark blue electricity
+ * The light variant, applied after TRANSPARENT_PLATE_EDITS: a blue plate with black electricity
  * and white text. Arcs are composited by their intensity (dark ink cannot be keyed off
  * brightness the way the glowing dark variant is).
  */
@@ -69,6 +69,8 @@ const LIGHT_PLATE_EDITS: [string, string][] = [
     "'    float seg = smoothstep(0.35, 0.75, noise(vec2(a * 1.8 + fi * 7.7, t * (0.9 + fi * 0.13) + fi * 19.0)));',",
     "'    float seg = smoothstep(0.35, 0.75, noise(vec2(cos(a) * 1.0 + fi * 7.7, sin(a) * 1.0 + t * (0.9 + fi * 0.13) + fi * 19.0)));',",
   ],
+  // Thinner filaments than the glowing dark variant, so dark strands stay distinct instead of merging into a band.
+  ["'    float g = 0.0042 / (abs(d + off) + 0.006);',", "'    float g = 0.0022 / (abs(d + off) + 0.0035);',"],
   // arcCol.x carries the arc intensity, arcCol.y its hot core.
   [
     "'    arcCol += (vec3(0.0, 0.75, 0.9) * g + vec3(0.6, 1.0, 0.95) * g * g * 0.55) * w * seg;',",
@@ -76,8 +78,12 @@ const LIGHT_PLATE_EDITS: [string, string][] = [
   ],
   [
     "'  col += arcCol * (0.6 + 0.4 * hover) * outerMask;',",
-    "'  float arcA = clamp(arcCol.x * (0.6 + 0.4 * hover) * outerMask, 0.0, 1.0);', '  vec3 arcInk = mix(vec3(0.03, 0.10, 0.42), vec3(0.12, 0.33, 0.95), clamp(arcCol.y * 0.5, 0.0, 1.0));',",
+    "'  float arcA = clamp(arcCol.x * (1.0 + 0.2 * hover) * outerMask, 0.0, 1.0);', '  vec3 arcInk = vec3(0.02, 0.025, 0.04);',",
   ],
+  // More arcs at rest than the dark variant (2.4) so the black electricity reads on the light page.
+  ["let arcs = 2.4, arcsTarget = 2.4", "let arcs = 4.0, arcsTarget = 4.0"],
+  ["btn.addEventListener('mouseleave', () => arcsTarget = 2.4);", "btn.addEventListener('mouseleave', () => arcsTarget = 4.0);"],
+  ["btn.addEventListener('blur', () => arcsTarget = 2.4);", "btn.addEventListener('blur', () => arcsTarget = 4.0);"],
   ["'  col += vec3(0.8, 0.98, 1.0) * ring * u_flash * 1.5 * outerMask;',", "'  arcA = clamp(arcA + ring * u_flash * 1.5 * outerMask, 0.0, 1.0);',"],
   ["'  col += vec3(0.7, 0.95, 1.0) * u_flash * 0.16 * outerMask;',", "'  col = mix(col, vec3(0.55, 0.75, 1.0) * plate, u_flash * 0.5);',"],
   [
@@ -113,7 +119,7 @@ function labelEdits(label: string, width: number): [string, string][] {
 /**
  * A call to action drawn by the WebGL induction button, with a plain link as fallback.
  * label: upper-case text on the plate. width: the button's width in px (the plate is 96 px tall).
- * variant: "dark" glows cyan over dark backgrounds; "light" is a blue plate with dark blue electricity, for light backgrounds.
+ * variant: "dark" glows cyan over dark backgrounds; "light" is a blue plate with black electricity, for light backgrounds.
  * children: the fallback link's content.
  */
 export function ElectricButton({
