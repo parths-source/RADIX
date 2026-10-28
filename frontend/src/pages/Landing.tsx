@@ -1,7 +1,8 @@
 import { ArrowRight, Sparkles } from "lucide-react"
+
 import { ElectricButton } from "@/components/hero/ElectricButton"
 import { Hero } from "@/components/hero/Hero"
-import { RadixLogo } from "@/components/hero/RadixLogo"
+import { SiteFooter } from "@/components/landing/SiteFooter"
 import { StepsFlow } from "@/components/landing/StepsFlow"
 
 export default function Landing() {
@@ -72,14 +73,9 @@ export default function Landing() {
             </div>
           </div>
         </section>
-
-        <footer className="border-t border-line bg-surface/70">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-ink-muted sm:px-6">
-            <RadixLogo label tone="ink" className="h-5" labelClassName="hidden sm:inline" />
-            <span>Talent Match Hackathon 2026</span>
-          </div>
-        </footer>
       </div>
+
+      <SiteFooter />
     </div>
   )
 }

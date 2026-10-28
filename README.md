@@ -183,6 +183,10 @@ Errors always have the shape `{"error": {"code", "message", "details"}}`.
 
 Everything outside the hero uses off-white paper (`--color-paper` #f5f7fc), white cards, navy text and blue accents; the tokens are in `frontend/src/index.css`. Text colours meet WCAG AA on both paper and white: ink 16:1, secondary 8.3:1, muted 5.1:1, accent blue 5.7:1, warning 5.1:1, error 5.4:1, and white on the blue buttons 6.1:1. The chart colours passed the dataviz palette check against white without changes. Headings use **Plus Jakarta Sans** (self-hosted in `src/assets/fonts/`, SIL Open Font License), body text stays Inter. The "Five steps, one flow" section (`components/landing/StepsFlow.tsx`) is a zig-zag of cards joined by bold dashed arrows whose dashes flow toward each arrowhead (static under reduced motion); the arrows are drawn from the measured card positions, so they follow any resize, and on phones the cards stack with short arrows between them.
 
+## Landing footer
+
+`components/landing/SiteFooter.tsx`: the hero shader (`kk.tsx`, which pauses itself off-screen, so only one shader animates at a time) under a navy scrim, with link columns and a large RADIX wordmark at the bottom. A soft light and a diagonal shaft follow the cursor. The wordmark letters are filled by that light, and the letter under the cursor lifts and tilts while its neighbours rise less, easing back when the cursor leaves. With `prefers-reduced-motion`: no shader and no letter movement; the light still follows the cursor. On phones the two link columns sit side by side.
+
 ## Notes
 
 - `frontend/src/components/ui/kk.tsx` (the shader) is kept verbatim. It does not pass TypeScript strict null checks, so `tsconfig.app.json` maps `@/components/ui/kk` to a type declaration (`src/types/kk-shader.d.ts`) and excludes the file from type checking. Vite still bundles the real component.

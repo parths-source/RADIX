@@ -63,3 +63,61 @@ html {
         background: radial-gradient(ellipse 110% 46% at 50% 28%, rgb(3 28 38 / 0.75), rgb(3 28 38 / 0.55) 55%, rgb(3 28 38 / 0.2) 80%, transparent 95%);
     }
 }
+
+/* Landing footer (components/landing/SiteFooter.tsx): hero shader under a navy scrim, a cursor light
+   (--fx/--fy, set from script) and the large RADIX wordmark lit from that light. */
+.footer-scrim {
+    background:
+        linear-gradient(to bottom, rgb(4 10 32 / 0.8), rgb(4 12 40 / 0.62) 45%, rgb(2 6 20 / 0.9)),
+        radial-gradient(ellipse 60% 50% at 70% 0%, rgb(61 107 255 / 0.18), transparent 70%);
+}
+.footer-stripes {
+    background: repeating-linear-gradient(90deg, rgb(0 0 0 / 0.18) 0 26px, transparent 26px 52px);
+    mask-image: linear-gradient(to right, black, transparent 45%);
+    opacity: 0.6;
+}
+.footer-glow {
+    background: radial-gradient(520px circle at var(--fx, 62%) var(--fy, 35%), rgb(84 120 255 / 0.3), transparent 65%);
+    mix-blend-mode: screen;
+}
+/* A soft diagonal shaft of light through the cursor. */
+.footer-beam {
+    left: var(--fx, 62%);
+    top: calc(var(--fy, 35%) - 90vh);
+    width: 220px;
+    height: 180vh;
+    transform: translateX(-50%) rotate(20deg);
+    background: linear-gradient(to bottom, transparent, rgb(90 130 255 / 0.32) 42%, rgb(90 130 255 / 0.4) 50%, rgb(90 130 255 / 0.18) 62%, transparent);
+    filter: blur(38px);
+    mix-blend-mode: screen;
+}
+.footer-label {
+    border-bottom: 1px solid rgb(91 124 255 / 0.45);
+    padding-bottom: 0.9rem;
+    color: #8aa0ff;
+    font-size: 0.95rem;
+}
+.footer-wordmark {
+    font-family: var(--font-display);
+    font-size: clamp(6.5rem, 27vw, 23rem);
+    font-weight: 800;
+    line-height: 0.8;
+    letter-spacing: 0.02em;
+    /* letters run off the bottom edge and fade out, as in the reference */
+    margin-bottom: -0.16em;
+    mask-image: linear-gradient(to bottom, black 45%, rgb(0 0 0 / 0.45) 78%, transparent 99%);
+}
+/* Each letter is filled by a light centred on the cursor (--lx/--ly are relative to the letter). */
+.footer-letter {
+    background: radial-gradient(
+        circle at var(--lx, 50%) var(--ly, -40%),
+        #8ea6ff 0%,
+        #4a6cff 14%,
+        #2d4ad6 30%,
+        #2238a8 55%,
+        #182a80 85%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
