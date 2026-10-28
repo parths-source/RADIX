@@ -29,6 +29,28 @@ const bridgeScript = (token: string) => `<script>
 })();
 </script>`
 
+/**
+ * Edits to the button scene so it has no dark box around the plate. The original opens an opaque
+ * canvas and paints #0A0A0A outside the plate; here the canvas is transparent, the outside paints
+ * nothing, and each pixel's alpha follows its brightness (premultiplied), so the glow and arcs
+ * blend over the hero while the plate itself stays solid.
+ */
+const TRANSPARENT_PLATE_EDITS: [string, string][] = [
+  ["canvas.getContext('webgl', { alpha: false, antialias: true })", "canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true })"],
+  ["'  vec3 col = vec3(0.039, 0.039, 0.039);',", "'  vec3 col = vec3(0.0);',"],
+  [
+    "'  gl_FragColor = vec4(col, 1.0);',",
+    "'  float alpha = max(plate, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));', '  gl_FragColor = vec4(min(col, vec3(alpha)), alpha);',",
+  ],
+]
+
+function applyEdits(source: string, edits: [string, string][]) {
+  return edits.reduce((text, [from, to]) => {
+    if (!text.includes(from)) console.warn(`GetStartedButton: scene changed, could not apply edit for: ${from}`)
+    return text.replace(from, to)
+  }, source)
+}
+
 /** The landing "Get Started" call to action: the WebGL induction button, with a plain button as fallback. */
 export function GetStartedButton() {
   const navigate = useNavigate()
@@ -44,7 +66,9 @@ export function GetStartedButton() {
       // Only the button: no ambient background canvas, so the hero shader shows through.
       targets: [{ selector: "#btn", role: "button" }],
       transformSource: (source) =>
-        source.replace(">VALENCE CORE</span>", `>${LABEL}</span>`).replace(/<\/body>/i, `${bridgeScript(token)}</body>`),
+        applyEdits(source, TRANSPARENT_PLATE_EDITS)
+          .replace(">VALENCE CORE</span>", `>${LABEL}</span>`)
+          .replace(/<\/body>/i, `${bridgeScript(token)}</body>`),
     }),
     [token],
   )
