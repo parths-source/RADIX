@@ -32,7 +32,7 @@ export function Hero() {
             RADIX Talent Match helps you understand job requirements, evaluate your skills, find the gaps, and build your path to success.
           </p>
           <ElectricButton
-            label={["GET STARTED"]}
+            label="GET STARTED"
             to="/analyze"
             className="mt-2"
             fallbackClassName="inline-flex items-center gap-2 rounded-full border border-mist/40 bg-abyss/60 px-6 py-2.5 font-medium text-mist backdrop-blur hover:bg-abyss/80 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"

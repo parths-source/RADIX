@@ -36,11 +36,13 @@ export default function Landing() {
             </div>
 
             <div className="relative mt-14 flex justify-center">
-              {/* Blue halo so the button's glow reads on the light paper. */}
-              <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 h-20 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent/35 via-sky-400/40 to-accent/35 blur-2xl" />
+              {/* Soft blue halo under the white electric button. */}
+              <div aria-hidden className="pointer-events-none absolute top-1/2 left-1/2 h-16 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-accent/25 via-[#1e3a8a]/30 to-accent/25 blur-2xl" />
               <ElectricButton
-                label={["START WITH A", "JOB DESCRIPTION"]}
+                label="START WITH A JOB DESCRIPTION"
                 to="/analyze"
+                width={340}
+                variant="light"
                 fallbackClassName="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#4338ca] via-accent to-sky px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_32px_-12px_rgb(31_86_224/0.7)] transition hover:brightness-110 focus-visible:ring-4 focus-visible:ring-accent/30 focus-visible:outline-none"
               >
                 Start with a job description

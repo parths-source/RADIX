@@ -14,7 +14,7 @@ const LAYOUT_DEADLINE_MS = 3000 // after load; the Tailwind CDN styles the butto
  * (its Tailwind CDN classes applied), "failed" if Tailwind never loaded or the layout never
  * settles, and "click" on activation.
  */
-const bridgeScript = (token: string) => `<script>
+const bridgeScript = (token: string, width: number) => `<script>
 (function () {
   function post(type) { parent.postMessage({ source: ${JSON.stringify(MESSAGE_SOURCE)}, token: ${JSON.stringify(token)}, type: type }, "*"); }
   window.addEventListener("load", function () {
@@ -24,8 +24,8 @@ const bridgeScript = (token: string) => `<script>
     if (!btn || !window.tailwind) return post("failed");
     var started = Date.now();
     (function check() {
-      // 280x96 only once the Tailwind CDN classes have applied.
-      if (btn.offsetWidth === 280 && btn.offsetHeight === 96 && document.body.hasAttribute("data-threeui-ready")) return post("ready");
+      // The exact size only once the Tailwind CDN classes have applied.
+      if (btn.offsetWidth === ${width} && btn.offsetHeight === 96 && document.body.hasAttribute("data-threeui-ready")) return post("ready");
       if (Date.now() - started > ${LAYOUT_DEADLINE_MS}) return post("failed");
       setTimeout(check, ${LAYOUT_POLL_MS});
     })();
@@ -48,6 +48,51 @@ const TRANSPARENT_PLATE_EDITS: [string, string][] = [
   ],
 ]
 
+/**
+ * The light variant, applied after TRANSPARENT_PLATE_EDITS: a white plate with dark blue electricity
+ * and near-black text. Arcs are composited by their intensity (dark ink cannot be keyed off
+ * brightness the way the glowing dark variant is).
+ */
+const LIGHT_PLATE_EDITS: [string, string][] = [
+  ["'  vec3 plateCol = vec3(0.04, 0.05, 0.055);',", "'  vec3 plateCol = vec3(1.0);',"],
+  ["'  plateCol += vec3(0.014, 0.022, 0.035) * fbm(p * 9.0);',", "'  plateCol -= vec3(0.035, 0.028, 0.0) * fbm(p * 9.0);',"],
+  [
+    "'  plateCol += vec3(0.0, 0.25, 0.3) * exp(d * 9.0) * (0.25 + hover * 0.6);',",
+    "'  plateCol = mix(plateCol, vec3(0.76, 0.84, 1.0), clamp(exp(d * 9.0) * (0.25 + hover * 0.6), 0.0, 1.0));',",
+  ],
+  // Sample the arc noise on a circle instead of by raw angle, so there is no seam where the angle wraps (left edge).
+  [
+    "'    float n1 = fbm(vec2(a * 2.4 + fi * 11.3, t * (1.6 + fi * 0.27) + fi * 53.1));',",
+    "'    float n1 = fbm(vec2(cos(a) * 1.3 + fi * 11.3, sin(a) * 1.3 + t * (1.6 + fi * 0.27) + fi * 53.1));',",
+  ],
+  [
+    "'    float seg = smoothstep(0.35, 0.75, noise(vec2(a * 1.8 + fi * 7.7, t * (0.9 + fi * 0.13) + fi * 19.0)));',",
+    "'    float seg = smoothstep(0.35, 0.75, noise(vec2(cos(a) * 1.0 + fi * 7.7, sin(a) * 1.0 + t * (0.9 + fi * 0.13) + fi * 19.0)));',",
+  ],
+  // arcCol.x carries the arc intensity, arcCol.y its hot core.
+  [
+    "'    arcCol += (vec3(0.0, 0.75, 0.9) * g + vec3(0.6, 1.0, 0.95) * g * g * 0.55) * w * seg;',",
+    "'    arcCol += vec3(g + g * g * 0.55, g * g * 0.55, 0.0) * w * seg;',",
+  ],
+  [
+    "'  col += arcCol * (0.6 + 0.4 * hover) * outerMask;',",
+    "'  float arcA = clamp(arcCol.x * (0.6 + 0.4 * hover) * outerMask, 0.0, 1.0);', '  vec3 arcInk = mix(vec3(0.03, 0.10, 0.42), vec3(0.12, 0.33, 0.95), clamp(arcCol.y * 0.5, 0.0, 1.0));',",
+  ],
+  ["'  col += vec3(0.8, 0.98, 1.0) * ring * u_flash * 1.5 * outerMask;',", "'  arcA = clamp(arcA + ring * u_flash * 1.5 * outerMask, 0.0, 1.0);',"],
+  ["'  col += vec3(0.7, 0.95, 1.0) * u_flash * 0.16 * outerMask;',", "'  col = mix(col, vec3(0.80, 0.87, 1.0) * plate, u_flash * 0.5);',"],
+  [
+    "'  float alpha = max(plate, clamp(max(col.r, max(col.g, col.b)), 0.0, 1.0));', '  gl_FragColor = vec4(min(col, vec3(alpha)), alpha);',",
+    "'  gl_FragColor = vec4(arcInk * arcA + col * (1.0 - arcA), arcA + plate * (1.0 - arcA));',",
+  ],
+  // No WebGL: plain white plate with a blue edge.
+  ["btn.style.background = '#062630';", "btn.style.background = '#ffffff';"],
+  ["btn.style.boxShadow = '0 0 0 2px #00f2fe, 0 0 24px rgba(0, 242, 254, .5)';", "btn.style.boxShadow = '0 0 0 2px #1f56e0, 0 0 24px rgba(31, 86, 224, .35)';"],
+  [
+    `text-[#e0f7f8]" style="text-shadow: 0 0 12px rgba(0, 210, 255, .6), 0 1px 4px rgba(0, 0, 0, .8);"`,
+    `text-[#0b1020]" style=""`,
+  ],
+]
+
 function applyEdits(source: string, edits: [string, string][]) {
   return edits.reduce((text, [from, to]) => {
     if (!text.includes(from)) console.warn(`ElectricButton: scene changed, could not apply edit for: ${from}`)
@@ -55,26 +100,35 @@ function applyEdits(source: string, edits: [string, string][]) {
   }, source)
 }
 
-/** Label edits: one line keeps the scene's wide letter spacing; two lines get tighter, smaller type to fit the plate. */
-function labelEdits(lines: string[]): [string, string][] {
-  const edits: [string, string][] = [[">VALENCE CORE</span>", `>${lines.join("<br>")}</span>`]]
-  if (lines.length > 1) edits.push(["tracking-[0.3em] indent-[0.3em]", "tracking-[0.2em] indent-[0.2em] text-xs leading-snug text-center"])
+/** Label and size edits. Long labels get tighter letter spacing so they fit on one line. */
+function labelEdits(label: string, width: number): [string, string][] {
+  const edits: [string, string][] = [
+    [">VALENCE CORE</span>", `>${label}</span>`],
+    ["w-[280px] h-[96px]", `w-[${width}px] h-[96px]`],
+  ]
+  if (label.length > 16) edits.push(["font-medium text-sm tracking-[0.3em] indent-[0.3em]", "font-semibold text-[13px] tracking-[0.12em] indent-[0.12em] whitespace-nowrap"])
   return edits
 }
 
 /**
  * A call to action drawn by the WebGL induction button, with a plain link as fallback.
- * label: upper-case text on the plate, one string per line. children: the fallback link's content.
+ * label: upper-case text on the plate. width: the button's width in px (the plate is 96 px tall).
+ * variant: "dark" glows cyan over dark backgrounds; "light" is a white plate with dark blue electricity.
+ * children: the fallback link's content.
  */
 export function ElectricButton({
   label,
   to,
+  width = 280,
+  variant = "dark",
   fallbackClassName,
   className = "",
   children,
 }: {
-  label: string[]
+  label: string
   to: string
+  width?: number
+  variant?: "dark" | "light"
   fallbackClassName: string
   className?: string
   children: ReactNode
@@ -83,19 +137,21 @@ export function ElectricButton({
   const token = useMemo(() => crypto.randomUUID(), [])
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading")
 
-  const labelKey = label.join("\n") // stable across renders, unlike the array
   const definition = useMemo<EffectDefinition>(
     () => ({
       ...INDUCTION_EFFECT,
-      title: labelKey.replace(/\n/g, " "),
+      title: label,
       background: "transparent",
       theme: { ...INDUCTION_EFFECT.theme!, darkBackground: "transparent" },
       // Only the button: no ambient background canvas, so the hero shader shows through.
       targets: [{ selector: "#btn", role: "button" }],
       transformSource: (source) =>
-        applyEdits(applyEdits(source, TRANSPARENT_PLATE_EDITS), labelEdits(labelKey.split("\n"))).replace(/<\/body>/i, `${bridgeScript(token)}</body>`),
+        applyEdits(source, [...TRANSPARENT_PLATE_EDITS, ...(variant === "light" ? LIGHT_PLATE_EDITS : []), ...labelEdits(label, width)]).replace(
+          /<\/body>/i,
+          `${bridgeScript(token, width)}</body>`,
+        ),
     }),
-    [token, labelKey],
+    [token, label, width, variant],
   )
 
   useEffect(() => {
@@ -115,7 +171,7 @@ export function ElectricButton({
   }, [token, navigate, to])
 
   return (
-    <div className={`relative flex h-[112px] w-[320px] max-w-full items-center justify-center ${className}`}>
+    <div className={`relative flex h-[112px] max-w-full items-center justify-center ${className}`} style={{ width: width + 40 }}>
       {/* Plain fallback: kept invisible while the electric button loads (no flash of the old button,
           no layout jump), shown only if the electric button fails, e.g. CDNs unreachable. */}
       {status !== "ready" && (
@@ -130,6 +186,7 @@ export function ElectricButton({
         <NeuformIsolatedEffect
           definition={definition}
           className={`absolute inset-0 transition-opacity duration-300 ${status === "ready" ? "opacity-100" : "pointer-events-none opacity-0"}`}
+          // Must match the scene's own (dark) scheme, or the browser paints the iframe opaque.
           style={{ colorScheme: "dark" }}
         />
       )}
