@@ -143,21 +143,77 @@
     /* Chart series on the dark surface (validated with the dataviz palette checker vs #0a2a44) */
     --color-series-candidate: #3987e5;
     --color-series-required: #d55181;
+
+    /* Light theme for everything outside the hero: off-white paper, navy ink, blue accents.
+       Text tokens checked for WCAG AA on paper and on white surfaces. */
+    --color-paper: #f5f7fc;
+    --color-surface: #ffffff;
+    --color-tint: #eef3ff;
+    --color-ink: #0b1a3a;
+    --color-ink-soft: #3a4a6b;
+    --color-ink-muted: #5b6987;
+    --color-line: #dde4f0;
+    --color-line-strong: #c3cee3;
+    --color-accent: #1f56e0;
+    --color-sky: #0369a1;
+    --color-warn-ink: #9a5b00;
+    --color-danger-ink: #c2262e;
+    --font-display: 'Plus Jakarta Sans Variable', 'Inter Variable', sans-serif;
 }
 
-/* App pages: a static version of the shader gradient plus faint noise (no WebGL off the landing page). */
-.app-backdrop {
-    background:
-        radial-gradient(ellipse 80% 60% at 85% 0%, rgb(27 108 168 / 0.55), transparent 70%),
-        radial-gradient(ellipse 60% 50% at 0% 100%, rgb(10 42 68 / 0.9), transparent 70%),
-        linear-gradient(160deg, var(--color-abyss), var(--color-deep));
-    background-color: var(--color-abyss);
+/* Heading face for the light pages (self-hosted, SIL Open Font License). */
+@font-face {
+    font-family: 'Plus Jakarta Sans Variable';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("./assets/fonts/plus-jakarta-sans-latin-var.woff2") format("woff2");
 }
-.app-backdrop::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.06;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+/* Light pages (everything but the hero): off-white paper with soft blue light in the corners. */
+.paper {
+    color: var(--color-ink);
+    background:
+        radial-gradient(ellipse 60% 45% at 100% 0%, rgb(31 86 224 / 0.08), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 0% 100%, rgb(3 105 161 / 0.07), transparent 70%),
+        var(--color-paper);
+}
+.paper :is(h1, h2, h3) {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+}
+/* Blue highlight for a word or two inside a heading. */
+.blue-gradient {
+    background: linear-gradient(100deg, #4338ca, var(--color-accent) 45%, var(--color-sky));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+/* Navy-to-blue headline ink. */
+.ink-gradient {
+    background: linear-gradient(100deg, var(--color-ink) 10%, var(--color-accent) 75%, var(--color-sky));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Landing steps: a light pulse running along the connectors. */
+.steps-flow-pulse {
+    animation: steps-flow 2.2s linear infinite;
+}
+@keyframes steps-flow {
+    to {
+        stroke-dashoffset: -200;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .steps-flow-pulse {
+        display: none;
+    }
+}
+
+/* Dot grid used as a quiet decoration on the light sections. */
+.dot-grid {
+    background-image: radial-gradient(var(--color-accent) 1.2px, transparent 1.6px);
+    background-size: 18px 18px;
 }

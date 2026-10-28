@@ -23,14 +23,14 @@ export function CoreSpinLoader() {
         {/* Base Glow */}
         <div className="
           absolute inset-0 rounded-full blur-xl animate-pulse
-          bg-emerald-400/15
+          bg-blue-400/15
           dark:bg-cyan-500/10
         " />
 
         {/* Outer Dashed Ring */}
         <div className="
           absolute inset-0 rounded-full border border-dashed
-          border-emerald-500/40
+          border-blue-500/40
           dark:border-cyan-500/20
           animate-[spin_10s_linear_infinite]
         " />
@@ -38,9 +38,9 @@ export function CoreSpinLoader() {
         {/* Main Arc */}
         <div className="
           absolute inset-1 rounded-full border-2 border-transparent
-          border-t-emerald-500
+          border-t-blue-600
           dark:border-t-cyan-400
-          shadow-[0_0_6px_rgba(16,185,129,0.5)]
+          shadow-[0_0_6px_rgba(37,99,235,0.5)]
           dark:shadow-[0_0_10px_rgba(34,211,238,0.4)]
           animate-[spin_2s_linear_infinite]
         " />
@@ -48,9 +48,9 @@ export function CoreSpinLoader() {
         {/* Reverse Arc */}
         <div className="
           absolute inset-3 rounded-full border-2 border-transparent
-          border-b-green-600
+          border-b-sky-500
           dark:border-b-purple-500
-          shadow-[0_0_6px_rgba(22,163,74,0.4)]
+          shadow-[0_0_6px_rgba(14,165,233,0.4)]
           dark:shadow-[0_0_10px_rgba(168,85,247,0.4)]
           animate-[spin_3s_linear_infinite_reverse]
         " />
@@ -58,7 +58,7 @@ export function CoreSpinLoader() {
         {/* Inner Fast Ring */}
         <div className="
           absolute inset-5 rounded-full border border-transparent
-          border-l-green-700/60
+          border-l-indigo-500/60
           dark:border-l-white/50
           animate-[spin_1s_ease-in-out_infinite]
         " />
@@ -68,9 +68,9 @@ export function CoreSpinLoader() {
           <div className="
             absolute top-0 left-1/2 -translate-x-1/2
             w-1 h-1 rounded-full
-            bg-emerald-600
+            bg-blue-600
             dark:bg-cyan-400
-            shadow-[0_0_4px_rgba(16,185,129,0.9)]
+            shadow-[0_0_4px_rgba(37,99,235,0.9)]
             dark:shadow-[0_0_6px_rgba(34,211,238,0.8)]
           " />
         </div>
@@ -78,9 +78,9 @@ export function CoreSpinLoader() {
         {/* Center Core */}
         <div className="
           absolute w-2 h-2 rounded-full animate-pulse
-          bg-emerald-700
+          bg-blue-700
           dark:bg-white
-          shadow-[0_0_6px_rgba(16,185,129,0.6)]
+          shadow-[0_0_6px_rgba(37,99,235,0.6)]
           dark:shadow-[0_0_10px_rgba(255,255,255,0.8)]
         " />
       </div>
@@ -91,7 +91,7 @@ export function CoreSpinLoader() {
           key={loadingText}
           className="
             text-[10px] font-medium tracking-[0.3em] uppercase
-            text-emerald-700
+            text-blue-700
             dark:text-cyan-200/70
             animate-in fade-in slide-in-from-bottom-2 duration-500
           "

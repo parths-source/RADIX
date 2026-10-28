@@ -146,9 +146,9 @@ export default function Profile() {
       {load.status === "ready" && (
         <FormProvider {...form}>
           <form onSubmit={handleSubmit(onSubmit, () => toast.error("Fix the highlighted fields, then save profile."))} noValidate className="space-y-6">
-            {load.note && <p className="rounded-xl border border-cyan/30 bg-cyan/10 px-4 py-3 text-sm text-mist">{load.note}</p>}
+            {load.note && <p className="rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-ink">{load.note}</p>}
             {!profileId && !fromId && (
-              <p className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-mist/70">
+              <p className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink-soft">
                 Starting from scratch. To pre-fill this form, parse a resume first and choose “Build profile from this resume”.
               </p>
             )}
@@ -182,15 +182,15 @@ export default function Profile() {
                 </Field>
                 <div>
                   <p className="mb-1.5 text-sm font-medium">CV</p>
-                  {cvFile && <p className="mb-2 text-sm text-mist/70">Stored: {cvFile.split("/").pop()}</p>}
+                  {cvFile && <p className="mb-2 text-sm text-ink-soft">Stored: {cvFile.split("/").pop()}</p>}
                   <FileDrop onFile={uploadCv} disabled={saving} />
                 </div>
               </div>
             </FormSection>
 
-            <div className="sticky bottom-4 z-20 flex items-center justify-end gap-3 rounded-2xl border border-white/10 bg-abyss/90 p-3 backdrop-blur">
-              <span className="text-sm text-mist/60">{formState.isDirty ? "Unsaved changes" : profileId ? "All changes saved" : ""}</span>
-              <Button type="submit" disabled={saving} className="bg-brand text-white hover:bg-brand/90">
+            <div className="sticky bottom-4 z-20 flex items-center justify-end gap-3 rounded-2xl border border-line bg-surface/90 p-3 backdrop-blur">
+              <span className="text-sm text-ink-muted">{formState.isDirty ? "Unsaved changes" : profileId ? "All changes saved" : ""}</span>
+              <Button type="submit" disabled={saving} className="bg-accent text-white hover:bg-accent/90">
                 {saving ? "Saving…" : "Save profile"}
               </Button>
             </div>

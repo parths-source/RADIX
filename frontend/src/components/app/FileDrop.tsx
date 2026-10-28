@@ -35,13 +35,13 @@ export function FileDrop({ onFile, disabled }: { onFile: (file: File) => void; d
           setDragging(false)
           take(e.dataTransfer.files[0])
         }}
-        className={`flex w-full flex-col items-center gap-2 rounded-2xl border border-dashed px-4 py-6 text-sm text-mist/80 transition-colors focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none disabled:opacity-50 ${
-          dragging ? "border-cyan bg-cyan/10" : "border-white/20 hover:bg-white/5"
+        className={`flex w-full flex-col items-center gap-2 rounded-2xl border border-dashed px-4 py-6 text-sm text-ink-soft transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:opacity-50 ${
+          dragging ? "border-accent bg-accent/10" : "border-line-strong hover:bg-tint"
         }`}
       >
-        <FileUp className="size-5 text-cyan" aria-hidden />
+        <FileUp className="size-5 text-accent" aria-hidden />
         <span>Drop a PDF or DOCX here, or click to choose one</span>
-        <span className="text-xs text-mist/50">Up to {MAX_MB} MB. Scanned PDFs are not supported.</span>
+        <span className="text-xs text-ink-muted">Up to {MAX_MB} MB. Scanned PDFs are not supported.</span>
       </button>
       <input
         ref={input}
@@ -55,7 +55,7 @@ export function FileDrop({ onFile, disabled }: { onFile: (file: File) => void; d
           e.target.value = ""
         }}
       />
-      {problem && <p className="mt-2 text-sm text-danger" role="alert">{problem}</p>}
+      {problem && <p className="mt-2 text-sm text-danger-ink" role="alert">{problem}</p>}
     </div>
   )
 }

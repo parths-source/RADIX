@@ -64,8 +64,8 @@ export default function SkillMatch() {
 
       {nothingToChoose ? (
         <EmptyState>
-          {profiles?.length === 0 ? <>No saved profiles yet. <Link to="/resume" className="text-cyan underline">Parse a resume</Link> and save a profile first.</> : null}{" "}
-          {jds?.length === 0 ? <>No analyzed JDs yet. <Link to="/analyze" className="text-cyan underline">Analyze a JD</Link> first.</> : null}
+          {profiles?.length === 0 ? <>No saved profiles yet. <Link to="/resume" className="text-accent underline">Parse a resume</Link> and save a profile first.</> : null}{" "}
+          {jds?.length === 0 ? <>No analyzed JDs yet. <Link to="/analyze" className="text-accent underline">Analyze a JD</Link> first.</> : null}
         </EmptyState>
       ) : (
         <Panel className="mb-6">
@@ -84,7 +84,7 @@ export default function SkillMatch() {
                 {jds?.map((j) => <option key={j.id} value={j.id}>{jdLabel(j)}{j.status === "fallback" ? " (saved extraction)" : ""}</option>)}
               </select>
             </div>
-            <Button onClick={runMatch} disabled={!profileId || !jdId || run.status === "loading"} className="bg-brand text-white hover:bg-brand/90">
+            <Button onClick={runMatch} disabled={!profileId || !jdId || run.status === "loading"} className="bg-accent text-white hover:bg-accent/90">
               {run.status === "loading" ? "Matching…" : "Match"}
             </Button>
           </div>
@@ -99,12 +99,12 @@ export default function SkillMatch() {
           <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
             <Panel className="lg:row-span-2">
               {run.result.llm_judge === "failed" && (
-                <p role="note" className="mb-4 rounded-xl border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-mist">
+                <p role="note" className="mb-4 rounded-xl border border-warn/40 bg-warn/10 px-3 py-2 text-sm text-ink">
                   The AI judge was unavailable, so this is the rule-based score only (exact, alias and similar-name matches).
                 </p>
               )}
               <h2 className="text-xl font-semibold">Missing skills</h2>
-              <p className="mt-1 mb-4 text-sm text-mist/70">
+              <p className="mt-1 mb-4 text-sm text-ink-soft">
                 {missingRequired > 0 ? `${missingRequired} required skill${missingRequired === 1 ? "" : "s"} not shown in the profile. Close these first.` : "Every required skill is covered."}
               </p>
               <MissingList missing={run.result.missing_skills} />

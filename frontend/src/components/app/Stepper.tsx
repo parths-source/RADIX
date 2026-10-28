@@ -25,8 +25,8 @@ export function Stepper() {
                 to={step.to}
                 aria-label={`${step.label}${done ? " (done)" : " (not started)"}`}
                 className={({ isActive }) =>
-                  `flex items-center gap-2 rounded-full px-3 py-1.5 text-sm focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none ${
-                    isActive ? "bg-brand text-white" : "text-mist/75 hover:bg-white/10"
+                  `flex items-center gap-2 rounded-full px-3 py-1.5 text-sm focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                    isActive ? "bg-accent text-white" : "text-ink-soft hover:bg-tint"
                   }`
                 }
               >
@@ -34,7 +34,7 @@ export function Stepper() {
                   <>
                     <span
                       className={`flex size-5 items-center justify-center rounded-full text-[11px] font-semibold ${
-                        done ? "bg-cyan text-abyss" : isActive ? "bg-white/25 text-white" : "border border-white/25"
+                        done ? "bg-accent text-white" : isActive ? "bg-white/25 text-white" : "border border-line-strong"
                       }`}
                       aria-hidden
                     >

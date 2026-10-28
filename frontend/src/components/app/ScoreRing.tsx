@@ -6,25 +6,31 @@ export function ScoreRing({ score, label, caption }: { score: number; label: str
   return (
     <figure className="flex flex-col items-center gap-2">
       <svg viewBox="0 0 128 128" className="size-36" role="img" aria-label={`${label}: ${score} out of 100`}>
-        <circle cx="64" cy="64" r={radius} fill="none" stroke="rgb(255 255 255 / 0.1)" strokeWidth="10" />
+        <defs>
+          <linearGradient id="score-ring-gradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="var(--color-accent)" />
+            <stop offset="100%" stopColor="var(--color-sky)" />
+          </linearGradient>
+        </defs>
+        <circle cx="64" cy="64" r={radius} fill="none" stroke="var(--color-tint)" strokeWidth="10" />
         <circle
           cx="64"
           cy="64"
           r={radius}
           fill="none"
-          stroke="var(--color-cyan)"
+          stroke="url(#score-ring-gradient)"
           strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray={`${filled} ${circumference}`}
           transform="rotate(-90 64 64)"
         />
-        <text x="64" y="64" textAnchor="middle" dominantBaseline="central" className="fill-mist text-3xl font-semibold">
+        <text x="64" y="64" textAnchor="middle" dominantBaseline="central" className="fill-ink text-3xl font-bold" style={{ fontFamily: "var(--font-display)" }}>
           {score}
         </text>
       </svg>
       <figcaption className="text-center">
-        <span className="block text-sm font-medium text-mist">{label}</span>
-        {caption && <span className="block text-xs text-mist/60">{caption}</span>}
+        <span className="block text-sm font-medium text-ink">{label}</span>
+        {caption && <span className="block text-xs text-ink-muted">{caption}</span>}
       </figcaption>
     </figure>
   )

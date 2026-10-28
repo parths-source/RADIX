@@ -33,7 +33,7 @@ export function SkillsEditor() {
       }
     >
       {fields.length === 0 ? (
-        <p className="text-sm text-mist/60">No skills yet. Add them here, or build the profile from a parsed resume.</p>
+        <p className="text-sm text-ink-muted">No skills yet. Add them here, or build the profile from a parsed resume.</p>
       ) : (
         <ul className="space-y-3">
           {fields.map((field, i) => (
@@ -66,7 +66,7 @@ export function SkillsEditor() {
           ))}
         </ul>
       )}
-      {errors?.root?.message && <p className="mt-2 text-xs text-danger">{errors.root.message}</p>}
+      {errors?.root?.message && <p className="mt-2 text-xs text-danger-ink">{errors.root.message}</p>}
     </FormSection>
   )
 }

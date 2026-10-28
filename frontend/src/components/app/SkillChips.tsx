@@ -9,7 +9,7 @@ function ConfidenceDots({ confidence }: { confidence: Confidence }) {
   return (
     <span className="flex gap-0.5" aria-hidden>
       {[1, 2, 3].map((i) => (
-        <span key={i} className={`size-1.5 rounded-full ${i <= CONFIDENCE_DOTS[confidence] ? "bg-cyan" : "bg-white/20"}`} />
+        <span key={i} className={`size-1.5 rounded-full ${i <= CONFIDENCE_DOTS[confidence] ? "bg-accent" : "bg-line-strong"}`} />
       ))}
     </span>
   )
@@ -26,8 +26,8 @@ export function SkillChips({ skills, showRequirement = false }: { skills: Skill[
     <div className="space-y-5">
       {groups.map((group) => (
         <div key={group.code}>
-          <h3 className="mb-2 text-xs font-medium tracking-wide text-mist/60 uppercase">
-            {group.label} <span className="text-mist/40">· {group.skills.length}</span>
+          <h3 className="mb-2 text-xs font-medium tracking-wider text-accent uppercase">
+            {group.label} <span className="text-ink-muted">· {group.skills.length}</span>
           </h3>
           <ul className="flex flex-wrap gap-2">
             {group.skills.map((skill) => {
@@ -41,8 +41,8 @@ export function SkillChips({ skills, showRequirement = false }: { skills: Skill[
                     aria-expanded={expanded}
                     title={skill.evidence}
                     onClick={() => setOpen(expanded ? null : key)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-mist transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none ${
-                      preferred ? "border-dashed border-white/30" : "border-cyan/30 bg-tide/20"
+                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm text-ink transition-colors hover:bg-tint focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                      preferred ? "border-dashed border-line-strong" : "border-accent/30 bg-tint"
                     }`}
                   >
                     {skill.skill_name}
@@ -52,10 +52,10 @@ export function SkillChips({ skills, showRequirement = false }: { skills: Skill[
                     </span>
                   </button>
                   {expanded && (
-                    <p className="mt-2 rounded-lg bg-black/20 px-3 py-2 text-sm text-mist/80">
-                      <span className="text-mist/50">Evidence: </span>“{skill.evidence || "none given"}”
-                      <span className="text-mist/50"> · {skill.confidence} confidence</span>
-                      {showRequirement && <span className="text-mist/50"> · {skill.requirement_type ?? "required"}</span>}
+                    <p className="mt-2 rounded-lg bg-paper px-3 py-2 text-sm text-ink-soft">
+                      <span className="text-ink-muted">Evidence: </span>“{skill.evidence || "none given"}”
+                      <span className="text-ink-muted"> · {skill.confidence} confidence</span>
+                      {showRequirement && <span className="text-ink-muted"> · {skill.requirement_type ?? "required"}</span>}
                     </p>
                   )}
                 </li>
@@ -70,12 +70,12 @@ export function SkillChips({ skills, showRequirement = false }: { skills: Skill[
 
 export function SkillLegend({ showRequirement = false }: { showRequirement?: boolean }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-mist/60">
+    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-ink-muted">
       <span className="flex items-center gap-2"><ConfidenceDots confidence="high" /> confidence: high, medium, low</span>
       {showRequirement && (
         <>
-          <span className="flex items-center gap-2"><span className="h-3 w-5 rounded-full border border-cyan/30 bg-tide/20" /> required</span>
-          <span className="flex items-center gap-2"><span className="h-3 w-5 rounded-full border border-dashed border-white/30" /> nice to have</span>
+          <span className="flex items-center gap-2"><span className="h-3 w-5 rounded-full border border-accent/30 bg-tint" /> required</span>
+          <span className="flex items-center gap-2"><span className="h-3 w-5 rounded-full border border-dashed border-line-strong" /> nice to have</span>
         </>
       )}
       <span>Click a skill to see the evidence.</span>

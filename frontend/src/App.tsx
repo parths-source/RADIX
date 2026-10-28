@@ -18,7 +18,7 @@ function App() {
       <BrowserRouter>
         <Suspense
           fallback={
-            <div className="app-backdrop flex min-h-svh items-center justify-center motion-reduce:[&_*]:animate-none" aria-hidden>
+            <div className="paper flex min-h-svh items-center justify-center motion-reduce:[&_*]:animate-none" aria-hidden>
               <CoreSpinLoader />
             </div>
           }
@@ -32,7 +32,7 @@ function App() {
             <Route path="/match" element={<SkillMatch />} />
           </Routes>
         </Suspense>
-        <Toaster theme="dark" position="top-center" richColors />
+        <Toaster theme="light" position="top-center" richColors />
       </BrowserRouter>
     </FlowProvider>
   )

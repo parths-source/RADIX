@@ -58,7 +58,7 @@ export default function TalentCheck() {
 
       {profiles && profiles.length === 0 ? (
         <EmptyState>
-          No saved profiles yet. <Link to="/resume" className="text-cyan underline">Parse a resume</Link> and save a profile first.
+          No saved profiles yet. <Link to="/resume" className="text-accent underline">Parse a resume</Link> and save a profile first.
         </EmptyState>
       ) : (
         <Panel className="mb-6">
@@ -77,7 +77,7 @@ export default function TalentCheck() {
                 {companies?.companies.map((c) => <option key={c.company_key} value={c.company_key}>{c.display_name}</option>)}
               </select>
             </div>
-            <Button onClick={runCheck} disabled={!profileId || !companyKey || run.status === "loading"} className="bg-brand text-white hover:bg-brand/90">
+            <Button onClick={runCheck} disabled={!profileId || !companyKey || run.status === "loading"} className="bg-accent text-white hover:bg-accent/90">
               {run.status === "loading" ? "Running…" : "Run Talent Check"}
             </Button>
           </div>
@@ -94,7 +94,7 @@ export default function TalentCheck() {
               <div className="grid items-center gap-6 md:grid-cols-[auto_minmax(0,1fr)]">
                 <div className="flex flex-col items-center gap-3">
                   <ScoreRing score={run.result.readiness_score} label="Estimated readiness" caption={run.result.company} />
-                  <p className="text-sm text-mist/70">{gaps === 0 ? "Meets the bar in every skillset" : `${gaps} of 12 skillsets below the bar`}</p>
+                  <p className="text-sm text-ink-soft">{gaps === 0 ? "Meets the bar in every skillset" : `${gaps} of 12 skillsets below the bar`}</p>
                 </div>
                 <GapRadar gaps={run.result.skillset_gap} />
               </div>
@@ -102,7 +102,7 @@ export default function TalentCheck() {
             <Panel>
               <h2 className="mb-3 text-lg font-semibold">Skillset gaps</h2>
               <GapTable gaps={run.result.skillset_gap} />
-              <p className="mt-3 text-xs text-mist/50">
+              <p className="mt-3 text-xs text-ink-muted">
                 Scoring {run.result.scoring_version}. Estimated levels depend on extraction quality and cannot tell a deep project from a small one.
               </p>
             </Panel>

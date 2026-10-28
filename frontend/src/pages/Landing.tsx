@@ -1,55 +1,81 @@
+import { ArrowRight, Sparkles } from "lucide-react"
 import { Link } from "react-router"
 
 import { Hero } from "@/components/hero/Hero"
 import { RadixLogo } from "@/components/hero/RadixLogo"
-
-const MODULES = [
-  { title: "JD Analytics", text: "Upload a job description and see the skills it actually asks for, sorted into RADIX's 12 skillsets." },
-  { title: "Resume Parsing", text: "Upload a resume and see the skills it shows, with projects, internships and hackathons." },
-  { title: "Profile Builder", text: "Turn the resume into a full profile and link each skill to the experience that proves it." },
-  { title: "Talent Check", text: "See how the profile stacks up against a company's bar across all 12 skillsets." },
-  { title: "Skill Matching", text: "Compare the profile with one job posting: a match score and, more importantly, the gap list." },
-]
+import { StepsFlow } from "@/components/landing/StepsFlow"
 
 export default function Landing() {
   return (
-    <div className="bg-abyss text-mist">
-      <Hero />
+    <div className="bg-paper">
+      <div className="bg-abyss text-mist">
+        <Hero />
+      </div>
 
-      <section id="features" className="mx-auto max-w-6xl scroll-mt-6 px-4 py-20 sm:px-6">
-        <h2 className="text-3xl font-semibold tracking-tight">Five steps, one flow</h2>
-        <p className="mt-2 max-w-2xl text-mist/70">Each step feeds the next, so you go from a job posting to a clear list of what to work on.</p>
-        <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {MODULES.map((m, i) => (
-            <li key={m.title} className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-              <span className="flex size-8 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">{i + 1}</span>
-              <h3 className="mt-4 font-semibold">{m.title}</h3>
-              <p className="mt-2 text-sm text-mist/70">{m.text}</p>
-            </li>
-          ))}
-        </ol>
-        <Link to="/analyze" className="mt-8 inline-flex rounded-full bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand/90 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none">
-          Start with a job description
-        </Link>
-      </section>
+      <div className="paper">
+        <section id="features" className="relative scroll-mt-6 overflow-hidden">
+          <div aria-hidden className="pointer-events-none absolute -top-40 -right-40 size-[28rem] rounded-full bg-accent/10 blur-3xl" />
+          <div aria-hidden className="pointer-events-none absolute -bottom-48 -left-40 size-[30rem] rounded-full bg-sky/10 blur-3xl" />
+          <div aria-hidden className="dot-grid pointer-events-none absolute bottom-16 left-6 hidden h-24 w-24 opacity-25 lg:block" />
+          <div aria-hidden className="dot-grid pointer-events-none absolute top-24 right-8 hidden h-20 w-20 opacity-20 lg:block" />
 
-      <section id="about" className="border-t border-white/10">
-        <div className="mx-auto max-w-6xl scroll-mt-6 px-4 py-16 sm:px-6">
-          <h2 className="text-2xl font-semibold tracking-tight">About</h2>
-          <p className="mt-3 max-w-3xl text-mist/75">
-            Everything RADIX has built so far serves the company side of hiring: a 12-skillset competency framework and real hiring data.
-            Talent Match flips the lens for the candidate. Scores are estimates from the documents you provide, not verified proficiency,
-            and the company data shown in this build is a placeholder until RADIX's export is connected.
-          </p>
-        </div>
-      </section>
+          <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-tint px-3 py-1 text-xs font-semibold tracking-[0.18em] text-accent uppercase">
+                <Sparkles className="size-3.5" aria-hidden /> How it works
+              </span>
+              <h2 className="mt-5 text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
+                Five steps, <span className="blue-gradient">one flow</span>
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-balance text-ink-soft">
+                Each step feeds the next, so you go from a job posting to a clear list of what to work on.
+              </p>
+            </div>
 
-      <footer className="border-t border-white/10">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-mist/50 sm:px-6">
-          <RadixLogo label className="h-5" labelClassName="hidden sm:inline" />
-          <span>Talent Match Hackathon 2026</span>
-        </div>
-      </footer>
+            <div className="mt-16 sm:mt-20">
+              <StepsFlow />
+            </div>
+
+            <div className="mt-16 flex justify-center">
+              <Link
+                to="/analyze"
+                className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#4338ca] via-accent to-sky px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_32px_-12px_rgb(31_86_224/0.7)] transition hover:shadow-[0_18px_40px_-10px_rgb(31_86_224/0.8)] hover:brightness-110 focus-visible:ring-4 focus-visible:ring-accent/30 focus-visible:outline-none"
+              >
+                Start with a job description
+                <ArrowRight className="size-5 transition-transform group-hover:translate-x-1 motion-reduce:transition-none" aria-hidden />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section id="about" className="relative scroll-mt-6 border-t border-line">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_2fr] lg:items-start">
+            <div>
+              <span className="text-xs font-semibold tracking-[0.18em] text-accent uppercase">About</span>
+              <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
+                The candidate's side of <span className="blue-gradient">hiring</span>
+              </h2>
+            </div>
+            <div className="rounded-2xl border border-line bg-surface p-6 text-ink-soft shadow-[0_18px_40px_-28px_rgb(31_86_224/0.35)] sm:p-8">
+              <p className="text-lg leading-relaxed">
+                Everything RADIX has built so far serves the company side of hiring: a 12-skillset competency framework and real hiring data.
+                <strong className="font-semibold text-accent"> Talent Match flips the lens for the candidate.</strong>
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-ink-muted">
+                Scores are estimates from the documents you provide, not verified proficiency, and the company data shown in this build is a placeholder
+                until RADIX's export is connected.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer className="border-t border-line bg-surface/70">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-ink-muted sm:px-6">
+            <RadixLogo label tone="ink" className="h-5" labelClassName="hidden sm:inline" />
+            <span>Talent Match Hackathon 2026</span>
+          </div>
+        </footer>
+      </div>
     </div>
   )
 }

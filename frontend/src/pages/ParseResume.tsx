@@ -30,18 +30,18 @@ export default function ParseResume() {
               <Panel className="space-y-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm text-mist/60">{state.result.source_file}</p>
+                    <p className="text-sm text-ink-muted">{state.result.source_file}</p>
                     <h2 className="text-xl font-semibold">
                       {state.result.details?.name ?? "Candidate"} · {state.result.skills.length} skills found
                     </h2>
-                    {state.result.details?.email && <p className="text-sm text-mist/60">{state.result.details.email}</p>}
+                    {state.result.details?.email && <p className="text-sm text-ink-muted">{state.result.details.email}</p>}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     {state.result.status === "fallback" && <FallbackBadge />}
                     {state.result.id && (
                       <Link
                         to={`/profile?from=${state.result.id}`}
-                        className="rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white hover:bg-brand/90 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
+                        className="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                       >
                         {flow.profileId ? "Build a new profile from this resume" : "Build profile from this resume"}
                       </Link>
@@ -60,7 +60,7 @@ export default function ParseResume() {
               {state.result.details && (
                 <Panel className="space-y-6">
                   <Section title="Education">
-                    <p className="text-sm text-mist/80">{state.result.details.education || "Not found in the resume."}</p>
+                    <p className="text-sm text-ink-soft">{state.result.details.education || "Not found in the resume."}</p>
                   </Section>
                   <Section title="Projects">
                     <Entries entries={state.result.details.projects} empty="No projects found." />
@@ -72,7 +72,7 @@ export default function ParseResume() {
                     <Entries entries={state.result.details.certifications ?? []} empty="No certifications found." />
                   </Section>
                   <Section title="Preferred roles">
-                    <p className="text-sm text-mist/80">{state.result.details.preferred_roles?.join(", ") || "None listed."}</p>
+                    <p className="text-sm text-ink-soft">{state.result.details.preferred_roles?.join(", ") || "None listed."}</p>
                   </Section>
                 </Panel>
               )}
@@ -81,7 +81,7 @@ export default function ParseResume() {
                   {flow.profileId && (
                     <Link
                       to={`/profile?id=${flow.profileId}&from=${state.result.id}`}
-                      className="mt-6 inline-flex items-center rounded-full border border-white/20 px-5 py-2 text-sm text-mist hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
+                      className="mt-6 inline-flex items-center rounded-full border border-line-strong px-5 py-2 text-sm text-ink hover:bg-tint focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
                     >
                       Merge into the current profile
                     </Link>
@@ -100,29 +100,29 @@ export default function ParseResume() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="mb-2 text-xs font-medium tracking-wide text-mist/60 uppercase">{title}</h3>
+      <h3 className="mb-2 text-xs font-medium tracking-wider text-accent uppercase">{title}</h3>
       {children}
     </div>
   )
 }
 
 function Entries({ entries, empty }: { entries: Entry[]; empty: string }) {
-  if (entries.length === 0) return <p className="text-sm text-mist/60">{empty}</p>
+  if (entries.length === 0) return <p className="text-sm text-ink-muted">{empty}</p>
   return (
     <ul className="space-y-3">
       {entries.map((entry, i) => (
-        <li key={`${entry.title}-${i}`} className="rounded-xl border border-white/10 bg-black/10 p-3">
+        <li key={`${entry.title}-${i}`} className="rounded-xl border border-line bg-paper p-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-medium">{entry.title}</span>
             {entry.kind && (
-              <span className="rounded-full bg-tide/30 px-2 py-0.5 text-xs text-cyan">{entry.kind === "internship" ? "Internship" : "Hackathon"}</span>
+              <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs text-accent">{entry.kind === "internship" ? "Internship" : "Hackathon"}</span>
             )}
-            {entry.duration_months != null && <span className="text-xs text-mist/60">{entry.duration_months} months</span>}
+            {entry.duration_months != null && <span className="text-xs text-ink-muted">{entry.duration_months} months</span>}
           </div>
-          {entry.description && <p className="mt-1 text-sm text-mist/70">{entry.description}</p>}
+          {entry.description && <p className="mt-1 text-sm text-ink-soft">{entry.description}</p>}
           {entry.skills_used && entry.skills_used.length > 0 && (
-            <p className="mt-2 text-xs text-mist/60">
-              Skills used: <span className="text-mist/85">{entry.skills_used.join(", ")}</span>
+            <p className="mt-2 text-xs text-ink-muted">
+              Skills used: <span className="text-ink-soft">{entry.skills_used.join(", ")}</span>
             </p>
           )}
         </li>

@@ -29,11 +29,11 @@ export function EntriesEditor({ group, title, description, singular, showDuratio
       }
     >
       {fields.length === 0 ? (
-        <p className="text-sm text-mist/60">None yet.</p>
+        <p className="text-sm text-ink-muted">None yet.</p>
       ) : (
         <ul className="space-y-4">
           {fields.map((field, i) => (
-            <li key={field.id} className="space-y-3 rounded-xl border border-white/10 bg-black/10 p-4">
+            <li key={field.id} className="space-y-3 rounded-xl border border-line bg-paper p-4">
               <div className="flex items-start gap-2">
                 <div className="flex-1">
                   <Field id={`${group}-${i}-title`} label={`${singular[0].toUpperCase()}${singular.slice(1)} title`} error={errors?.[i]?.title?.message}>
@@ -78,9 +78,9 @@ function SkillsUsedPicker({ group, index, error }: { group: EntryGroup; index: n
 
   return (
     <fieldset>
-      <legend className="mb-1.5 text-sm font-medium text-mist">Skills used</legend>
+      <legend className="mb-1.5 text-sm font-medium text-ink">Skills used</legend>
       {names.length === 0 ? (
-        <p className="text-xs text-mist/50">Add skills above first, then pick the ones used here.</p>
+        <p className="text-xs text-ink-muted">Add skills above first, then pick the ones used here.</p>
       ) : (
         <div className="flex flex-wrap gap-2">
           {names.map((name) => {
@@ -91,8 +91,8 @@ function SkillsUsedPicker({ group, index, error }: { group: EntryGroup; index: n
                 type="button"
                 aria-pressed={on}
                 onClick={() => toggle(name)}
-                className={`rounded-full border px-3 py-1 text-xs focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none ${
-                  on ? "border-cyan bg-cyan/20 text-mist" : "border-white/15 text-mist/60 hover:bg-white/10"
+                className={`rounded-full border px-3 py-1 text-xs focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                  on ? "border-accent bg-accent/15 text-ink" : "border-line text-ink-muted hover:bg-tint"
                 }`}
               >
                 {name}
@@ -100,13 +100,13 @@ function SkillsUsedPicker({ group, index, error }: { group: EntryGroup; index: n
             )
           })}
           {unknown.map((name) => (
-            <button key={name} type="button" onClick={() => toggle(name)} className="rounded-full border border-danger/50 px-3 py-1 text-xs text-danger" title="Not in the skills list. Click to remove.">
+            <button key={name} type="button" onClick={() => toggle(name)} className="rounded-full border border-danger/50 px-3 py-1 text-xs text-danger-ink" title="Not in the skills list. Click to remove.">
               {name} ×
             </button>
           ))}
         </div>
       )}
-      {error && <p className="mt-1 text-xs text-danger">{error}</p>}
+      {error && <p className="mt-1 text-xs text-danger-ink">{error}</p>}
     </fieldset>
   )
 }

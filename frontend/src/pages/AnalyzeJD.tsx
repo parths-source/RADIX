@@ -27,7 +27,7 @@ export default function AnalyzeJD() {
             <Panel className="space-y-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm text-mist/60">{state.result.company ?? "Company not found in the JD"}</p>
+                  <p className="text-sm text-ink-muted">{state.result.company ?? "Company not found in the JD"}</p>
                   <h2 className="text-xl font-semibold">{state.result.role ?? state.result.source_file}</h2>
                 </div>
                 {state.result.status === "fallback" && <FallbackBadge />}
@@ -53,8 +53,8 @@ export default function AnalyzeJD() {
 function Counts({ skills }: { skills: { requirement_type?: string | null }[] }) {
   const preferred = skills.filter((s) => s.requirement_type === "preferred").length
   return (
-    <p className="text-sm text-mist/70">
-      <strong className="text-mist">{skills.length - preferred}</strong> required · <strong className="text-mist">{preferred}</strong> nice to have
+    <p className="text-sm text-ink-soft">
+      <strong className="text-ink">{skills.length - preferred}</strong> required · <strong className="text-ink">{preferred}</strong> nice to have
     </p>
   )
 }
