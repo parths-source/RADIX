@@ -1,0 +1,65 @@
+/* Hero visuals (PLAN.md 11.3-11.4). Colours come from the design tokens in index.css. */
+
+/* Layer 1: shown under the shader, and alone when WebGL or motion is unavailable. */
+.hero-fallback {
+    background:
+        radial-gradient(ellipse 70% 60% at 80% 10%, rgb(90 210 244 / 0.55), transparent 60%),
+        radial-gradient(ellipse 80% 70% at 75% 40%, rgb(27 108 168 / 0.8), transparent 70%),
+        var(--color-abyss);
+}
+
+/* Layer 3: darkens the centre-top behind the text block. The plan's ~35% abyss was not enough
+   for the headline over the bright upper-right of the shader (measured), so the core is ~72%. */
+.hero-scrim {
+    background: radial-gradient(ellipse 62% 48% at 50% 27%, rgb(3 28 38 / 0.72), rgb(3 28 38 / 0.5) 50%, rgb(3 28 38 / 0.2) 75%, transparent 90%);
+}
+
+/* Planet horizon: a large circle clipped by the stage, with a cyan-white rim light and outer glow. */
+.hero-planet {
+    background: radial-gradient(circle at 50% 0%, #0f3a5a 0%, #082436 35%, var(--color-abyss) 70%);
+    box-shadow:
+        0 -1.5px 0 rgb(234 249 255 / 0.9),
+        0 -6px 18px rgb(234 249 255 / 0.35),
+        0 -24px 80px rgb(90 210 244 / 0.45),
+        inset 0 20px 50px rgb(90 210 244 / 0.25);
+}
+
+.hero-wordmark {
+    filter: drop-shadow(0 0 14px rgb(90 210 244 / 0.65)) drop-shadow(0 0 40px rgb(90 210 244 / 0.35));
+}
+
+.hero-dot {
+    background: var(--color-cyan);
+    box-shadow: 0 0 8px 2px rgb(90 210 244 / 0.7);
+}
+
+/* Orbiting icon: glass circle, 1px ring in the brand colour, soft same-colour glow. */
+.orbit-icon {
+    transition: filter 200ms ease;
+}
+.orbit-icon__disc {
+    background: rgb(255 255 255 / 0.06);
+    border: 1px solid color-mix(in srgb, var(--brand) 70%, transparent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--brand) 35%, transparent), inset 0 0 12px rgb(255 255 255 / 0.06);
+    backdrop-filter: blur(6px);
+    transition: box-shadow 200ms ease;
+}
+.orbit-icon:hover .orbit-icon__disc {
+    box-shadow: 0 0 30px color-mix(in srgb, var(--brand) 70%, transparent), inset 0 0 14px rgb(255 255 255 / 0.12);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Phones: the text block is nearly full width, so the scrim must be too. */
+@media (max-width: 639px) {
+    .hero-scrim {
+        background: radial-gradient(ellipse 110% 46% at 50% 28%, rgb(3 28 38 / 0.75), rgb(3 28 38 / 0.55) 55%, rgb(3 28 38 / 0.2) 80%, transparent 95%);
+    }
+}

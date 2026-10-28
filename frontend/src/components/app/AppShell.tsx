@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import { ArrowRight, RotateCcw } from "lucide-react"
 import { Link, useNavigate } from "react-router"
 
-import logo from "@/assets/radix-logo.svg"
+import { RadixLogo } from "@/components/hero/RadixLogo"
 import { Stepper } from "@/components/app/Stepper"
 import { useFlow } from "@/lib/flowState"
 
@@ -45,8 +45,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="relative z-10 border-b border-white/10">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-3 rounded focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none">
-            <img src={logo} alt="RADIX" className="h-6 w-auto" />
-            <span className="text-xs font-medium tracking-[0.25em] text-mist/70">TALENT MATCH</span>
+            <RadixLogo label />
           </Link>
           <div className="flex flex-wrap items-center gap-2">
             <Stepper />

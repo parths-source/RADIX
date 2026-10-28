@@ -5,7 +5,7 @@ Flow: pick a JD → parse a resume → build a profile → Talent Check → Skil
 
 Scope, data contract, scoring and build order: [PLAN.md](PLAN.md). Decisions: [docs/DECISIONS.md](docs/DECISIONS.md). Contract: [docs/CONTRACT.md](docs/CONTRACT.md). Demo: [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
 
-**Status:** Phases 0–8 complete: all five modules run as one guided flow, sample files use saved extractions by default, and the Definition of Done checks are recorded below. Phase 2 (landing hero) is in progress; until it lands, `/` is a placeholder with a Get Started link.
+**Status:** All phases (0–8) complete. Landing page with the shader hero at `/`; the five modules run as one guided flow from `/analyze`; sample files use saved extractions by default; the Definition of Done checks are recorded below.
 
 ## Run it from a clean clone
 
@@ -169,6 +169,14 @@ Errors always have the shape `{"error": {"code", "message", "details"}}`.
 **Talent Check (tc-v0.1, D6).** Per skillset: strength = confidence (high 1.0, medium 0.7, low 0.4) × where the skill appears (internship 1.0, project/hackathon 0.7, certification 0.6, skills list only 0.3); depth = min(1, Σ strength / 2.5); experience = min(1, entries using the skillset / 3); level = 1 + round(9 × (0.6 depth + 0.4 experience)), capped at 5 when backed only by a skills list. Readiness = 100 × Σ(bar × min(1, level / bar)) / Σ bar. Formula: PLAN.md section 7.
 
 **Skill Matching (sm-v0.1, D7 + D13).** Per JD skill, the first tier that hits: exact name (1.0), alias (1.0), near-identical name with `rapidfuzz.fuzz.ratio` ≥ 88 (0.8), optional AI judge (0.6). Required skills weigh 1.0, nice-to-haves 0.5. Missing skills are listed required first, then in JD order. Formula: PLAN.md section 8.
+
+## Landing hero
+
+`/` layers, bottom to top: a CSS gradient fallback, the provided WebGL shader (`kk.tsx`, landing page only), a scrim behind the text, the orbit stage (rings, planet horizon, the RADIX wordmark derived from `radix-logo.svg`, 11 orbiting logos), then the content. Checked in headless Chromium (software WebGL):
+- Logos orbit (about 60 px per 2 s) and slow to about 20% while one is hovered; the loop pauses off-screen or in a hidden tab.
+- The shader receives the pointer (its mouse uniform follows the cursor, cursor effect on). The visible distortion could not be measured reliably under software rendering; check it by eye on a real GPU.
+- `prefers-reduced-motion`: no shader, logos at fixed positions. At 375 px: labels hidden, no horizontal scroll. No console errors.
+- **Headline contrast** (WCAG, background sampled behind the text over several shader frames, 95th percentile / brightest pixel): with the plan's ~35% scrim the headline failed, so the scrim core is ~72% abyss (wider on phones). White (`--mist`) headline: 5.2–6.6:1 / ≥ 3.16:1 at every size (3:1 needed for large text). Subcopy: 6.7–8.2:1 / 4.06:1 at worst on tablet (4.5:1 needed for body text, met at the 95th percentile). The mockup's **violet→pink second line failed** (about 1.8:1 and 2.4:1) and was replaced with `--mist`, as PLAN.md 11.4 specifies.
 
 ## Notes
 
