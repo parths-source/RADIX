@@ -13,6 +13,7 @@ import { SkillsEditor } from "@/components/profile/SkillsEditor"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ProfileSummary } from "@/lib/api"
 import { useFlow } from "@/lib/flowState"
+import { labelClass, primaryButton } from "@/lib/steps"
 import { fromForm, profileSchema, toForm, type ProfileForm } from "@/lib/profileForm"
 
 type Load = { status: "loading" } | { status: "ready"; note?: string } | { status: "error"; message: string }
@@ -114,7 +115,7 @@ export default function Profile() {
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
-          <label htmlFor="saved-profile" className="mb-1.5 block text-sm font-medium">Saved profiles</label>
+          <label htmlFor="saved-profile" className={labelClass}>Saved profiles</label>
           <select
             id="saved-profile"
             className={inputClass}
@@ -135,7 +136,7 @@ export default function Profile() {
           </select>
         </div>
         {profileId && fromId && (
-          <Button type="button" variant="outline" disabled={merging || load.status !== "ready"} onClick={mergeResume}>
+          <Button type="button" variant="outline" disabled={merging || load.status !== "ready"} onClick={mergeResume} className="h-11 rounded-xl px-4">
             {merging ? "Merging…" : "Merge parsed resume"}
           </Button>
         )}
@@ -181,16 +182,16 @@ export default function Profile() {
                   <input id="roles" className={inputClass} {...register("preferred_roles")} />
                 </Field>
                 <div>
-                  <p className="mb-1.5 text-sm font-medium">CV</p>
+                  <p className={labelClass}>CV</p>
                   {cvFile && <p className="mb-2 text-sm text-ink-soft">Stored: {cvFile.split("/").pop()}</p>}
                   <FileDrop onFile={uploadCv} disabled={saving} />
                 </div>
               </div>
             </FormSection>
 
-            <div className="sticky bottom-4 z-20 flex items-center justify-end gap-3 rounded-2xl border border-line bg-surface/90 p-3 backdrop-blur">
+            <div className="sticky bottom-4 z-20 flex items-center justify-end gap-3 rounded-2xl border border-line bg-surface/90 p-3 shadow-[0_16px_40px_-20px_rgb(31_86_224/0.5)] backdrop-blur-md">
               <span className="text-sm text-ink-muted">{formState.isDirty ? "Unsaved changes" : profileId ? "All changes saved" : ""}</span>
-              <Button type="submit" disabled={saving} className="bg-accent text-white hover:bg-accent/90">
+              <Button type="submit" disabled={saving} className={primaryButton}>
                 {saving ? "Saving…" : "Save profile"}
               </Button>
             </div>

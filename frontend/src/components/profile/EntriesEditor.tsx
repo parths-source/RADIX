@@ -33,14 +33,14 @@ export function EntriesEditor({ group, title, description, singular, showDuratio
       ) : (
         <ul className="space-y-4">
           {fields.map((field, i) => (
-            <li key={field.id} className="space-y-3 rounded-xl border border-line bg-paper p-4">
+            <li key={field.id} className="space-y-3 rounded-2xl border border-line bg-paper/70 p-4 transition-colors hover:border-accent/30 sm:p-5">
               <div className="flex items-start gap-2">
                 <div className="flex-1">
                   <Field id={`${group}-${i}-title`} label={`${singular[0].toUpperCase()}${singular.slice(1)} title`} error={errors?.[i]?.title?.message}>
                     <input id={`${group}-${i}-title`} className={inputClass} aria-invalid={!!errors?.[i]?.title} {...register(`${group}.${i}.title`)} />
                   </Field>
                 </div>
-                <div className="pt-7">
+                <div className="pt-[30px]">
                   <SmallButton tone="danger" onClick={() => remove(i)} label={`Remove ${singular} ${i + 1}`}>
                     <Trash2 className="size-4" aria-hidden />
                   </SmallButton>
@@ -78,7 +78,7 @@ function SkillsUsedPicker({ group, index, error }: { group: EntryGroup; index: n
 
   return (
     <fieldset>
-      <legend className="mb-1.5 text-sm font-medium text-ink">Skills used</legend>
+      <legend className="mb-2 text-sm font-semibold text-ink">Skills used</legend>
       {names.length === 0 ? (
         <p className="text-xs text-ink-muted">Add skills above first, then pick the ones used here.</p>
       ) : (
@@ -91,8 +91,8 @@ function SkillsUsedPicker({ group, index, error }: { group: EntryGroup; index: n
                 type="button"
                 aria-pressed={on}
                 onClick={() => toggle(name)}
-                className={`rounded-full border px-3 py-1 text-xs focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
-                  on ? "border-accent bg-accent/15 text-ink" : "border-line text-ink-muted hover:bg-tint"
+                className={`rounded-full border px-3 py-1.5 text-xs font-medium transition duration-150 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${
+                  on ? "border-accent bg-accent text-white shadow-[0_4px_10px_-4px_rgb(31_86_224/0.7)]" : "border-line-strong bg-surface text-ink-soft hover:border-accent/50 hover:text-accent"
                 }`}
               >
                 {name}

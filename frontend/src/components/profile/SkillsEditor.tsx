@@ -37,7 +37,7 @@ export function SkillsEditor() {
       ) : (
         <ul className="space-y-3">
           {fields.map((field, i) => (
-            <li key={field.id} className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_minmax(0,1fr)_auto] sm:items-start">
+            <li key={field.id} className="grid grid-cols-1 gap-3 rounded-2xl border border-line bg-paper/70 p-4 transition-colors hover:border-accent/30 sm:grid-cols-[minmax(0,2fr)_minmax(0,2fr)_minmax(0,1fr)_auto] sm:items-start">
               <Field id={`skill-${i}-name`} label={`Skill ${i + 1}`} error={errors?.[i]?.skill_name?.message}>
                 <input id={`skill-${i}-name`} className={inputClass} aria-invalid={!!errors?.[i]?.skill_name} {...register(`skills.${i}.skill_name`)} />
               </Field>
@@ -57,7 +57,7 @@ export function SkillsEditor() {
                   <option value="low">Low</option>
                 </select>
               </Field>
-              <div className="sm:pt-7">
+              <div className="sm:pt-[30px]">
                 <SmallButton tone="danger" onClick={() => removeSkill(i)} label={`Remove skill ${i + 1}`}>
                   <Trash2 className="size-4" aria-hidden />
                 </SmallButton>

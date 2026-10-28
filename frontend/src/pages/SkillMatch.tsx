@@ -9,6 +9,7 @@ import { inputClass } from "@/components/profile/fields"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ExtractionSummary, type ProfileSummary } from "@/lib/api"
 import { useFlow } from "@/lib/flowState"
+import { labelClass, primaryButton } from "@/lib/steps"
 import type { SkillMatchResult } from "@/types/contract"
 
 type Run = { status: "idle" } | { status: "loading" } | { status: "done"; result: SkillMatchResult } | { status: "error"; message: string }
@@ -71,20 +72,20 @@ export default function SkillMatch() {
         <Panel className="mb-6">
           <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
             <div>
-              <label htmlFor="sm-profile" className="mb-1.5 block text-sm font-medium">Profile</label>
+              <label htmlFor="sm-profile" className={labelClass}>Profile</label>
               <select id="sm-profile" className={inputClass} value={profileId} disabled={!profiles} onChange={(e) => choose("id", e.target.value)}>
                 {!profiles && <option>Loading…</option>}
                 {profiles?.map((p) => <option key={p.id} value={p.id}>{p.name}{p.email ? ` (${p.email})` : ""}</option>)}
               </select>
             </div>
             <div>
-              <label htmlFor="sm-jd" className="mb-1.5 block text-sm font-medium">Analyzed JD</label>
+              <label htmlFor="sm-jd" className={labelClass}>Analyzed JD</label>
               <select id="sm-jd" className={inputClass} value={jdId} disabled={!jds} onChange={(e) => choose("jd", e.target.value)}>
                 {!jds && <option>Loading…</option>}
                 {jds?.map((j) => <option key={j.id} value={j.id}>{jdLabel(j)}{j.status === "fallback" ? " (saved extraction)" : ""}</option>)}
               </select>
             </div>
-            <Button onClick={runMatch} disabled={!profileId || !jdId || run.status === "loading"} className="bg-accent text-white hover:bg-accent/90">
+            <Button onClick={runMatch} disabled={!profileId || !jdId || run.status === "loading"} className={primaryButton}>
               {run.status === "loading" ? "Matching…" : "Match"}
             </Button>
           </div>

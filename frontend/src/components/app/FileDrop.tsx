@@ -35,12 +35,21 @@ export function FileDrop({ onFile, disabled }: { onFile: (file: File) => void; d
           setDragging(false)
           take(e.dataTransfer.files[0])
         }}
-        className={`flex w-full flex-col items-center gap-2 rounded-2xl border border-dashed px-4 py-6 text-sm text-ink-soft transition-colors focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none disabled:opacity-50 ${
-          dragging ? "border-accent bg-accent/10" : "border-line-strong hover:bg-tint"
+        className={`group flex w-full flex-col items-center gap-3 rounded-2xl border-2 border-dashed px-4 py-8 text-sm text-ink-soft transition duration-200 focus-visible:ring-4 focus-visible:ring-accent/20 focus-visible:outline-none disabled:opacity-50 ${
+          dragging ? "border-accent bg-accent/5" : "border-line-strong bg-paper/60 hover:border-accent/60 hover:bg-tint/70"
         }`}
       >
-        <FileUp className="size-5 text-accent" aria-hidden />
-        <span>Drop a PDF or DOCX here, or click to choose one</span>
+        <span
+          aria-hidden
+          className={`flex size-12 items-center justify-center rounded-2xl shadow-sm transition duration-200 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-y-0 ${
+            dragging ? "bg-gradient-to-br from-accent to-sky text-white" : "bg-gradient-to-br from-[#dfe8ff] to-[#f4f7ff] text-accent group-hover:from-accent group-hover:to-sky group-hover:text-white"
+          }`}
+        >
+          <FileUp className="size-6" />
+        </span>
+        <span className="font-medium text-ink">
+          Drop a PDF or DOCX here, or <span className="text-accent underline-offset-2 group-hover:underline">click to choose one</span>
+        </span>
         <span className="text-xs text-ink-muted">Up to {MAX_MB} MB. Scanned PDFs are not supported.</span>
       </button>
       <input

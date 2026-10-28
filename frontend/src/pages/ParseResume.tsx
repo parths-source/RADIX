@@ -5,6 +5,7 @@ import { SkillChips, SkillLegend } from "@/components/app/SkillChips"
 import { SourcePicker } from "@/components/app/SourcePicker"
 import { EmptyState, ErrorPanel, LoadingState, Panel } from "@/components/app/StateViews"
 import { useFlow } from "@/lib/flowState"
+import { primaryButton } from "@/lib/steps"
 import { useExtraction } from "@/lib/useExtraction"
 import type { Entry } from "@/types/contract"
 
@@ -41,7 +42,7 @@ export default function ParseResume() {
                     {state.result.id && (
                       <Link
                         to={`/profile?from=${state.result.id}`}
-                        className="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-white hover:bg-accent/90 focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none"
+                        className={`${primaryButton} h-10 rounded-full px-4`}
                       >
                         {flow.profileId ? "Build a new profile from this resume" : "Build profile from this resume"}
                       </Link>

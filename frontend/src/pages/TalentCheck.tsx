@@ -11,6 +11,7 @@ import { inputClass } from "@/components/profile/fields"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ProfileSummary } from "@/lib/api"
 import { useFlow } from "@/lib/flowState"
+import { labelClass, primaryButton } from "@/lib/steps"
 import type { CompaniesResponse, TalentCheckResult } from "@/types/contract"
 
 type Run = { status: "idle" } | { status: "loading" } | { status: "done"; result: TalentCheckResult } | { status: "error"; message: string }
@@ -64,20 +65,20 @@ export default function TalentCheck() {
         <Panel className="mb-6">
           <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
             <div>
-              <label htmlFor="tc-profile" className="mb-1.5 block text-sm font-medium">Profile</label>
+              <label htmlFor="tc-profile" className={labelClass}>Profile</label>
               <select id="tc-profile" className={inputClass} value={profileId} disabled={!profiles} onChange={(e) => { setParams({ id: e.target.value }); update({ profileId: e.target.value, talentCheckDone: false, skillMatchDone: false }); setRun({ status: "idle" }) }}>
                 {!profiles && <option>Loading…</option>}
                 {profiles?.map((p) => <option key={p.id} value={p.id}>{p.name}{p.email ? ` (${p.email})` : ""}</option>)}
               </select>
             </div>
             <div>
-              <label htmlFor="tc-company" className="mb-1.5 block text-sm font-medium">Company</label>
+              <label htmlFor="tc-company" className={labelClass}>Company</label>
               <select id="tc-company" className={inputClass} value={companyKey} disabled={!companies} onChange={(e) => { update({ companyKey: e.target.value || undefined }); setRun({ status: "idle" }) }}>
                 <option value="">{companies ? "Choose a company…" : "Loading…"}</option>
                 {companies?.companies.map((c) => <option key={c.company_key} value={c.company_key}>{c.display_name}</option>)}
               </select>
             </div>
-            <Button onClick={runCheck} disabled={!profileId || !companyKey || run.status === "loading"} className="bg-accent text-white hover:bg-accent/90">
+            <Button onClick={runCheck} disabled={!profileId || !companyKey || run.status === "loading"} className={primaryButton}>
               {run.status === "loading" ? "Running…" : "Run Talent Check"}
             </Button>
           </div>
