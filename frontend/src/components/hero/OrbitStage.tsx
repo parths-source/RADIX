@@ -32,7 +32,7 @@ export function OrbitStage() {
   const g = layout
 
   return (
-    <div ref={stageRef} className="pointer-events-none relative h-[clamp(260px,32vw,440px)] w-full overflow-hidden">
+    <div ref={stageRef} className="pointer-events-none relative h-[clamp(250px,30vw,400px)] w-full overflow-hidden">
       <p className="sr-only">Decorative animation: logos of common technologies (JavaScript, Python, Java, SQL and others) orbit the RADIX wordmark.</p>
       <div aria-hidden className="absolute inset-0">
         {g && (

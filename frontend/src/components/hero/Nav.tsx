@@ -10,7 +10,7 @@ const LINKS = [
 
 export function Nav() {
   return (
-    <header className="relative z-40 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-5 sm:px-6">
+    <header className="relative z-40 mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
       <a href="#top" className="rounded focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none">
         <RadixLogo label labelClassName="hidden sm:inline" />
       </a>
