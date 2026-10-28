@@ -42,7 +42,7 @@ export function GapRadar({ gaps }: { gaps: SkillsetGap[] }) {
           <RadarChart data={data} outerRadius="72%" accessibilityLayer>
             <PolarGrid stroke="rgb(255 255 255 / 0.12)" />
             <PolarAngleAxis dataKey="code" tickFormatter={(c: string) => SHORT[c] ?? label(c)} tick={{ fill: "rgb(234 249 255 / 0.75)", fontSize: 11 }} />
-            <PolarRadiusAxis domain={[0, 10]} tickCount={6} angle={90} tick={{ fill: "rgb(234 249 255 / 0.45)", fontSize: 10 }} axisLine={false} />
+            <PolarRadiusAxis domain={[0, 10]} tickCount={6} angle={75} tick={{ fill: "rgb(234 249 255 / 0.45)", fontSize: 10 }} axisLine={false} />
             <Radar name="Company requirement" dataKey="required" stroke="var(--color-series-required)" strokeWidth={2} strokeDasharray="5 4" fill="none" isAnimationActive={false} />
             <Radar name="Candidate (estimated)" dataKey="candidate" stroke="var(--color-series-candidate)" strokeWidth={2} fill="var(--color-series-candidate)" fillOpacity={0.3} dot={{ r: 3, fill: "var(--color-series-candidate)", stroke: "var(--color-abyss)", strokeWidth: 2 }} isAnimationActive={false} />
             <Tooltip content={<RadarTooltip />} />

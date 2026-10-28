@@ -36,9 +36,9 @@ def test_pick_jd_parse_resume_build_profile_talent_check_skill_match():
     app.dependency_overrides[get_llm] = lambda: llm
     try:
         jd = ExtractedSkillList.model_validate(
-            client.post("/api/extractions/jd", json={"sample_id": "jd:google_software_engineer.docx"}).json())
+            client.post("/api/extractions/jd", json={"sample_id": "jd:google_software_engineer.docx", "mode": "live"}).json())
         resume = ExtractedSkillList.model_validate(
-            client.post("/api/extractions/resume", json={"sample_id": "resume:ananya_rao.docx"}).json())
+            client.post("/api/extractions/resume", json={"sample_id": "resume:ananya_rao.docx", "mode": "live"}).json())
 
         draft = client.post("/api/profiles/draft", json={"resume_extraction_id": resume.id}).json()
         assert draft["name"] == "Flow Candidate" and [i["title"] for i in draft["internships"]] == ["Intern"]

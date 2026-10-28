@@ -36,7 +36,9 @@ export function useExtraction(kind: SourceType, savedId: string | undefined, onD
     setState({ status: "loading", name })
     try {
       const result =
-        source.kind === "sample" ? await api.extractSample(kind, source.sample.sample_id) : await api.extractFile(kind, source.file)
+        source.kind === "sample"
+          ? await api.extractSample(kind, source.sample.sample_id, source.mode)
+          : await api.extractFile(kind, source.file)
       setState({ status: "done", result })
       onDone(result)
     } catch (e) {

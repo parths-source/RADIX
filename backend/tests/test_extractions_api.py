@@ -140,3 +140,49 @@ def test_db_misconfiguration_fails_before_the_llm_call(use, tmp_path):
     response = client.post("/api/extractions/jd", json={"sample_id": JD_SAMPLE})
     assert (response.status_code, response.json()["error"]["code"]) == (503, "db_not_configured")
     assert llm.calls == []
+
+
+# Phase 8: samples use saved extractions by default (demo reliability); live stays available.
+
+FIXTURE_JD = {"source_type": "jd", "source_file": "google_software_engineer.docx", "company": "Saved Co",
+              "skills": [{"skill_name": "Go", "category_code": "COD", "evidence": "Go", "confidence": "high"}]}
+
+
+def test_sample_defaults_to_saved_extraction_without_llm_call(use, repo):
+    llm = FakeLLM()
+    use(llm, fixtures={"google_software_engineer.json": FIXTURE_JD})
+    body = client.post("/api/extractions/jd", json={"sample_id": JD_SAMPLE}).json()
+    assert body["status"] == "fallback" and body["company"] == "Saved Co"  # badge: "Using saved extraction"
+    assert body["id"] in repo.extractions and llm.calls == []
+
+
+def test_saved_pdf_sample_uses_the_shared_fixture(use):
+    use(FakeLLM(), fixtures={"google_software_engineer.json": FIXTURE_JD})
+    body = client.post("/api/extractions/jd", json={"sample_id": "jd:google_software_engineer.pdf"}).json()
+    assert body["status"] == "fallback" and body["source_file"] == "google_software_engineer.pdf"
+
+
+def test_live_mode_runs_the_extractor(use):
+    llm = FakeLLM(JD_OUT)
+    use(llm, fixtures={"google_software_engineer.json": FIXTURE_JD})
+    body = client.post("/api/extractions/jd", json={"sample_id": JD_SAMPLE, "mode": "live"}).json()
+    assert body["status"] == "ok" and body["company"] == "Google LLC" and len(llm.calls) == 1
+
+
+def test_saved_mode_without_fixture_runs_live(use):
+    llm = FakeLLM(JD_OUT)
+    use(llm)
+    assert client.post("/api/extractions/jd", json={"sample_id": JD_SAMPLE}).json()["status"] == "ok"
+
+
+def test_server_default_can_be_live(use, tmp_path):
+    llm = FakeLLM(JD_OUT)
+    use(llm, fixtures={"google_software_engineer.json": FIXTURE_JD})
+    app.dependency_overrides[get_settings] = lambda: Settings(_env_file=None, data_dir=tmp_path, sample_extraction_mode="live")
+    assert client.post("/api/extractions/jd", json={"sample_id": JD_SAMPLE}).json()["status"] == "ok"
+
+
+def test_bad_mode_is_rejected(use):
+    use(FakeLLM())
+    response = client.post("/api/extractions/jd", json={"sample_id": JD_SAMPLE, "mode": "cached"})
+    assert response.status_code == 422

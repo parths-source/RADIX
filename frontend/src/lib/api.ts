@@ -70,12 +70,9 @@ const json = (method: string, body: unknown): RequestInit => ({
 export const api = {
   samples: () => request<{ samples: Sample[] }>("/samples").then((r) => r.samples),
   companies: () => request<CompaniesResponse>("/companies"),
-  extractSample: (kind: SourceType, sampleId: string) =>
-    request<ExtractedSkillList>(`/extractions/${kind}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sample_id: sampleId }),
-    }),
+  /** mode "saved" serves the saved extraction of the sample (no LLM call); "live" runs Gemini. */
+  extractSample: (kind: SourceType, sampleId: string, mode: "saved" | "live") =>
+    request<ExtractedSkillList>(`/extractions/${kind}`, json("POST", { sample_id: sampleId, mode })),
   extractFile: (kind: SourceType, file: File) => {
     const form = new FormData()
     form.append("file", file)

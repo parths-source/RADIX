@@ -151,7 +151,7 @@
         radial-gradient(ellipse 80% 60% at 85% 0%, rgb(27 108 168 / 0.55), transparent 70%),
         radial-gradient(ellipse 60% 50% at 0% 100%, rgb(10 42 68 / 0.9), transparent 70%),
         linear-gradient(160deg, var(--color-abyss), var(--color-deep));
-    background-attachment: fixed;
+    background-color: var(--color-abyss);
 }
 .app-backdrop::before {
     content: "";

@@ -23,7 +23,7 @@ export default function ParseResume() {
         <SourcePicker sourceType="resume" actionLabel="Parse resume" busy={busy} onRun={run} />
         <div aria-live="polite" className="space-y-6">
           {state.status === "idle" && <EmptyState>Choose a resume on the left and press “Parse resume” to see what it shows.</EmptyState>}
-          {state.status === "loading" && <LoadingSkeleton label={`Parsing ${state.name}… this takes 5–20 seconds.`} />}
+          {state.status === "loading" && <LoadingSkeleton label={`Parsing ${state.name}… live runs take 10–25 seconds.`} />}
           {state.status === "error" && <ErrorPanel title={`Could not parse ${state.name}`} message={state.message} />}
           {state.status === "done" && (
             <>
@@ -40,10 +40,10 @@ export default function ParseResume() {
                     {state.result.status === "fallback" && <FallbackBadge />}
                     {state.result.id && (
                       <Link
-                        to={flow.profileId ? `/profile?id=${flow.profileId}&from=${state.result.id}` : `/profile?from=${state.result.id}`}
+                        to={`/profile?from=${state.result.id}`}
                         className="rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-white hover:bg-brand/90 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
                       >
-                        {flow.profileId ? "Merge into the profile" : "Build profile from this resume"}
+                        {flow.profileId ? "Build a new profile from this resume" : "Build profile from this resume"}
                       </Link>
                     )}
                   </div>
@@ -77,10 +77,17 @@ export default function ParseResume() {
                 </Panel>
               )}
               {state.result.id && (
-                <NextStep
-                  to={flow.profileId ? `/profile?id=${flow.profileId}&from=${state.result.id}` : `/profile?from=${state.result.id}`}
-                  label={flow.profileId ? "Next: merge into the profile" : "Next: build the profile"}
-                />
+                <div className="flex flex-wrap justify-end gap-3">
+                  {flow.profileId && (
+                    <Link
+                      to={`/profile?id=${flow.profileId}&from=${state.result.id}`}
+                      className="mt-6 inline-flex items-center rounded-full border border-white/20 px-5 py-2 text-sm text-mist hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none"
+                    >
+                      Merge into the current profile
+                    </Link>
+                  )}
+                  <NextStep to={`/profile?from=${state.result.id}`} label={flow.profileId ? "Next: build a new profile" : "Next: build the profile"} />
+                </div>
               )}
             </>
           )}

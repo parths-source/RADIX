@@ -21,7 +21,7 @@ export default function AnalyzeJD() {
         <SourcePicker sourceType="jd" actionLabel="Analyze JD" busy={busy} onRun={run} />
         <div aria-live="polite">
           {state.status === "idle" && <EmptyState>Choose a JD on the left and press “Analyze JD” to see its skills here.</EmptyState>}
-          {state.status === "loading" && <LoadingSkeleton label={`Analyzing ${state.name}… this takes 5–20 seconds.`} />}
+          {state.status === "loading" && <LoadingSkeleton label={`Analyzing ${state.name}… live runs take 10–25 seconds.`} />}
           {state.status === "error" && <ErrorPanel title={`Could not analyze ${state.name}`} message={state.message} />}
           {state.status === "done" && (
             <Panel className="space-y-5">

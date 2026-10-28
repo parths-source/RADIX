@@ -23,6 +23,7 @@ export function Stepper() {
             <li key={step.to}>
               <NavLink
                 to={step.to}
+                aria-label={`${step.label}${done ? " (done)" : " (not started)"}`}
                 className={({ isActive }) =>
                   `flex items-center gap-2 rounded-full px-3 py-1.5 text-sm focus-visible:ring-2 focus-visible:ring-cyan focus-visible:outline-none ${
                     isActive ? "bg-brand text-white" : "text-mist/75 hover:bg-white/10"
@@ -39,8 +40,8 @@ export function Stepper() {
                     >
                       {done ? <Check className="size-3" strokeWidth={3} /> : i + 1}
                     </span>
-                    {step.label}
-                    <span className="sr-only">{done ? " (done)" : " (not started)"}</span>
+                    {/* On phones only the current step shows its label; the others keep it in aria-label. */}
+                    <span className={isActive ? undefined : "hidden sm:inline"}>{step.label}</span>
                   </>
                 )}
               </NavLink>

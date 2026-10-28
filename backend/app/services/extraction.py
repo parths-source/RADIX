@@ -125,14 +125,24 @@ def load_fixture(path: Path) -> tuple[dict, ExtractedSkillList]:
     return data["_meta"], ExtractedSkillList.model_validate(data["extraction"])
 
 
-def _fallback(spec: ExtractionSpec, source_file: str, settings: Settings, reason: str) -> ExtractedSkillList:
+def saved_extraction(source_type: SourceType, source_file: str, settings: Settings) -> ExtractedSkillList | None:
+    """The fixture for this file (matched by stem, so PDF and DOCX share it), marked status "fallback"
+    so the UI shows "Using saved extraction". None if there is no fixture of this type."""
     fixture = settings.data_dir / "fixtures" / f"{Path(source_file).stem}.json"
-    if fixture.is_file():
-        meta, extraction = load_fixture(fixture)
-        if extraction.source_type == spec.source_type:
-            logger.info("extraction_fallback module=%s reason=%s fixture=%s fixture_model=%s",
-                        spec.source_type, reason, fixture.name, meta.get("model"))
-            return extraction.model_copy(update={"id": None, "source_file": source_file, "status": "fallback"})
+    if not fixture.is_file():
+        return None
+    meta, extraction = load_fixture(fixture)
+    if extraction.source_type != source_type:
+        return None
+    logger.info("extraction_saved module=%s fixture=%s fixture_model=%s", source_type, fixture.name, meta.get("model"))
+    return extraction.model_copy(update={"id": None, "source_file": source_file, "status": "fallback"})
+
+
+def _fallback(spec: ExtractionSpec, source_file: str, settings: Settings, reason: str) -> ExtractedSkillList:
+    saved = saved_extraction(spec.source_type, source_file, settings)
+    if saved is not None:
+        logger.info("extraction_fallback module=%s reason=%s", spec.source_type, reason)
+        return saved
     messages = {
         "llm_not_configured": "No LLM is configured and there is no saved extraction for this file.",
         "llm_error": "The LLM call failed and there is no saved extraction for this file. Try again, or use a sample file.",

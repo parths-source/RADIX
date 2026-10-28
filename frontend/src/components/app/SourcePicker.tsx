@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { api, type Sample } from "@/lib/api"
 import type { SourceType } from "@/types/contract"
 
-export type Source = { kind: "sample"; sample: Sample } | { kind: "file"; file: File }
+export type Source = { kind: "sample"; sample: Sample; mode: "saved" | "live" } | { kind: "file"; file: File }
 
 /** Pick a sample from the pack (DOCX by default) or upload a file, then run the action. */
 export function SourcePicker({
@@ -24,6 +24,7 @@ export function SourcePicker({
   const [loadError, setLoadError] = useState<string | null>(null)
   const [selected, setSelected] = useState("")
   const [showPdf, setShowPdf] = useState(false)
+  const [useSaved, setUseSaved] = useState(true) // demo default: no LLM call, always the same result
 
   useEffect(() => {
     api.samples().then(
@@ -56,7 +57,7 @@ export function SourcePicker({
               </option>
             ))}
           </select>
-          <Button disabled={busy || !chosen} onClick={() => chosen && onRun({ kind: "sample", sample: chosen })} className="bg-brand text-white hover:bg-brand/90">
+          <Button disabled={busy || !chosen} onClick={() => chosen && onRun({ kind: "sample", sample: chosen, mode: useSaved ? "saved" : "live" })} className="bg-brand text-white hover:bg-brand/90">
             {actionLabel}
           </Button>
         </div>
@@ -70,6 +71,10 @@ export function SourcePicker({
             }}
           />
           Use the PDF version (converted from the DOCX, text only)
+        </label>
+        <label className="mt-1 flex items-center gap-2 text-xs text-mist/60">
+          <input type="checkbox" checked={useSaved} onChange={(e) => setUseSaved(e.target.checked)} />
+          Use saved extraction (recommended for demos). Untick to run the AI live, which takes 10–25 seconds and can vary.
         </label>
         {loadError && <p className="mt-2 text-sm text-danger" role="alert">{loadError}</p>}
       </div>

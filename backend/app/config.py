@@ -2,6 +2,7 @@
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -23,6 +24,9 @@ class Settings(BaseSettings):
     enable_llm_match: bool = False
 
     frontend_origin: str = "http://localhost:5173"
+
+    # Sample files: "saved" serves data/fixtures/ (reliable demo, no LLM call); "live" runs the extractor.
+    sample_extraction_mode: Literal["saved", "live"] = "saved"
 
     max_upload_mb: int = 5
     llm_max_input_chars: int = 20000

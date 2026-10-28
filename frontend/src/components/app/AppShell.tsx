@@ -70,7 +70,7 @@ export function PageHeading({ title, description }: { title: string; description
 
 export function FallbackBadge() {
   return (
-    <span className="rounded-full border border-warn/50 bg-warn/15 px-2.5 py-0.5 text-xs font-medium text-warn" title="The LLM was unavailable, so this is a saved extraction of the same file.">
+    <span className="rounded-full border border-warn/50 bg-warn/15 px-2.5 py-0.5 text-xs font-medium text-warn" title="Loaded from a saved extraction of this file, made earlier by the same extractor (gemini-3.5-flash). Used by default for sample files, and automatically if the AI is unavailable.">
       Using saved extraction
     </span>
   )

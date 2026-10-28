@@ -1,6 +1,7 @@
 """Modules 1 and 2 over HTTP: POST /extractions/jd, POST /extractions/resume, GET /extractions/{id}."""
 
 from dataclasses import dataclass
+from typing import Literal, Optional
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.concurrency import run_in_threadpool
@@ -12,6 +13,7 @@ from app.config import Settings, get_settings
 from app.errors import AppError
 from app.models.contract import ExtractedSkillList, SourceType
 from app.services import file_text, jd_analytics, resume_parsing
+from app.services.extraction import saved_extraction
 from app.services.llm import StructuredLLM
 from app.services.repository import Repository
 from app.services.samples import resolve_sample
@@ -23,6 +25,7 @@ MODULES = {"jd": jd_analytics, "resume": resume_parsing}
 
 class SampleRequest(BaseModel):
     sample_id: str
+    mode: Optional[Literal["saved", "live"]] = None  # default: SAMPLE_EXTRACTION_MODE ("saved")
 
 
 @dataclass
@@ -31,6 +34,7 @@ class _Input:
     data: bytes
     content_type: str
     is_sample: bool
+    mode: str = "live"
 
 
 async def _read_input(request: Request, source_type: SourceType, settings: Settings) -> _Input:
@@ -52,7 +56,7 @@ async def _read_input(request: Request, source_type: SourceType, settings: Setti
         if path is None:
             raise AppError(404, "sample_not_found", f"No {source_type} sample with id '{body.sample_id}'. See GET /api/samples.")
         mime = file_text.ALLOWED_TYPES[path.suffix]
-        return _Input(path.name, path.read_bytes(), mime, is_sample=True)
+        return _Input(path.name, path.read_bytes(), mime, is_sample=True, mode=body.mode or settings.sample_extraction_mode)
     raise AppError(422, "unsupported_request", "Send multipart/form-data with a 'file' field, or JSON with a 'sample_id'.")
 
 
@@ -64,7 +68,11 @@ async def _extract(
     file_name = file_text.sanitize_filename(doc.file_name)
     text = await run_in_threadpool(file_text.extract_text, doc.data, ext)
     await run_in_threadpool(repo.ensure_ready)  # before the LLM call: free-tier quota is small
-    extraction = await run_in_threadpool(MODULES[source_type].run, text, file_name, llm, settings)
+    extraction = None
+    if doc.mode == "saved":  # demo default for samples; no LLM call
+        extraction = saved_extraction(source_type, file_name, settings)
+    if extraction is None:
+        extraction = await run_in_threadpool(MODULES[source_type].run, text, file_name, llm, settings)
     file_path = None
     if not doc.is_sample:  # samples already live in the repo
         file_path = await run_in_threadpool(repo.upload_file, source_type, file_name, doc.data, doc.content_type)
