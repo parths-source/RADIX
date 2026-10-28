@@ -7,24 +7,31 @@ import { INDUCTION_EFFECT, NeuformIsolatedEffect, type EffectDefinition } from "
 const LABEL = "GET STARTED"
 const TARGET = "/analyze"
 const FLASH_MS = 380 // let the click discharge show before leaving the page
-const READY_TIMEOUT_MS = 4000 // no word from the iframe by then: show the plain button
+const READY_TIMEOUT_MS = 6000 // no word from the iframe by then: show the plain button
 const MESSAGE_SOURCE = "radix-induction-button"
+const LAYOUT_POLL_MS = 100
+const LAYOUT_DEADLINE_MS = 3000 // after load; the Tailwind CDN styles the button a moment after the scripts arrive
 
 /**
  * Runs inside the button's sandboxed iframe. Reports "ready" once the button is laid out
- * (its Tailwind CDN classes applied), "failed" otherwise, and "click" on activation.
+ * (its Tailwind CDN classes applied), "failed" if Tailwind never loaded or the layout never
+ * settles, and "click" on activation.
  */
 const bridgeScript = (token: string) => `<script>
 (function () {
   function post(type) { parent.postMessage({ source: ${JSON.stringify(MESSAGE_SOURCE)}, token: ${JSON.stringify(token)}, type: type }, "*"); }
   window.addEventListener("load", function () {
-    setTimeout(function () {
-      var btn = document.getElementById("btn");
-      // 280x96 only when the Tailwind CDN classes applied; without them (offline) the button renders broken.
-      var ok = !!btn && btn.offsetWidth === 280 && btn.offsetHeight === 96 && document.body.hasAttribute("data-threeui-ready");
-      post(ok ? "ready" : "failed");
-      if (btn) btn.addEventListener("click", function () { post("click"); });
-    }, 300);
+    var btn = document.getElementById("btn");
+    if (btn) btn.addEventListener("click", function () { post("click"); });
+    // Offline: the Tailwind script failed, so the button would render broken. Say so at once.
+    if (!btn || !window.tailwind) return post("failed");
+    var started = Date.now();
+    (function check() {
+      // 280x96 only once the Tailwind CDN classes have applied.
+      if (btn.offsetWidth === 280 && btn.offsetHeight === 96 && document.body.hasAttribute("data-threeui-ready")) return post("ready");
+      if (Date.now() - started > ${LAYOUT_DEADLINE_MS}) return post("failed");
+      setTimeout(check, ${LAYOUT_POLL_MS});
+    })();
   });
 })();
 </script>`
