@@ -1,7 +1,7 @@
 import { AppShell, FallbackBadge, NextStep, PageHeading } from "@/components/app/AppShell"
 import { SkillChips, SkillLegend } from "@/components/app/SkillChips"
 import { SourcePicker } from "@/components/app/SourcePicker"
-import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app/StateViews"
+import { EmptyState, ErrorPanel, LoadingState, Panel } from "@/components/app/StateViews"
 import { useFlow } from "@/lib/flowState"
 import { useExtraction } from "@/lib/useExtraction"
 
@@ -21,7 +21,7 @@ export default function AnalyzeJD() {
         <SourcePicker sourceType="jd" actionLabel="Analyze JD" busy={busy} onRun={run} />
         <div aria-live="polite">
           {state.status === "idle" && <EmptyState>Choose a JD on the left and press “Analyze JD” to see its skills here.</EmptyState>}
-          {state.status === "loading" && <LoadingSkeleton label={`Analyzing ${state.name}… live runs take 10–25 seconds.`} />}
+          {state.status === "loading" && <LoadingState label={state.restoring ? "Loading the last result…" : `Analyzing ${state.name}… live runs take 10–25 seconds.`} />}
           {state.status === "error" && <ErrorPanel title={`Could not analyze ${state.name}`} message={state.message} />}
           {state.status === "done" && (
             <Panel className="space-y-5">

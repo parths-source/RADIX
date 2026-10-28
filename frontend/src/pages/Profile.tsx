@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 import { AppShell, NextStep, PageHeading } from "@/components/app/AppShell"
 import { FileDrop } from "@/components/app/FileDrop"
-import { ErrorPanel, LoadingSkeleton } from "@/components/app/StateViews"
+import { ErrorPanel, LoadingState } from "@/components/app/StateViews"
 import { EntriesEditor } from "@/components/profile/EntriesEditor"
 import { Field, FormSection, inputClass } from "@/components/profile/fields"
 import { SkillsEditor } from "@/components/profile/SkillsEditor"
@@ -141,7 +141,7 @@ export default function Profile() {
         )}
       </div>
 
-      {load.status === "loading" && <LoadingSkeleton label="Loading profile…" />}
+      {load.status === "loading" && <LoadingState label="Loading profile…" />}
       {load.status === "error" && <ErrorPanel title="Could not load the profile" message={load.message} />}
       {load.status === "ready" && (
         <FormProvider {...form}>

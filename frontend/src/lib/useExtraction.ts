@@ -6,7 +6,7 @@ import type { ExtractedSkillList, SourceType } from "@/types/contract"
 
 type State =
   | { status: "idle" }
-  | { status: "loading"; name: string }
+  | { status: "loading"; name: string; restoring?: boolean }
   | { status: "done"; result: ExtractedSkillList }
   | { status: "error"; name: string; message: string }
 
@@ -15,7 +15,7 @@ type State =
  * so a page refresh keeps it on screen. onDone receives every new result.
  */
 export function useExtraction(kind: SourceType, savedId: string | undefined, onDone: (result: ExtractedSkillList) => void) {
-  const [state, setState] = useState<State>(() => (savedId ? { status: "loading", name: "the last result" } : { status: "idle" }))
+  const [state, setState] = useState<State>(() => (savedId ? { status: "loading", name: "the last result", restoring: true } : { status: "idle" }))
 
   useEffect(() => {
     if (!savedId) return

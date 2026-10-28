@@ -6,7 +6,7 @@ import { DummyBanner } from "@/components/app/DummyBanner"
 import { GapRadar } from "@/components/app/GapRadar"
 import { GapTable } from "@/components/app/GapTable"
 import { ScoreRing } from "@/components/app/ScoreRing"
-import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app/StateViews"
+import { EmptyState, ErrorPanel, LoadingState, Panel } from "@/components/app/StateViews"
 import { inputClass } from "@/components/profile/fields"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ProfileSummary } from "@/lib/api"
@@ -86,7 +86,7 @@ export default function TalentCheck() {
 
       <div aria-live="polite">
         {run.status === "idle" && profiles && profiles.length > 0 && <EmptyState>Choose a company and press “Run Talent Check”.</EmptyState>}
-        {run.status === "loading" && <LoadingSkeleton label="Running Talent Check…" />}
+        {run.status === "loading" && <LoadingState label="Running Talent Check…" />}
         {run.status === "error" && <ErrorPanel title="Talent Check failed" message={run.message} />}
         {run.status === "done" && (
           <div className="space-y-6">

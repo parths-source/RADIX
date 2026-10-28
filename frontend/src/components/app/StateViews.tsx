@@ -1,26 +1,21 @@
 import type { ReactNode } from "react"
 import { AlertTriangle } from "lucide-react"
 
+import { CoreSpinLoader } from "@/components/ui/core-spin-loader"
+
 export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <section className={`rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur ${className}`}>{children}</section>
 }
 
-export function LoadingSkeleton({ label }: { label: string }) {
+/** Shown while data is fetched or a background job runs: the animated loader plus what is happening. */
+export function LoadingState({ label, className = "" }: { label: string; className?: string }) {
   return (
-    <Panel>
-      <p className="mb-4 text-sm text-mist/70" role="status">{label}</p>
-      <div className="space-y-4" aria-hidden>
-        {[0, 1, 2].map((row) => (
-          <div key={row} className="space-y-2">
-            <div className="h-3 w-40 animate-pulse rounded bg-white/10 motion-reduce:animate-none" />
-            <div className="flex flex-wrap gap-2">
-              {[0, 1, 2, 3].map((chip) => (
-                <div key={chip} className="h-7 w-24 animate-pulse rounded-full bg-white/10 motion-reduce:animate-none" />
-              ))}
-            </div>
-          </div>
-        ))}
+    <Panel className={className}>
+      {/* aria-hidden: the loader's text changes every second and would be re-announced inside aria-live regions. */}
+      <div aria-hidden className="motion-reduce:[&_*]:animate-none">
+        <CoreSpinLoader />
       </div>
+      <p className="text-center text-sm text-mist/70" role="status">{label}</p>
     </Panel>
   )
 }

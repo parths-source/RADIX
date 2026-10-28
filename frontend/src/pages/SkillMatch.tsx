@@ -4,7 +4,7 @@ import { Link, useSearchParams } from "react-router"
 import { AppShell, PageHeading } from "@/components/app/AppShell"
 import { MatchedList, MissingList } from "@/components/app/MatchLists"
 import { ScoreRing } from "@/components/app/ScoreRing"
-import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app/StateViews"
+import { EmptyState, ErrorPanel, LoadingState, Panel } from "@/components/app/StateViews"
 import { inputClass } from "@/components/profile/fields"
 import { Button } from "@/components/ui/button"
 import { api, ApiError, type ExtractionSummary, type ProfileSummary } from "@/lib/api"
@@ -93,7 +93,7 @@ export default function SkillMatch() {
 
       <div aria-live="polite">
         {run.status === "idle" && !nothingToChoose && profiles && <EmptyState>Choose a profile and an analyzed JD, then press “Match”.</EmptyState>}
-        {run.status === "loading" && <LoadingSkeleton label="Matching skills…" />}
+        {run.status === "loading" && <LoadingState label="Matching skills…" />}
         {run.status === "error" && <ErrorPanel title="Match failed" message={run.message} />}
         {run.status === "done" && (
           <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">

@@ -3,7 +3,7 @@ import { Link } from "react-router"
 import { AppShell, FallbackBadge, NextStep, PageHeading } from "@/components/app/AppShell"
 import { SkillChips, SkillLegend } from "@/components/app/SkillChips"
 import { SourcePicker } from "@/components/app/SourcePicker"
-import { EmptyState, ErrorPanel, LoadingSkeleton, Panel } from "@/components/app/StateViews"
+import { EmptyState, ErrorPanel, LoadingState, Panel } from "@/components/app/StateViews"
 import { useFlow } from "@/lib/flowState"
 import { useExtraction } from "@/lib/useExtraction"
 import type { Entry } from "@/types/contract"
@@ -23,7 +23,7 @@ export default function ParseResume() {
         <SourcePicker sourceType="resume" actionLabel="Parse resume" busy={busy} onRun={run} />
         <div aria-live="polite" className="space-y-6">
           {state.status === "idle" && <EmptyState>Choose a resume on the left and press “Parse resume” to see what it shows.</EmptyState>}
-          {state.status === "loading" && <LoadingSkeleton label={`Parsing ${state.name}… live runs take 10–25 seconds.`} />}
+          {state.status === "loading" && <LoadingState label={state.restoring ? "Loading the last result…" : `Parsing ${state.name}… live runs take 10–25 seconds.`} />}
           {state.status === "error" && <ErrorPanel title={`Could not parse ${state.name}`} message={state.message} />}
           {state.status === "done" && (
             <>
